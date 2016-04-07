@@ -26,3 +26,21 @@ Auto Encrypt/Decrypt
 API's used
 - encryption in js: https://github.com/openpgpjs/openpgpjs
 - password storage hash: https://www.npmjs.com/package/password-hash
+
+
+Server-Side
+- Web Server to hold unique identifiers for private keys, and the corresponding public keys for each person
+- | id | hashed-priv-FK | pub-key-FK | user | 
+- | id | pub key |
+- | id | hashed-priv | 
+<br>
+RESTful API supports  
+- Given username, get pub key
+- Store priv/pub key pairs
+- user registration
+- user login - downloads all keys related to user to their localDB
+<br>
+LocalDB to store priv-key and any pub keys
+- | id | priv key | 
+- | id | pub key | user
+
