@@ -14,3 +14,7 @@ Stretch Goals
 - increases of security on server
 - send encrypted files
 - group encrypted communication
+
+API's used
+- encryption in js: https://github.com/openpgpjs/openpgpjs
+- password storage hash: https://www.npmjs.com/package/password-hash
