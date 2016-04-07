@@ -23,3 +23,6 @@ Auto Encrypt/Decrypt
 - 3rd field: the actual message to be decoded
 
 
+API's used
+- encryption in js: https://github.com/openpgpjs/openpgpjs
+- password storage hash: https://www.npmjs.com/package/password-hash
