@@ -8,9 +8,10 @@ Core Features
 - local storage for private key, and all public keys
 
 Stretch Goals
+- support signed messages (default not signed)
+- hashed password storeage
 - a way to talk to someone who isnt registered
 - closed channel chat app between two users
-- hashed password storeage
 - increases of security on server
 - send encrypted files
 - group encrypted communication
