@@ -44,4 +44,18 @@ RESTful API supports
 LocalDB to store priv-key and any pub keys
 - | id | priv key | 
 - | id | pub key | user
+- hashed password storeage
+- hashed password storeage
 
+
+
+
+
+#References
+https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#Creating_or_updating_the_version_of_the_database
+<br>
+http://blog.teamtreehouse.com/create-your-own-to-do-app-with-html5-and-indexeddb
+<br>
+https://trackingjs.com/
+<br>
+https://www.wanderu.com/en/depart/Columbus%2C%20OH%2C%20USA/Toledo%2C%20OH%2C%20USA/2016-04-15
