@@ -52,10 +52,15 @@ LocalDB to store priv-key and any pub keys
 
 
 #References
+Chrome Workaround for web workers
+http://stackoverflow.com/questions/22717586/create-a-web-worker-from-a-chrome-extension-content-script<br>
+Implement Web Workers in Firefox
+https://developer.mozilla.org/en-US/docs/Using_workers_in_extensions<br>
+Implement indexedDB
 https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#Creating_or_updating_the_version_of_the_database
 <br>
 http://blog.teamtreehouse.com/create-your-own-to-do-app-with-html5-and-indexeddb
 <br>
+Facial recognition lib
 https://trackingjs.com/
 <br>
-https://www.wanderu.com/en/depart/Columbus%2C%20OH%2C%20USA/Toledo%2C%20OH%2C%20USA/2016-04-15
