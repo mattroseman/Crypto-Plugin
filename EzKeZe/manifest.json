@@ -3,14 +3,27 @@
   "description": "Making Secure Communcation Ez Pz",
   "version": "0.1",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "http://*/*",
+    "webNavigation"
   ],
+  "content_scripts": {
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "all_frames": true,
+      "match_about_blank": true 
+  },
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["src/background/background.js"],
     "persistent": false
   },
   "browser_action": {
-    "default_title": "EncryptoMatic!!"
+    "default_title": "EncryptoMatic!!",
+    "default_popup": "src/popup/popup.html"
+  },
+  "commands": {
+      "encrypt": {
+          "description": "encrypt the currently selected text"
+      }
   },
   "manifest_version": 2
 }
