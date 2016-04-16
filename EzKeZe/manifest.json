@@ -19,7 +19,7 @@
     "matches": ["http://*/*",
             "https://*/*"],
     "js": ["src/content/content.js"],
-    "run_at": "document_end"    
+    "run_at": "document_end"
     }],
   "commands": {
       "encrypt": {
