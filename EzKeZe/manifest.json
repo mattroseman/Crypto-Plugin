@@ -13,7 +13,7 @@
       "match_about_blank": true 
   },
   "background": {
-    "scripts": ["src/background/background.js"],
+    "scripts": ["src/background/background.js", "/lib/jquery-1.12.2.min.js"],
     "persistent": false
   },
   "browser_action": {
