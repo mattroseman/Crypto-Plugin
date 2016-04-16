@@ -7,11 +7,6 @@
     "http://*/*",
     "webNavigation"
   ],
-  "content_scripts": {
-      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-      "all_frames": true,
-      "match_about_blank": true 
-  },
   "background": {
     "scripts": ["src/background/background.js", "/lib/jquery-1.12.2.min.js"],
     "persistent": false
@@ -20,6 +15,12 @@
     "default_title": "EncryptoMatic!!",
     "default_popup": "src/popup/popup.html"
   },
+  "content_scripts": [{
+    "matches": ["http://*/*",
+            "https://*/*"],
+    "js": ["src/content/content.js"],
+    "run_at": "document_end"    
+    }],
   "commands": {
       "encrypt": {
           "description": "encrypt the currently selected text"
