@@ -1,0 +1,16 @@
+{
+  "name": "EzKeZe",
+  "description": "Making Secure Communcation Ez Pz",
+  "version": "0.1",
+  "permissions": [
+    "activeTab"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "EncryptoMatic!!"
+  },
+  "manifest_version": 2
+}
