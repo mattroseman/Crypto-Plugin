@@ -13,6 +13,7 @@ $(document).ready(function() {
  * @return: a string representing the text
  */
 function getActiveText() {
+    return $(':focus').val();
 }
 
 /**
