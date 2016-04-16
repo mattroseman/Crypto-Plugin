@@ -25,8 +25,9 @@ Auto Encrypt/Decrypt
 
 
 API's used
-- encryption in js: https://github.com/openpgpjs/openpgpjs
+- PGP encryption in js: https://github.com/openpgpjs/openpgpjs
 - password storage hash: https://www.npmjs.com/package/password-hash
+- AES encryption in js: https://github.com/chrisveness/crpto
 
 
 Server-Side
