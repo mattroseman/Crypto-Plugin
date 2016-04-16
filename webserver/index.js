@@ -5,6 +5,10 @@ var app = express();
 var port = process.env.PORT || 8080;
 var diff = require('deep-diff').diff;
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
 // First you need to create a connection to the db
 var con = mysql.createConnection({
 	host: "localhost",
@@ -22,25 +26,12 @@ con.connect(function(err){
 	console.log('Connection established');
 });
 
-var bodyParser = require('body-parser');
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
-var rhs = {
-	"keys": [
-		'1',
-	'2',
-	'3' 
-		],
-	"user_id": "1"
-}
 
 // ----------return json of new public keys
 // compare list being sent to me with list on the server
 app.post('/api/server_sync', function(req, res) {
 // get array of origin keys
 	var rhs = {}, keys = [];
-	console.log(req.headers);
 	keys = JSON.parse(req.headers.keys);
 	rhs.keys = keys;
 
@@ -60,10 +51,20 @@ app.post('/api/server_sync', function(req, res) {
 	{
 		lhs.keys.push(rows[i].key);
 	}
-		console.log(lhs);
-		console.log(rhs);
+		// console.log(lhs);
+		// console.log(rhs);
 		var differences = diff(lhs, rhs);
-		console.log(differences);
+		var key_list = [];
+
+		for(i in differences){
+			if(differences[i].kind == "A")
+				key_list.push(differences[i].item.lhs);
+		}
+		// now have a list of id's for the missing pub keys
+		// get a list of the actual pub keys from DB
+		con.query('SELECT pub_key FROM keys WHERE id=? ', [ key_list], function (err, rows) {
+			console.log(rows);
+		});
 
 	});
 });
