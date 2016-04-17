@@ -1,0 +1,63 @@
+#geo-hunt-box {
+    position: fixed;
+    background: #FFF;
+    z-index: 10000;
+    width: 300px;
+    height: 150px;
+    border-radius: 2px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    font-family: Roboto;
+    opacity: 1;
+    transition: opacity .4s;
+}
+
+#geo-hunt-box.exiting {
+    opacity: 0;
+}
+
+#geo-hunt-box .header {
+    line-height: 22px;
+    font-size: 20px;
+    color: #333;
+}
+
+#geo-hunt-box .content {
+    height: 74px;
+    line-height: 18px;
+    font-size: 14px;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v12/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+#geo-hunt-box button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+#geo-hunt-box img {
+    margin-top: -50px;
+    height: 110px;
+}
