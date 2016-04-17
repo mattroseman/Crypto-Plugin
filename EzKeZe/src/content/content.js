@@ -1,14 +1,15 @@
 // Listen for messages
+//nogf
 chrome.runtime.onMessage.addListener(
   function (msg, sender, sendResponse) {
-    if(msg.action = "encrypt_request"){
+    if(msg.action == "encrypt_request"){
       var active = document.activeElement;
       var txt = textNodesUnder(active);
       var selectedText = window.getSelection().toString();
       if(selectedText){
         console.log("taking THIS route");
         console.log(selectedText);
-        sendResponse({'text': selectedText, 'action': 'pleaseEncrypt'});
+        sendResponse({text: selectedText, action: 'pleaseEncrypt'});
       }
       /*else if(txt[0].baseURI.search('hangouts.google.com') == -1 && txt[0].nodeValue && txt[0].nodeValue.search("init()") == -1){
         console.log(txt);
@@ -18,6 +19,11 @@ chrome.runtime.onMessage.addListener(
         txt[0].textContent= "REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
       }
       */
+    }
+
+    if(msg.action == 'encrypted_text'){
+      //Replaces the selected text with the txt in the message
+      replaceSelectedText(msg.text);
     }
 
 
@@ -30,7 +36,7 @@ function nodeInsertedCallback(event){
   var node2search = event.target;
 
   //findText(event.target, "test");
-  highlight(node2search, "test");
+  highlight(node2search, "MattHasNoImaginationHesGonnaRuinMyART");
 
 }
 
@@ -84,16 +90,18 @@ function highlight(searchNode, regexString)  {
             if (result != null) {
 
                 parentNode = searchNode.parentNode;
-                searchNode.nodeValue = "Nothing to see here";
+                var encryptObject = JSON.parse(nodeValue);
+                encryptObject.msg = "decrypt_this";
+                chrome.extension.sendMessage(encryptObject, function(response){
+                    searchNode.nodeValue = response;
+                })
+
                 console.log("Here we go!")
                 console.log(parentNode);
 
                 match = nodeValue; // the string of matched text
 
                 console.log("The string: " + match);
-
-
-                matchNode = document.createTextNode(match);
                 break;
                 }
             }
@@ -114,8 +122,25 @@ function highlight(searchNode, regexString)  {
 
     return;
 }
-highlight(document.body, "test");
+highlight(document.body, "MattHasNoImaginationHesGonnaRuinMyART");
 
 function scanforIframes(){
   var iframes = document.getElementsByTag("iframe");
+}
+
+
+
+function replaceSelectedText(replacementText) {
+    var sel, range;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(replacementText));
+        }
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.text = replacementText;
+    }
 }
