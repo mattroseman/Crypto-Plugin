@@ -15,8 +15,6 @@ chrome.runtime.onMessage.addListener(
         console.log(txt);
         console.log(txt[0].nodeValue);
         sendResponse(txt[0].nodeValue);
-      //  txt[0].data = "WHAT THE FUCK IS GOING ON HERE YOU SHITSTAINS"; Data is whats shown to the USER
-        txt[0].textContent= "REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
       }
       */
     }
@@ -26,17 +24,23 @@ chrome.runtime.onMessage.addListener(
       replaceSelectedText(msg.text);
     }
 
+    if(msg.action == 'decrypt_request'){
+      highlight(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
+      sendResponse("Finished Decrypting");
+    }
+
 
 
 });
 
 document.addEventListener('DOMNodeInserted', nodeInsertedCallback);
+highlight(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
 
 function nodeInsertedCallback(event){
   var node2search = event.target;
 
-  //findText(event.target, "test");
-  highlight(node2search, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
+  findText(event.target, "test");
+  //highlight(node2search, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
 
 }
 
@@ -93,8 +97,11 @@ function highlight(searchNode, regexString)  {
                 var encryptObject = JSON.parse(nodeValue);
                 encryptObject.msg = "decrypt_this";
                 console.log(encryptObject);
+                console.log(parentNode);
+                console.log(searchNode);
                 chrome.extension.sendMessage(encryptObject, function(response){
-                    searchNode.nodeValue = response;
+                    console.log(response);
+                    parentNode.innerHTML = response;
                 });
 
                 console.log("Here we go!")

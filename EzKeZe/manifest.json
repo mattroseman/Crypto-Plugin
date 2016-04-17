@@ -30,6 +30,14 @@
             "linux": "Ctrl+Shift+V"
           },
           "description": "encrypt the currently selected text"
+      },
+      "decrypt_userText": {
+          "suggested_key": {
+            "default": "Ctrl+Shift+F",
+            "mac": "Command+Shift+F",
+            "linux": "Ctrl+Shift+F"
+          },
+          "description": "encrypt the currently selected text"
       }
   },
   "manifest_version": 2
