@@ -44,3 +44,5 @@ var plaintext = "Hello World";
 console.log("plaintext: " + plaintext);
 
 var ciphertext = encrypt_asym_message(plaintext, publickey).cipher;
+
+console.log("ciphertext: " + ciphertext);
