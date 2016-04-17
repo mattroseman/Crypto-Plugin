@@ -8,15 +8,16 @@ chrome.runtime.onMessage.addListener(
       if(selectedText){
         console.log("taking THIS route");
         console.log(selectedText);
-        sendResponse(selectedText);
-      }else if(txt[0].baseURI.search('hangouts.google.com') == -1 && txt[0].nodeValue && txt[0].nodeValue.search("init()") == -1){
+        sendResponse({'text': selectedText, 'action': 'pleaseEncrypt'});
+      }
+      /*else if(txt[0].baseURI.search('hangouts.google.com') == -1 && txt[0].nodeValue && txt[0].nodeValue.search("init()") == -1){
         console.log(txt);
         console.log(txt[0].nodeValue);
         sendResponse(txt[0].nodeValue);
       //  txt[0].data = "WHAT THE FUCK IS GOING ON HERE YOU SHITSTAINS"; Data is whats shown to the USER
         txt[0].textContent= "REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
       }
-
+      */
     }
 
 
