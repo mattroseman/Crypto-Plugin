@@ -22,7 +22,11 @@ chrome.commands.onCommand.addListener(function(command){
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {action: "encrypt_request"}, function(response){
-      console.log(response);
+        console.log(response);
+        var key = generate_asym_keys("p@ssw0rd");
+        var publickey = cryptico.publicKeyString(key);
+        var ciphertext = encrypt_asym_message(response, publickey).cipher;
+        console.log(ciphertext);
     });
 
   });
