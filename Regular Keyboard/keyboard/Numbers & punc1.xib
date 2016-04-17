@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KeyboardViewController" customModule="keyboard" customModuleProvider="target">
+            <connections>
+                <outlet property="symbolsOneField" destination="KOe-U7-Y4J" id="JwG-5A-jad"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" horizontalHuggingPriority="375" verticalHuggingPriority="225" id="ivc-dV-zqz">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="198"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5g3-VW-KXZ">
+                    <rect key="frame" x="95" y="153" width="186" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.7565528333" green="0.77565611580000005" blue="0.82149869109999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="space" image="space.png"/>
+                    <connections>
+                        <action selector="spacePress" destination="-1" eventType="touchUpInside" id="zO4-DT-tqq"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1F2-7n-Tb9">
+                    <rect key="frame" x="286" y="153" width="87" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                    <state key="normal" title="encrypt" image="encrypt.png"/>
+                    <connections>
+                        <action selector="encryptFunc" destination="-1" eventType="touchUpInside" id="EHA-zp-fCG"/>
+                        <outletCollection property="gestureRecognizers" destination="E6L-bJ-0Vp" appends="YES" id="679-T3-EwJ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="f50-Kz-raU">
+                    <rect key="frame" x="48" y="153" width="42" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="nextKeyboard" image="nextKeyboard.png"/>
+                    <connections>
+                        <action selector="nextKeyboard" destination="-1" eventType="touchUpInside" id="lgK-vs-Jkk"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="HFH-Av-Iob">
+                    <rect key="frame" x="1" y="153" width="42" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="ABC" image="ABC.png"/>
+                    <connections>
+                        <action selector="toLowercase" destination="-1" eventType="touchUpInside" id="ZrS-3X-umQ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="BnZ-LA-uRb">
+                    <rect key="frame" x="4" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="1" image="1.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Ua3-5Z-0FV"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="G1d-ao-UXu">
+                    <rect key="frame" x="41" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="2" image="2.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="4bv-Tl-Pw3"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dcf-NC-8Z3">
+                    <rect key="frame" x="78" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="3" image="3.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Ewr-hC-hrg"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="BFU-Wu-KMz">
+                    <rect key="frame" x="115" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="4" image="4.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Guv-8H-6oO"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z8o-jX-B6d">
+                    <rect key="frame" x="152" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="5" image="5.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="gZ8-3m-uwF"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Zgl-9M-KUH">
+                    <rect key="frame" x="189" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="6" image="6.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="HjY-pe-xYp"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dgS-rr-kl8">
+                    <rect key="frame" x="226" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="7" image="7.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="IR5-6g-bdi"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8d7-kg-bvV">
+                    <rect key="frame" x="263" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="8" image="8.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="09I-tR-I3L"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="w3l-wd-9EX">
+                    <rect key="frame" x="300" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="9" image="9.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="RGq-47-MZo"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="oDU-yz-hF6">
+                    <rect key="frame" x="337" y="17" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="0" image="0.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="G4q-JB-dP3"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Hrk-qD-HeU">
+                    <rect key="frame" x="331" y="106" width="42" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="delete" image="delete.png"/>
+                    <connections>
+                        <action selector="delete" destination="-1" eventType="touchUpInside" id="vFM-XQ-iJ2"/>
+                        <action selector="deleteButtonUp" destination="-1" eventType="touchUpOutside" id="B7y-bg-y8o"/>
+                        <action selector="deleteButtonUp" destination="-1" eventType="touchUpInside" id="avP-rZ-8E8"/>
+                        <action selector="deleteFastFunc" destination="-1" eventType="touchDown" id="l8Y-8z-YRc"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="p7w-Ml-47A">
+                    <rect key="frame" x="1" y="106" width="42" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="symbols" image="symbols.png"/>
+                    <connections>
+                        <action selector="toNumbersTwo" destination="-1" eventType="touchUpInside" id="tch-0R-hl8"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="F0f-Yv-N1d">
+                    <rect key="frame" x="4" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="-" image="-.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="pJB-c4-z4V"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="h0X-Ha-BaL">
+                    <rect key="frame" x="41" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="/" image="forwardSlash.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Sss-Ro-E9Q"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="TTt-5a-akq">
+                    <rect key="frame" x="78" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title=":" image="colon.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="ahh-FB-jdn"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="DG5-fg-ExC">
+                    <rect key="frame" x="115" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title=";" image=";.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Co8-lZ-UDg"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="PJi-kN-cq6">
+                    <rect key="frame" x="152" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="(" image="(.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="axj-LA-eJV"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CcA-cD-OJt">
+                    <rect key="frame" x="189" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title=")" image=").png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="cx3-f3-rEv"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZO1-SY-bzQ">
+                    <rect key="frame" x="226" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="$" image="$.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="p33-PE-j2T"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CCy-rw-U1R">
+                    <rect key="frame" x="263" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="&amp;" image="&amp;.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="R36-Xk-22H"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Jd6-a6-dzX">
+                    <rect key="frame" x="300" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="@" image="@.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="AWe-1L-y3B"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="lti-pX-wdg">
+                    <rect key="frame" x="337" y="62" width="33" height="42"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="&quot;" image="&quot;.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="l5s-21-46u"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="LbU-Ag-rMy">
+                    <rect key="frame" x="56" y="106" width="47" height="43"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="." image="period.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="K95-q6-4l2"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="LVd-HH-OCT">
+                    <rect key="frame" x="110" y="106" width="47" height="43"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="," image=",.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="nqC-0n-Hr2"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="MNI-Qo-JxS">
+                    <rect key="frame" x="164" y="106" width="47" height="43"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="?" image="?.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="dRd-cG-Y7W"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WG1-0e-Cgw">
+                    <rect key="frame" x="218" y="106" width="47" height="43"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="!" image="!.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Vp7-zM-KAT"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Jz4-HQ-rBr">
+                    <rect key="frame" x="272" y="106" width="47" height="43"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="'" image="'.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="xw4-4x-NnO"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KOe-U7-Y4J" userLabel="Text Field">
+                    <rect key="frame" x="1" y="-8" width="372" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.70588235290000001" green="0.72549019609999998" blue="0.78039215689999997" alpha="1" colorSpace="calibratedRGB"/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="291.5" y="275"/>
+        </view>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="E6L-bJ-0Vp">
+            <connections>
+                <action selector="decryptFunc" destination="-1" id="OqM-vB-oVt"/>
+            </connections>
+        </pongPressGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="!.png" width="93" height="86"/>
+        <image name="&quot;.png" width="63" height="86"/>
+        <image name="$.png" width="63" height="86"/>
+        <image name="&amp;.png" width="63" height="86"/>
+        <image name="'.png" width="93" height="86"/>
+        <image name="(.png" width="63" height="86"/>
+        <image name=").png" width="63" height="86"/>
+        <image name=",.png" width="93" height="86"/>
+        <image name="-.png" width="63" height="86"/>
+        <image name="0.png" width="63" height="86"/>
+        <image name="1.png" width="63" height="86"/>
+        <image name="2.png" width="63" height="86"/>
+        <image name="3.png" width="63" height="86"/>
+        <image name="4.png" width="63" height="86"/>
+        <image name="5.png" width="63" height="86"/>
+        <image name="6.png" width="63" height="86"/>
+        <image name="7.png" width="63" height="86"/>
+        <image name="8.png" width="63" height="86"/>
+        <image name="9.png" width="63" height="86"/>
+        <image name=";.png" width="63" height="86"/>
+        <image name="?.png" width="93" height="86"/>
+        <image name="@.png" width="63" height="86"/>
+        <image name="ABC.png" width="80" height="86"/>
+        <image name="colon.png" width="63" height="86"/>
+        <image name="delete.png" width="84" height="86"/>
+        <image name="encrypt.png" width="175" height="86"/>
+        <image name="forwardSlash.png" width="63" height="86"/>
+        <image name="nextKeyboard.png" width="82" height="86"/>
+        <image name="period.png" width="93" height="86"/>
+        <image name="space.png" width="365" height="86"/>
+        <image name="symbols.png" width="84" height="86"/>
+    </resources>
+</document>
