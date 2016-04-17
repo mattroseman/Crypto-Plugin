@@ -1,4 +1,19 @@
 $(document).ready(function() {
+
+    var key = generate_asym_keys("p@ssw0rd");
+
+    var publickey = cryptico.publicKeyString(key);
+
+    console.log("public key:\n" + publickey);
+
+    var plaintext = "Hello World";
+
+    console.log("plaintext: " + plaintext);
+
+    var ciphertext = encrypt_asym_message(plaintext, publickey).cipher;
+
+    console.log("encrypted message: " + ciphertext);
+
     $("#encrypt").click(function() {
         // sends a message to te content scripts saying to encrypt the active text element
         var request = JSON.parse("{\"action\": \"encrypt\"}");
