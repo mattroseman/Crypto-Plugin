@@ -24,7 +24,19 @@ chrome.commands.onCommand.addListener(function(command){
       chrome.tabs.sendMessage(tabs[0].id, {action: "encrypt_request"}, function(response){
       console.log(response);
     });
-    
+
   });
   }
 });
+
+var key = generate_asym_keys("p@ssw0rd");
+
+var publickey = cryptico.publicKeyString(key);
+
+console.log("public key:\n" + publickey);
+
+var plaintext = "Hello World";
+
+console.log("plaintext: " + plaintext);
+
+var ciphertext = encrypt_asym_message(plaintext, publickey).cipher;
