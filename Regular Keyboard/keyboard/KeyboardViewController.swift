@@ -20,6 +20,7 @@ class KeyboardViewController: UIInputViewController
     var symbolsOneLogic:Bool = false
     var symbolsTwoLogic:Bool = false
     var error:Bool = false
+    var lastString:String = ""
     
     var timer = NSTimer()
     var timerTwo = NSTimer()
@@ -28,7 +29,7 @@ class KeyboardViewController: UIInputViewController
     let key: [UInt8] = [115, 98, 103, 111, 108, 121, 112, 105, 101, 115, 114, 100, 97, 105, 105, 97]
     let iv: [UInt8] = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]
     
-    var shittyString:String = ""
+    var gorgeousString:String = ""
     let identifier = "{\"identifier\":\"MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM\",\"content\":"
     let identifierTwo = "}"
     
@@ -60,12 +61,14 @@ class KeyboardViewController: UIInputViewController
     {
         let proxyField = findProxy()
         let proxy = textDocumentProxy as UITextDocumentProxy
-        let input = [UInt8](shittyString.utf8)
+        let input = [UInt8](gorgeousString.utf8)
         let encrypted: [UInt8] = try! AES(key: key, blockMode: .CTR).encrypt(input, padding: nil)
         let encryptedString = encrypted.description
-        proxyField.text = "Encryption successful!"
+        //proxyField.text = "Encryption successful!"
         proxy.insertText(identifier + encryptedString + identifierTwo)
         UIPasteboard.generalPasteboard().string = (identifier + encryptedString + identifierTwo)
+        proxyField.text = ""
+        gorgeousString = "" 
     }
     
     func turnDescriptionIntoJson(descriptionInput: String) -> [UInt8]
@@ -98,7 +101,7 @@ class KeyboardViewController: UIInputViewController
         if UIPasteboard.generalPasteboard().string == " "
         {
             error = true
-            proxyField.text = "Your clipboard is empty!"
+            proxyField.text = lastString
         }
         while !error
         {
@@ -129,8 +132,8 @@ class KeyboardViewController: UIInputViewController
             let decrypted: [UInt8] = try! AES(key: key, blockMode: .CTR).decrypt(input, padding: nil)
             let decryptedData: NSData = NSData(bytes: decrypted)
             let decryptedString = NSString(data: decryptedData, encoding: NSUTF8StringEncoding) as? String
-            proxyReal.insertText(decryptedString!)
-            proxyField.text = "Decryption successful!"
+            //proxyField.text = "Decryption successful!"
+            lastString = decryptedString!
             UIPasteboard.generalPasteboard().string = " "
             error = true
         }
@@ -152,7 +155,7 @@ class KeyboardViewController: UIInputViewController
         keyboardView = keyboardNib.instantiateWithOwner(self, options: nil)[0] as! UIView
         view.backgroundColor = keyboardView.backgroundColor
         view.addSubview(keyboardView)
-        lowercaseField.text = shittyString
+        lowercaseField.text = gorgeousString
     }
     
     @IBAction func toUppercase()
@@ -166,7 +169,7 @@ class KeyboardViewController: UIInputViewController
         keyboardView = keyboardNib.instantiateWithOwner(self, options: nil)[0] as! UIView
         view.backgroundColor = keyboardView.backgroundColor
         view.addSubview(keyboardView)
-        uppercaseField.text = shittyString
+        uppercaseField.text = gorgeousString
     }
     
     @IBAction func toDoubleUppercase()
@@ -182,7 +185,7 @@ class KeyboardViewController: UIInputViewController
         view.addSubview(keyboardView)
         dispatch_async(dispatch_get_main_queue())
         {
-            self.doublecaseField.text = self.shittyString
+            self.doublecaseField.text = self.gorgeousString
         }
     }
     
@@ -197,7 +200,7 @@ class KeyboardViewController: UIInputViewController
         keyboardView = keyboardNib.instantiateWithOwner(self, options: nil)[0] as! UIView
         view.backgroundColor = keyboardView.backgroundColor
         view.addSubview(keyboardView)
-        symbolsOneField.text = shittyString
+        symbolsOneField.text = gorgeousString
     }
     
     @IBAction func toNumbersTwo()
@@ -211,15 +214,15 @@ class KeyboardViewController: UIInputViewController
         keyboardView = keyboardNib.instantiateWithOwner(self, options: nil)[0] as! UIView
         view.backgroundColor = keyboardView.backgroundColor
         view.addSubview(keyboardView)
-        symbolsTwoField.text = shittyString
+        symbolsTwoField.text = gorgeousString
     }
     
     @IBAction func keypress(sender: UIButton!)
     {
         let proxy = findProxy()
         let typedCharacter = sender.titleLabel?.text
-        shittyString += typedCharacter!
-        proxy.text = shittyString
+        gorgeousString += typedCharacter!
+        proxy.text = gorgeousString
         if (uppercaseLogic)
         {
             toLowercase()
@@ -230,8 +233,8 @@ class KeyboardViewController: UIInputViewController
     {
         let proxy = findProxy()
         let typedCharacter = " "
-        shittyString += typedCharacter
-        proxy.text = shittyString
+        gorgeousString += typedCharacter
+        proxy.text = gorgeousString
     }
     
     @IBAction func delete()
@@ -240,11 +243,11 @@ class KeyboardViewController: UIInputViewController
         {
             toLowercase()
         }
-        if shittyString.isEmpty == false
+        if gorgeousString.isEmpty == false
         {
             let proxy = findProxy()
-            shittyString.removeAtIndex(shittyString.endIndex.predecessor())
-            proxy.text = shittyString
+            gorgeousString.removeAtIndex(gorgeousString.endIndex.predecessor())
+            proxy.text = gorgeousString
         }
     }
     
@@ -259,11 +262,11 @@ class KeyboardViewController: UIInputViewController
         {
             toLowercase()
         }
-        if shittyString.isEmpty == false
+        if gorgeousString.isEmpty == false
         {
             let proxy = findProxy()
-            shittyString.removeAtIndex(shittyString.endIndex.predecessor())
-            proxy.text = shittyString
+            gorgeousString.removeAtIndex(gorgeousString.endIndex.predecessor())
+            proxy.text = gorgeousString
         }
     }
     
