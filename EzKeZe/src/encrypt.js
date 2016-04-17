@@ -34,7 +34,8 @@ var decrypt_asym_message = function(ciphertext, privkey) {
  * @return: a 128 bit key
  */
 var generate_sym_key = function() {
-    var key = 'sbgolypiesrdaiia';
+
+    var key = new Uint8Array('sbgolypiesrdaiia');
     return key;
 };
 
