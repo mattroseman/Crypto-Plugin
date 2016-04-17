@@ -6,7 +6,7 @@
 var generate_asym_keys = function(pass) {
     return cryptico.generateRSAKey(pass, 2048);
 };
-
+console.log("Hitler did nothing wrong");
 /**
  * encrypts a plaintext message
  * @param: plaintext the unencrypted text

@@ -8,7 +8,7 @@
     "webNavigation"
   ],
   "background": {
-    "scripts": ["src/background/background.js", "/lib/jquery-1.12.2.min.js", "/lib/cryptico.js"],
+    "scripts": ["src/background/background.js", "/lib/jquery-1.12.2.min.js", "/lib/cryptico.js", "./src/encrypt.js"],
     "persistent": false
   },
   "browser_action": {

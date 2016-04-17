@@ -1,23 +1,25 @@
 // Listen for messages
 chrome.runtime.onMessage.addListener(
   function (msg, sender, sendResponse) {
-    console.log("message received");
     if(msg.action = "encrypt_request"){
       var active = document.activeElement;
-      console.log(active);
       var txt = textNodesUnder(active);
-      console.log("GET ON MY LEVEL BOYS");
-      console.log(txt);
-      console.log(txt[0].textContent);
-      console.log(txt[0]);
-      if(txt.length == 1 && txt[0].baseURI.search('hangouts.google.com') != -1){
+      var selectedText = window.getSelection().toString();
+      if(selectedText){
+        console.log("taking THIS route");
+        console.log(selectedText);
+        sendResponse(selectedText);
+      }else if(txt[0].baseURI.search('hangouts.google.com') == -1 && txt[0].nodeValue && txt[0].nodeValue.search("init()") == -1){
+        console.log(txt);
+        console.log(txt[0].nodeValue);
         sendResponse(txt[0].nodeValue);
-      }else{
-        var selectedText = window.getSelection().toString();
-        sendReponse(selectedText)
+      //  txt[0].data = "WHAT THE FUCK IS GOING ON HERE YOU SHITSTAINS"; Data is whats shown to the USER
+        txt[0].textContent= "REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
       }
 
     }
+
+
 
 });
 

@@ -15,6 +15,7 @@ $(document).ready(function() {
     console.log("encrypted message: " + ciphertext);
 
     $("#encrypt").click(function() {
+      console.log("Encrypt!");
         // sends a message to te content scripts saying to encrypt the active text element
         var request = JSON.parse("{\"action\": \"encrypt\"}");
 
