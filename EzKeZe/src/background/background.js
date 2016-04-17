@@ -26,6 +26,7 @@ chrome.commands.onCommand.addListener(function(command){
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {action: "encrypt_request"}, function(response){
+	      if(!response) console.log("response was null");
         console.log("We got a response");
         console.log(response.text);
 
