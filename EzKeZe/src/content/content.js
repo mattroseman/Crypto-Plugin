@@ -36,7 +36,7 @@ function nodeInsertedCallback(event){
   var node2search = event.target;
 
   //findText(event.target, "test");
-  highlight(node2search, "MattHasNoImaginationHesGonnaRuinMyART");
+  highlight(node2search, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
 
 }
 
@@ -92,9 +92,10 @@ function highlight(searchNode, regexString)  {
                 parentNode = searchNode.parentNode;
                 var encryptObject = JSON.parse(nodeValue);
                 encryptObject.msg = "decrypt_this";
+                console.log(encryptObject);
                 chrome.extension.sendMessage(encryptObject, function(response){
                     searchNode.nodeValue = response;
-                })
+                });
 
                 console.log("Here we go!")
                 console.log(parentNode);
@@ -122,7 +123,7 @@ function highlight(searchNode, regexString)  {
 
     return;
 }
-highlight(document.body, "MattHasNoImaginationHesGonnaRuinMyART");
+highlight(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
 
 function scanforIframes(){
   var iframes = document.getElementsByTag("iframe");

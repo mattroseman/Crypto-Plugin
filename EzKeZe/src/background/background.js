@@ -1,8 +1,7 @@
 var current_chat;
 var current_chat_key;
 
-current_chat_key = generate_sym_key();
-
+current_chat_key = [115, 98, 103, 111, 108, 121, 112, 105, 101, 115, 114, 100, 97, 105, 105, 97];
 /*
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action == "encrypt") {
@@ -50,9 +49,15 @@ chrome.commands.onCommand.addListener(function(command){
 
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
+    console.log("Extenion message?");
+
     if(request.msg == "decrypt_this"){
-      var decryption = decrypt_sym_message(request.content, '0000000000000000');
-      sendResponse(decryption);
+      var array = request.content;
+      console.log(array);
+      plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key);
+      console.log("Encrypted Message: " + request.content);
+      console.log("Decrypted Message: " + plaintext);
+      sendResponse(plaintext);
     }
   }
 )

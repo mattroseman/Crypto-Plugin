@@ -73,8 +73,9 @@ var encrypt_sym_message = function(plaintext, key) {
     }
 
     return ciphertext;*/
+    //var aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
    var textBytes = aesjs.util.convertStringToBytes(plaintext);
-   var aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+   var aesCtr = new aesjs.ModeOfOperation.ctr(key);
    var encryptedBytes = aesCtr.encrypt(textBytes);
 
    return encryptedBytes;
@@ -90,7 +91,8 @@ var decrypt_sym_message = function(ciphertext, key) {
     /*var aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
     var decryptedBytes = aesCbc.decrypt(ciphertext);
     return aesjs.util.convertBytesToString(decryptedBytes);*/
-   var aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+    //var aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+    var aesCtr = new aesjs.ModeOfOperation.ctr(key);
    var decryptedBytes = aesCtr.decrypt(ciphertext);
    var decryptedText = aesjs.util.convertBytesToString(decryptedBytes);
    return decryptedText;
