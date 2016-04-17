@@ -41,7 +41,7 @@ function encrypt_asym_message(plaintext, pubkey) {
 function decrypt_asym_message(ciphertext, privkey) {
     options = {
         message: openpgp.message.read(ciphertext),
-        privateKey: openpgp.key.readArmored(privkey).keys[0],
+        privateKey: privkey.key,
         format: 'binary'
     };
 
@@ -50,40 +50,69 @@ function decrypt_asym_message(ciphertext, privkey) {
 
 /**
  * generates a AES key
- *  key - 256 bits or 32 characters
- *  iv - 128 bits or 16 characters
- * @return: an array of [key, iv]
+ *  key - 128 bits or 32 characters
+ * @return: a 128 bit key
  */
 function generate_sym_key() {
-    var key = generate_random_bits(32);
-    var iv = generate_random_bits(16);
-    return [key, iv];
+    var key = generate_random_bits(16);
+    return key;
 }
 
 /**
- * Encrypts a message using a given key and iv
+ * Encrypts a message using a given key
  * @param: plaintext the plaintext string to encrypt
- * @param: key the 32 byte key to encrypt with
- * @param: iv the 16 byte iv to encrypt with
+ * @param: key the 16 byte key to encrypt with
  * @return: the encrypted string
  */
-function encrypt_sym_message(plaintext, key, iv) {
-    var textBytes = aesjs.util.convertStringToBytes(plaintext);
+function encrypt_sym_message(plaintext, key) {
+    /*var ciphertext = "";
+    var encryptedBytes = null;
     var aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
-    return aesjs.util.convertBytesToString(aesCbc.encrypt(textBytes));
+
+    while (plaintext.length !== 0) {
+        // first 16 characters of plaintext
+        var Byte16SubString = plaintext.slice(0,16);
+        // if there are x spaces to buffer then add x x's to the end of the string
+        //Byte16SubString += (" " * (16 - Byte16SubString.length));
+        var x;
+        if ((x = 16 - Byte16SubString.length) > 0) {
+            for (var i=0; i<x; i++) {
+                Byte16SubString += x.toString(16);
+            }
+        }
+        var textBytes = aesjs.util.convertStringToBytes(Byte16SubString);
+        if (encryptedBytes !== null) {
+            encryptedBytes += aesCbc.encrypt(textBytes);
+        } else {
+            encryptedBytes = aesCbc.encrypt(textBytes);
+        }
+        ciphertext +=  aesjs.util.convertBytesToString(encryptedBytes);
+
+        plaintext = plaintext.slice(16, plaintext.length);
+    }
+
+    return ciphertext;*/
+   var textBytes = aesjs.util.convertStringToBytes(plaintext);
+   var aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+   var encryptedBytes = aesCtr.encrypt(textBytes);
+
+   return encryptedBytes;
 }
 
 /**
- * Decrypts a message using a given key and iv
+ * Decrypts a message using a given key
  * @param: ciphertext the encrypted byte array to decrypt
  * @param: key the key to decrypt with
- * @param: iv the iv to decrypt with
  * @return: the decrypted string
  */
-function decrypt_sym_message(ciphertext, key, iv) {
-    var aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
+function decrypt_sym_message(ciphertext, key) {
+    /*var aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
     var decryptedBytes = aesCbc.decrypt(ciphertext);
-    return aesjs.util.convertBytesToString(decryptedBytes);
+    return aesjs.util.convertBytesToString(decryptedBytes);*/
+   var aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+   var decryptedBytes = aesCtr.decrypt(ciphertext);
+   var decryptedText = aesjs.util.convertBytesToString(decryptedBytes);
+   return decryptedText;
 }
 
 /**
@@ -97,4 +126,6 @@ function generate_random_bits(nBytes) {
     for (i = 0; i < nBytes; i++) {
        random_arr[i] = Math.floor(Math.random() * 256);
     }
+
+    return random_arr;
 }
