@@ -23,7 +23,11 @@
     "run_at": "document_end"
     }],
   "commands": {
-      "encrypt": {
+      "encrypt_userText": {
+          "suggested_key": {
+            "default": "Ctrl+Shift+V",
+            "mac": "Command+Shift+V"
+          },
           "description": "encrypt the currently selected text"
       }
   },

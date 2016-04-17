@@ -2,32 +2,26 @@
 chrome.runtime.onMessage.addListener(
   function (msg, sender, sendResponse) {
     console.log("message received");
-    // If the received message has the expected format...
-    if (msg.text == 'report_back') {
-        // Call the specified callback, passing
-        // the web-page's DOM content as argument
-        sendResponse(document.all[0].outerHTML);
+    if(msg.action = "encrypt_request"){
+      var active = document.activeElement;
+      console.log(active);
+      var txt = textNodesUnder(document.activeElement);
+      console.log("GET ON MY LEVEL BOYS");
+      console.log(txt);
+      sendResponse(txt[0].nodeValue);
     }
 
-    if(msg.text == 'encrypt'){
-      console.log('ENCRYPT????');
-      var txt = textNodesUnder(document.activeElement);
-      sendReponse(txt[0]);
-    }
 });
 
 document.addEventListener('DOMNodeInserted', nodeInsertedCallback);
 
 function nodeInsertedCallback(event){
   var node2search = event.target;
-  console.log("-----------------iframe changed---------------------");
-  console.log(event);
+
   //findText(event.target, "test");
   highlight(node2search, "test");
 
 }
-
-console.log("shitstain paeg loaded");
 
 /**
  * Takes html object and regex, and highlights the text that matches the regex
@@ -77,33 +71,22 @@ function highlight(searchNode, regexString)  {
             result = regex.exec(nodeValue);
             // if a match was found
             if (result != null) {
-                console.log("found match: " + result);
 
                 parentNode = searchNode.parentNode;
+                searchNode.nodeValue = "Nothing to see here";
+                console.log("Here we go!")
+                console.log(parentNode);
 
-                before = nodeValue.substring(0, result.index); // the string up to the first match
-                match = nodeValue.substring(result.index, regex.lastIndex); // the string of matched text
-                after = nodeValue.substring(regex.lastIndex); // the rest of the text (still to be matched)
+                match = nodeValue; // the string of matched text
 
-                console.log("The string: " + result[0] + " matches the search regular expression");
+                console.log("The string: " + match);
 
-                if (before) {
-                    beforeNode = document.createTextNode(before);
-                }
 
                 matchNode = document.createTextNode(match);
-
-
-                if (after) {
-                    afterNode = document.createTextNode(after);
-                    searchNode = afterNode;
-                // if this is the end of the text node
-                } else {
-                    searchNode = matchNode;
-                    break;
+                break;
                 }
             }
-        } while (result != null);
+         while (result != null);
     } else {
         // So for some text boxes the hidden tag is set, so I'm going to continue to check everything hidden or not unless I figure out a better solution
         // if this is a hidden node or not displayed in on screen
@@ -121,3 +104,7 @@ function highlight(searchNode, regexString)  {
     return;
 }
 highlight(document.body, "test");
+
+function scanforIframes(){
+  var iframes = document.getElementsByTag("iframe");
+}
