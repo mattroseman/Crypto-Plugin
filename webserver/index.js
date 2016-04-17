@@ -25,62 +25,75 @@ con.connect(function(err){
 	}
 	console.log('Connection established');
 });
-
+// put up an encrypted AES key for another user to download
+app.post('/api/invite', function(req, res) {
+	// take the key, add record under a persons name
+	var user_data = [];
+	var name = req.headers.user_id;
+	var pub_key = req.headers.pub_key;
+	user_data.push({username: name, key: pub_key});
+	console.log(user_data);
+	con.query('INSERT INTO user_maps SET ?', user_data, function(err,res){
+		if(err) throw err;
+		console.log('Last insert ID:', res.insertId);
+	});	  
+});
 
 // ----------return json of new public keys
 // compare list being sent to me with list on the server
+
 app.post('/api/server_sync', function(req, res) {
-// get array of origin keys
+	// get array of origin keys
 	var rhs = {}, keys = [];
 	keys = JSON.parse(req.headers.keys);
 	rhs.keys = keys;
 
-// console.log("KEYS  " + rhs.keys);
+	// console.log("KEYS  " + rhs.keys);
 	var user = req.headers.user_id;
 	rhs.user_id = user;
-	
-// now get list of keys where headers.user
+
+	// now get list of keys where headers.user
 	var lhs = {}, lhs_keys = [];
 	lhs.keys = lhs_keys;
 	lhs.user_id = user;	
-		
-	
+
+
 	con.query('SELECT `key` FROM `user_maps` WHERE username = ' + user, function(err,rows){
 		if(err) throw err;
 		for(i in rows)
 	{
 		lhs.keys.push(rows[i].key);
 	}
-		// console.log(lhs);
-		// console.log(rhs);
-		var differences = diff(lhs, rhs);
-		var key_list = [];
+	// console.log(lhs);
+	// console.log(rhs);
+	var differences = diff(lhs, rhs);
+	var key_list = [];
 
-		for(i in differences){
-			if(differences[i].kind == "A")
-				key_list.push(differences[i].item.lhs);
-		}
-		// now have a list of id's for the missing pub keys
-		// get a list of the actual pub keys from DB
-		con.query('SELECT pub_key FROM `keys` WHERE id IN (?) ', [ key_list ], function (err, results) {
-			var data_results = [];
-			if(err) throw err;
-			for(i in results){
+	for(i in differences){
+		if(differences[i].kind == "A")
+		key_list.push(differences[i].item.lhs);
+	}
+	// now have a list of id's for the missing pub keys
+	// get a list of the actual pub keys from DB
+	con.query('SELECT pub_key FROM `keys` WHERE id IN (?) ', [ key_list ], function (err, results) {
+		var data_results = [];
+		if(err) throw err;
+		for(i in results){
 			data_results.push(results[i].pub_key);
-			}
-			res.send(data_results);
-		});
+		}
+		res.send(data_results);
+	});
 	});
 });
 // ---------------fetch a pub key, given a userID
 app.post('/api/id_to_pub', function(req, res) {
 	console.log(req.headers.userID);
 	var nameID = mysql.escape(req.headers.userID);
-// 	con.query('SELECT pub_key WHERE id = ?', nameID, function(err,result){
-// 		if(err) throw err;
-// 		console.log('Pub Key id:', result.pub_key);
-// 		res.send();
-// 	});	  
+	// 	con.query('SELECT pub_key WHERE id = ?', nameID, function(err,result){
+	// 		if(err) throw err;
+	// 		console.log('Pub Key id:', result.pub_key);
+	// 		res.send();
+	// 	});	  
 });
 
 // -----------works to register a user
@@ -90,18 +103,20 @@ app.post('/api/register', function(req, res) {
 	var name = mysql.escape(req.headers.user);
 	var h_pass = mysql.escape(req.headers.pass);
 	var pub_key = req.headers.pub_key;
-	console.log(pub_key);
-	var sql = 'INSERT INTO keys SET `pub_key` = ?';
-	con.query(sql, pub_key, function(err,res){
+	// 	var insertion = [];
+	// 	insertion.push({pub_key: pub_key, placeholder: '0', second_hold: '1'});
+	// 	var sql = 'INSERT INTO keys SET ?';
+	// 	con.query(sql, insertion, function(err,res){
+	// 		if(err) throw err;
+	//		user_data.push({user: name, h_pass: h_pass, key: res.insertId});
+	user_data.push({user: name, h_pass: h_pass, pub_key: pub_key});
+	console.log(user_data);
+	con.query('INSERT INTO authenticate SET ?', user_data, function(err,res){
 		if(err) throw err;
-		user_data.push({user: name, h_pass: h_pass, key: res.insertId});
-		console.log(user_data);
-		con.query('INSERT INTO authenticate SET ?', user_data, function(err,res){
-			if(err) throw err;
 
-			console.log('Last insert ID:', res.insertId);
-		});	  
+		console.log('Last insert ID:', res.insertId);
 	});	  
+	//	});	  
 });
 
 // -----------returns success if login works, else wrong password
