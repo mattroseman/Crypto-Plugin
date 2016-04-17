@@ -5,10 +5,18 @@ chrome.runtime.onMessage.addListener(
     if(msg.action = "encrypt_request"){
       var active = document.activeElement;
       console.log(active);
-      var txt = textNodesUnder(document.activeElement);
+      var txt = textNodesUnder(active);
       console.log("GET ON MY LEVEL BOYS");
       console.log(txt);
-      sendResponse(txt[0].nodeValue);
+      console.log(txt[0].textContent);
+      console.log(txt[0]);
+      if(txt.length == 1 && txt[0].baseURI.search('hangouts.google.com') != -1){
+        sendResponse(txt[0].nodeValue);
+      }else{
+        var selectedText = window.getSelection().toString();
+        sendReponse(selectedText)
+      }
+
     }
 
 });
