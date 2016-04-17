@@ -62,14 +62,26 @@ app.post('/api/server_sync', function(req, res) {
 		}
 		// now have a list of id's for the missing pub keys
 		// get a list of the actual pub keys from DB
-		con.query('SELECT pub_key FROM keys WHERE id=? ', [ key_list], function (err, rows) {
-			console.log(rows);
+		con.query('SELECT pub_key FROM `keys` WHERE id IN (?) ', [ key_list ], function (err, results) {
+			var data_results = [];
+			if(err) throw err;
+			for(i in results){
+			data_results.push(results[i].pub_key);
+			}
+			res.send(data_results);
 		});
-
 	});
 });
-
-
+// ---------------fetch a pub key, given a userID
+app.post('/api/id_to_pub', function(req, res) {
+	console.log(req.headers.userID);
+	var nameID = mysql.escape(req.headers.userID);
+// 	con.query('SELECT pub_key WHERE id = ?', nameID, function(err,result){
+// 		if(err) throw err;
+// 		console.log('Pub Key id:', result.pub_key);
+// 		res.send();
+// 	});	  
+});
 
 // -----------works to register a user
 app.post('/api/register', function(req, res) {
@@ -77,13 +89,18 @@ app.post('/api/register', function(req, res) {
 	var user_data = [];
 	var name = mysql.escape(req.headers.user);
 	var h_pass = mysql.escape(req.headers.pass);
-	user_data.push({user: name, h_pass: h_pass});
-	console.log(user_data);
-	con.query('INSERT INTO authenticate SET ?', user_data, function(err,res){
+	var pub_key = req.headers.pub_key;
+	console.log(pub_key);
+	var sql = 'INSERT INTO keys SET `pub_key` = ?';
+	con.query(sql, pub_key, function(err,res){
 		if(err) throw err;
+		user_data.push({user: name, h_pass: h_pass, key: res.insertId});
+		console.log(user_data);
+		con.query('INSERT INTO authenticate SET ?', user_data, function(err,res){
+			if(err) throw err;
 
-		console.log('Last insert ID:', res.insertId);
-		res.send('success');
+			console.log('Last insert ID:', res.insertId);
+		});	  
 	});	  
 });
 
