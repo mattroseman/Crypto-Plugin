@@ -21,6 +21,7 @@ class KeyboardViewController: UIInputViewController
     var symbolsTwoLogic:Bool = false
     var error:Bool = false
     var lastString:String = ""
+    var based64:String = ""
     
     var timer = NSTimer()
     var timerTwo = NSTimer()
@@ -47,7 +48,7 @@ class KeyboardViewController: UIInputViewController
         super.updateViewConstraints()        
         
         // Add custom view sizing constraints here
-
+        
     }
     
     override func viewDidLoad()
@@ -65,8 +66,16 @@ class KeyboardViewController: UIInputViewController
         let encrypted: [UInt8] = try! AES(key: key, blockMode: .CTR).encrypt(input, padding: nil)
         let encryptedString = encrypted.description
         //proxyField.text = "Encryption successful!"
-        proxy.insertText(identifier + encryptedString + identifierTwo)
+        
         UIPasteboard.generalPasteboard().string = (identifier + encryptedString + identifierTwo)
+        let temp = UIPasteboard.generalPasteboard().string
+        
+        let base64String = try! temp!.encrypt(AES(key: "secret0key000000", iv: "0123456789012345")).toBase64()
+        proxy.insertText(base64String!)
+        
+        based64 = base64String!
+        UIPasteboard.generalPasteboard().string = based64
+        
         proxyField.text = ""
         gorgeousString = "" 
     }
@@ -98,6 +107,9 @@ class KeyboardViewController: UIInputViewController
         let proxyField = findProxy()
         let proxyReal = textDocumentProxy as UITextDocumentProxy
         
+        
+
+        
         if UIPasteboard.generalPasteboard().string == " "
         {
             error = true
@@ -107,28 +119,9 @@ class KeyboardViewController: UIInputViewController
         {
             let clipboard = UIPasteboard.generalPasteboard().string
             let changingString:String = clipboard!
-            do
-            {
-                let input: [UInt8] = try turnDescriptionIntoJson(changingString)
-            }
-            catch
-            {
-                self.error = true
-                proxyField.text = "Decryption failed."
-                break
-            }
-            do
-            {
-                let input: [UInt8] = try turnDescriptionIntoJson(changingString)
-                let decrypted: [UInt8] = try AES(key: key, blockMode: .CTR).decrypt(input, padding: nil)
-            }
-            catch
-            {
-                self.error = true
-                proxyField.text = "Decryption failed."
-                break
-            }
-            let input: [UInt8] = try! turnDescriptionIntoJson(changingString)
+            let decryptedFirst = try! changingString.decryptBase64ToString(AES(key: "secret0key000000", iv: "0123456789012345"))
+
+            let input: [UInt8] = try! turnDescriptionIntoJson(decryptedFirst)
             let decrypted: [UInt8] = try! AES(key: key, blockMode: .CTR).decrypt(input, padding: nil)
             let decryptedData: NSData = NSData(bytes: decrypted)
             let decryptedString = NSString(data: decryptedData, encoding: NSUTF8StringEncoding) as? String
@@ -286,17 +279,22 @@ class KeyboardViewController: UIInputViewController
     
     func timerFunc()
     {
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.15, target: self, selector: Selector(counterFunc(&counter)), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(0.15, target: self, selector: Selector(counterFunc()), userInfo: nil, repeats: true)
     }
     
     func timerTwoFunc()
     {
-        timerTwo = NSTimer.scheduledTimerWithTimeInterval(0.15, target: self, selector: Selector(counterFunc(&counterTwo)), userInfo: nil, repeats: true)
+        timerTwo = NSTimer.scheduledTimerWithTimeInterval(0.15, target: self, selector: Selector(counterFuncTwo()), userInfo: nil, repeats: true)
     }
     
-    func counterFunc(inout counter:Double)
+    func counterFunc()
     {
         counter += 0.15
+    }
+    
+    func counterFuncTwo()
+    {
+        counterTwo += 0.15
     }
     
     func findProxy() -> UILabel
