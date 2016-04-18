@@ -26,7 +26,6 @@ chrome.commands.onCommand.addListener(function(command){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {action: "encrypt_request"}, function(response){
 	      if(!response) console.log("response was null");
-        console.log("We got a response");
         console.log(response.text);
 
         var ciphertext = encrypt_sym_message(response.text, current_chat_key);
@@ -38,30 +37,31 @@ chrome.commands.onCommand.addListener(function(command){
 
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, data, function(response) {
-                console.log('The text should be encrypted');
             });
         });
     });
 
   });
   }
+
+  if(command == 'decrypt_userText'){
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {action: "decrypt_request"}, function(request){
+        var array = request.content;
+        plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key)
+        var data = {action: 'decrypted_text', text: plaintext};
+      });
+    });
+  }
 });
 
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
     console.log("Extenion message?");
-
     if(request.msg == "decrypt_this"){
       var array = request.content;
-      console.log(array);
-      plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key);
-      console.log("Encrypted Message: " + request.content);
-      console.log("Decrypted Message: " + plaintext);
+      plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key)
       sendResponse(plaintext);
     }
   }
-)
-
-
-//Code to decrypt the shit
-//decrypt_sym_message(message, current_chat_key);
+);
