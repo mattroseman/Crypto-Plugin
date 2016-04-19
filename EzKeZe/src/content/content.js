@@ -1,14 +1,21 @@
 // Listen for messages
 //nogf
+
 chrome.runtime.onMessage.addListener(
   function (msg, sender, sendResponse) {
+    //Msg is the message, sender is the sender of the message, and sendResponse is the callback function
+
+
+    //The extension wants to know what to encrypt
     if(msg.action == "encrypt_request"){
+      //Get the selected text
       var active = document.activeElement;
       var txt = textNodesUnder(active);
       var selectedText = window.getSelection().toString();
+      //If there is text selected
       if(selectedText){
-        console.log("taking THIS route");
         console.log(selectedText);
+        //Send the text back to the extension
         sendResponse({text: selectedText, action: 'pleaseEncrypt'});
       }
       /*else if(txt[0].baseURI.search('hangouts.google.com') == -1 && txt[0].nodeValue && txt[0].nodeValue.search("init()") == -1){
@@ -18,14 +25,15 @@ chrome.runtime.onMessage.addListener(
       }
       */
     }
-
+    //The extension sent a completed encryption
     if(msg.action == 'encrypted_text'){
       //Replaces the selected text with the txt in the message
       replaceSelectedText(msg.text);
     }
-
+    //The extension wants to decrypt all the text on the DOM
     if(msg.action == 'decrypt_request'){
-      highlight(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
+      //The identifier should be changed sometime
+      findEncryptedText(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
       sendResponse("Finished Decrypting");
     }
 
@@ -33,22 +41,17 @@ chrome.runtime.onMessage.addListener(
 
 });
 
+//Old code for automatically decrypting, might be useful someday
 document.addEventListener('DOMNodeInserted', nodeInsertedCallback);
-highlight(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
 
 function nodeInsertedCallback(event){
   var node2search = event.target;
 
   findText(event.target, "test");
-  //highlight(node2search, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
+  //findEncryptedText(node2search, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
 
 }
 
-/**
- * Takes html object and regex, and highlights the text that matches the regex
- * @param html the html object that will be searched
- * @param regex the regular expression to match to the html text
- */
 
 
  function textNodesUnder(el){
@@ -57,17 +60,18 @@ function nodeInsertedCallback(event){
   return a;
 }
 
+
+//Algorithims for searching the page
 var findText = function(node, text){
   var textNodes = textNodesUnder(node);
   for(i in textNodes){
     if(textNodes[i].textContent.search(text) != -1){
-      console.log(textNodes[i]);
+
     }
   }
 }
 
-
-function highlight(searchNode, regexString)  {
+function findEncryptedText(searchNode, regexString)  {
 
     if (searchNode.nodeName == "MARK" ||
         searchNode.nodeName == "SCRIPT" ||
@@ -84,8 +88,6 @@ function highlight(searchNode, regexString)  {
         var regex; // the Regular Expression
         var result; // result of regex.exec("string");
         var parentNode;
-        var beforeNode, matchNode, afterNode; // the new nodes being added
-        var span; // the node being added above the match for highlighting
         do {
             nodeValue = searchNode.nodeValue;
             regex = new RegExp(regexString, "g");
@@ -94,11 +96,14 @@ function highlight(searchNode, regexString)  {
             if (result != null) {
 
                 parentNode = searchNode.parentNode;
+                //Create an object from the encrypted text
                 var encryptObject = JSON.parse(nodeValue);
+                //Add a msg to the object that you want to decrypt it
                 encryptObject.msg = "decrypt_this";
                 console.log(encryptObject);
                 console.log(parentNode);
                 console.log(searchNode);
+                //Send the encrypted text object to the extension to be decoded
                 chrome.extension.sendMessage(encryptObject, function(response){
                     console.log(response);
                     parentNode.innerHTML = response;
@@ -123,21 +128,16 @@ function highlight(searchNode, regexString)  {
     }
 
     searchNode = searchNode.firstChild;
+    //Recursively loop through the document
     while (searchNode) {
-        highlight(searchNode, regexString);
+        findEncryptedText(searchNode, regexString);
         searchNode = searchNode.nextSibling;
     }
 
     return;
 }
-highlight(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
 
-function scanforIframes(){
-  var iframes = document.getElementsByTag("iframe");
-}
-
-
-
+//Replace the findEncryptedTexted text with replacement text
 function replaceSelectedText(replacementText) {
     var sel, range;
     if (window.getSelection) {
