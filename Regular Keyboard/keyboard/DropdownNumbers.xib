@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KeyboardViewController" customModule="keyboard" customModuleProvider="target">
+            <connections>
+                <outlet property="dropdownNumbers" destination="Vep-zA-elF" id="9HR-4g-qrS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" horizontalHuggingPriority="375" verticalHuggingPriority="225" id="abI-Co-bfo" userLabel="dropdownNumbers">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="216"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ws0-TJ-18e">
+                    <rect key="frame" x="96" y="170" width="183" height="43"/>
+                    <state key="normal" title="space" image="space.png"/>
+                </button>
+                <button opaque="NO" alpha="0.64999997615814209" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f4B-0h-3Vj">
+                    <rect key="frame" x="285" y="170" width="87" height="43"/>
+                    <gestureRecognizers/>
+                    <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                    <state key="normal" title="encrypt" image="encrypt.png"/>
+                </button>
+                <button opaque="NO" alpha="0.64999997615814209" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvB-qV-nML">
+                    <rect key="frame" x="49" y="170" width="41" height="43"/>
+                    <state key="normal" title="nextKeyboard" image="nextKeyboard.png"/>
+                    <connections>
+                        <action selector="nextKeyboard" destination="-1" eventType="touchUpInside" id="K0h-og-n7A"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.64999997615814209" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Wg-Bq-JJ0">
+                    <rect key="frame" x="3" y="170" width="40" height="43"/>
+                    <state key="normal" title="ABC" image="ABC.png"/>
+                    <connections>
+                        <action selector="toLowercase" destination="-1" eventType="touchUpInside" id="VZY-Um-shK"/>
+                    </connections>
+                </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Vep-zA-elF">
+                    <rect key="frame" x="8" y="8" width="359" height="154"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+            </subviews>
+            <gestureRecognizers/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="oip-gL-PuQ" appends="YES" id="m0L-qP-Zva"/>
+            </connections>
+            <point key="canvasLocation" x="428.5" y="314"/>
+        </view>
+        <swipeGestureRecognizer direction="left" id="oip-gL-PuQ">
+            <connections>
+                <action selector="returnToWhichView" destination="-1" id="oet-xG-YDG"/>
+            </connections>
+        </swipeGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="ABC.png" width="80" height="86"/>
+        <image name="encrypt.png" width="175" height="86"/>
+        <image name="nextKeyboard.png" width="82" height="86"/>
+        <image name="space.png" width="365" height="86"/>
+    </resources>
+</document>

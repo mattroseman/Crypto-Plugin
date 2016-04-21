@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KeyboardViewController" customModule="keyboard" customModuleProvider="target">
+            <connections>
+                <outlet property="numbersOneField" destination="XXy-SS-1iM" id="yy8-0r-VME"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" horizontalHuggingPriority="375" verticalHuggingPriority="225" id="1uX-fP-bv8" userLabel="numbers1">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="216"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HVG-Vr-1F0">
+                    <rect key="frame" x="96" y="170" width="183" height="43"/>
+                    <state key="normal" title="space" image="space.png"/>
+                    <connections>
+                        <action selector="spacePress" destination="-1" eventType="touchUpInside" id="1yX-nO-jfK"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OJI-eB-5dJ">
+                    <rect key="frame" x="285" y="170" width="87" height="43"/>
+                    <gestureRecognizers/>
+                    <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                    <state key="normal" title="encrypt" image="encrypt.png"/>
+                    <connections>
+                        <action selector="encryptFunc" destination="-1" eventType="touchUpInside" id="HUF-Aw-Sh3"/>
+                        <outletCollection property="gestureRecognizers" destination="ASR-Xy-gBd" appends="YES" id="kya-ky-5Lt"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaM-Up-L5Z">
+                    <rect key="frame" x="49" y="170" width="41" height="43"/>
+                    <state key="normal" title="nextKeyboard" image="nextKeyboard.png"/>
+                    <connections>
+                        <action selector="nextKeyboard" destination="-1" eventType="touchUpInside" id="VV7-df-D5p"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gpk-kf-ERg">
+                    <rect key="frame" x="3" y="170" width="40" height="43"/>
+                    <state key="normal" title="ABC" image="ABC.png"/>
+                    <connections>
+                        <action selector="toLowercase" destination="-1" eventType="touchUpInside" id="d35-fn-nlf"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CbC-tv-MCh">
+                    <rect key="frame" x="3" y="26" width="32" height="43"/>
+                    <state key="normal" title="1" image="1.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="xkR-v8-8hA"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="xga-YF-Zcd"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="J3c-Bf-9Uv"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sGm-Xe-lLB">
+                    <rect key="frame" x="41" y="26" width="31" height="43"/>
+                    <state key="normal" title="2" image="2.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="kzl-cH-PjT"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="dna-jN-6Sk"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="BEe-4E-dWn"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dOO-SD-VWB">
+                    <rect key="frame" x="78" y="26" width="32" height="43"/>
+                    <state key="normal" title="3" image="3.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="PNg-3J-KEv"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="yKa-xm-egM"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="46W-wX-rat"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gYW-V7-kHu">
+                    <rect key="frame" x="116" y="26" width="31" height="43"/>
+                    <state key="normal" title="4" image="4.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="cE3-kU-CoW"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="WmG-B3-bpq"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="9j3-Td-1HK"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="goU-99-6WJ">
+                    <rect key="frame" x="153" y="26" width="32" height="43"/>
+                    <state key="normal" title="5" image="5.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Soq-yb-9PO"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="3nA-7U-nRq"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="5QF-4s-rly"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YaT-YB-JXt">
+                    <rect key="frame" x="191" y="26" width="31" height="43"/>
+                    <state key="normal" title="6" image="6.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="FB0-q9-518"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="2qU-Ue-IMl"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="FfK-qz-PlC"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dMC-vQ-VTD">
+                    <rect key="frame" x="228" y="26" width="32" height="43"/>
+                    <state key="normal" title="7" image="7.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="HyE-dW-fmO"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="O1I-t7-1gN"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="xDz-Tw-x7t"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2d9-kb-0l3">
+                    <rect key="frame" x="303" y="26" width="32" height="43"/>
+                    <state key="normal" title="9" image="9.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="pRq-ls-0Mh"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="zhu-4X-Rdd"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="v9q-U0-94t"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R5J-km-A2c">
+                    <rect key="frame" x="341" y="26" width="31" height="43"/>
+                    <state key="normal" title="0" image="0.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="ahD-I6-ZCk"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="YC3-J3-mT9"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="7CW-ty-CdC"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yeA-h0-wsC">
+                    <rect key="frame" x="330" y="122" width="42" height="43"/>
+                    <state key="normal" title="delete" image="delete.png"/>
+                    <connections>
+                        <action selector="delete" destination="-1" eventType="touchUpInside" id="ONh-lp-3yc"/>
+                        <action selector="deleteButtonUp" destination="-1" eventType="touchUpOutside" id="ZRS-N1-toz"/>
+                        <action selector="deleteButtonUp" destination="-1" eventType="touchUpInside" id="cAb-ZA-My7"/>
+                        <action selector="deleteFastFunc" destination="-1" eventType="touchDown" id="0Cz-cx-sAR"/>
+                    </connections>
+                </button>
+                <button opaque="NO" alpha="0.65000000000000002" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mch-dg-382">
+                    <rect key="frame" x="3" y="122" width="42" height="43"/>
+                    <state key="normal" title="symbols" image="symbols.png"/>
+                    <connections>
+                        <action selector="toNumbersTwo" destination="-1" eventType="touchUpInside" id="KSr-e0-kAZ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nNY-bK-O1k">
+                    <rect key="frame" x="3" y="74" width="32" height="43"/>
+                    <state key="normal" title="-" image="-.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="xQH-oN-IFr"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="aOL-rq-LFj"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="I4l-ne-98U"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="04w-pe-WeH">
+                    <rect key="frame" x="41" y="74" width="31" height="43"/>
+                    <state key="normal" title="/" image="forwardSlash.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="J3P-1z-tLb"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="KTv-Ag-mP3"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="5Ie-md-WcN"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b6N-7C-lC8">
+                    <rect key="frame" x="78" y="74" width="32" height="43"/>
+                    <state key="normal" title=":" image="colon.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="vZi-1g-w00"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="Foq-KZ-pQc"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="xwW-GH-zNM"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fTS-P3-waq">
+                    <rect key="frame" x="116" y="74" width="31" height="43"/>
+                    <state key="normal" title=";" image=";.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="F3X-u1-gVl"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="lsi-kh-1D5"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="ir4-fZ-XCU"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o5H-aV-S2T">
+                    <rect key="frame" x="153" y="74" width="32" height="43"/>
+                    <state key="normal" title="(" image="(.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="vjT-QL-1Cq"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="M7l-UF-Z3e"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="mUo-yD-DHQ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hfo-N5-fJz">
+                    <rect key="frame" x="191" y="74" width="31" height="43"/>
+                    <state key="normal" title=")" image=").png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="byr-PP-nKJ"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="fIf-cG-Z2y"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="exs-1S-TUm"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AA3-Rd-Qca">
+                    <rect key="frame" x="228" y="74" width="32" height="43"/>
+                    <state key="normal" title="$" image="$.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="1Rf-IA-Lvn"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="BCE-MR-D2t"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="V76-Wn-GJM"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="asV-Yz-tn0">
+                    <rect key="frame" x="266" y="74" width="31" height="43"/>
+                    <state key="normal" title="&amp;" image="&amp;.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="8R2-gT-ppj"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="cbp-8v-NJ9"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="Lnk-9s-ymD"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QUl-eN-mjk">
+                    <rect key="frame" x="303" y="74" width="32" height="43"/>
+                    <state key="normal" title="@" image="@.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="zRK-8e-dys"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="wgj-j1-yL7"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="Yg9-cp-042"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uwh-qU-oeF">
+                    <rect key="frame" x="341" y="74" width="31" height="43"/>
+                    <state key="normal" title="&quot;" image="&quot;.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="g3k-G8-jtQ"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="0rr-42-pjV"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="eyD-cv-VHk"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jt9-gx-zzW">
+                    <rect key="frame" x="59" y="122" width="47" height="43"/>
+                    <state key="normal" title="." image="period.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="xN8-LU-fpd"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="Cd5-wq-8KH"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="f2b-eK-dqK"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ryf-vd-2jf">
+                    <rect key="frame" x="112" y="122" width="46" height="43"/>
+                    <state key="normal" title="," image=",.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="d4T-lw-KSJ"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="pXq-wO-fg1"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="hQB-6j-OEU"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D5z-Qt-Vgl">
+                    <rect key="frame" x="165" y="122" width="46" height="43"/>
+                    <state key="normal" title="?" image="?.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="XqF-h4-MA1"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="h4e-VZ-Nt4"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="bTa-e7-ZhC"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VD8-Ed-lof">
+                    <rect key="frame" x="217" y="122" width="47" height="43"/>
+                    <state key="normal" title="!" image="!.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="Lgb-V6-ola"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="bfD-Wk-kTw"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="fsT-DS-tEw"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rUJ-D9-SFg">
+                    <rect key="frame" x="270" y="122" width="46" height="43"/>
+                    <state key="normal" title="'" image="'.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="7c3-BK-sLV"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="9tq-tK-d4B"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="3pI-aK-oel"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XXy-SS-1iM" userLabel="Text Field">
+                    <rect key="frame" x="3" y="0.0" width="369" height="26"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="182-ce-e5k">
+                    <rect key="frame" x="266" y="26" width="31" height="42"/>
+                    <state key="normal" title="8" image="8.png"/>
+                    <connections>
+                        <action selector="keypress:" destination="-1" eventType="touchUpInside" id="RRW-21-8VH"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="3QP-z9-Yo8"/>
+                        <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="874-mv-oJL"/>
+                    </connections>
+                </button>
+            </subviews>
+            <gestureRecognizers/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="FaC-tX-Lw9" appends="YES" id="VUc-Kb-paa"/>
+            </connections>
+            <point key="canvasLocation" x="698.5" y="87"/>
+        </view>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="ASR-Xy-gBd">
+            <connections>
+                <action selector="decryptFunc" destination="-1" id="BBJ-Iq-PrS"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <swipeGestureRecognizer direction="right" id="FaC-tX-Lw9">
+            <connections>
+                <action selector="toDropDown" destination="-1" id="psq-8j-cJ2"/>
+            </connections>
+        </swipeGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="!.png" width="93" height="86"/>
+        <image name="&quot;.png" width="63" height="86"/>
+        <image name="$.png" width="63" height="86"/>
+        <image name="&amp;.png" width="63" height="86"/>
+        <image name="'.png" width="93" height="86"/>
+        <image name="(.png" width="63" height="86"/>
+        <image name=").png" width="63" height="86"/>
+        <image name=",.png" width="93" height="86"/>
+        <image name="-.png" width="63" height="86"/>
+        <image name="0.png" width="63" height="86"/>
+        <image name="1.png" width="63" height="86"/>
+        <image name="2.png" width="63" height="86"/>
+        <image name="3.png" width="63" height="86"/>
+        <image name="4.png" width="63" height="86"/>
+        <image name="5.png" width="63" height="86"/>
+        <image name="6.png" width="63" height="86"/>
+        <image name="7.png" width="63" height="86"/>
+        <image name="8.png" width="63" height="86"/>
+        <image name="9.png" width="63" height="86"/>
+        <image name=";.png" width="63" height="86"/>
+        <image name="?.png" width="93" height="86"/>
+        <image name="@.png" width="63" height="86"/>
+        <image name="ABC.png" width="80" height="86"/>
+        <image name="colon.png" width="63" height="86"/>
+        <image name="delete.png" width="84" height="86"/>
+        <image name="encrypt.png" width="175" height="86"/>
+        <image name="forwardSlash.png" width="63" height="86"/>
+        <image name="nextKeyboard.png" width="82" height="86"/>
+        <image name="period.png" width="93" height="86"/>
+        <image name="space.png" width="365" height="86"/>
+        <image name="symbols.png" width="84" height="86"/>
+    </resources>
+</document>
