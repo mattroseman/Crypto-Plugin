@@ -16,8 +16,7 @@
 		831490921CC888F700B230A9 /* Doublecase.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831490911CC888F700B230A9 /* Doublecase.xib */; };
 		831490941CC8890000B230A9 /* Numbers1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831490931CC8890000B230A9 /* Numbers1.xib */; };
 		831490961CC8890800B230A9 /* Numbers2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831490951CC8890800B230A9 /* Numbers2.xib */; };
-		831490981CC9746100B230A9 /* DropdownNumbers.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831490971CC9746100B230A9 /* DropdownNumbers.xib */; };
-		8314909A1CC9748900B230A9 /* DropdownLetters.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831490991CC9748900B230A9 /* DropdownLetters.xib */; };
+		831490981CC9746100B230A9 /* DropdownText.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831490971CC9746100B230A9 /* DropdownText.xib */; };
 		836F7F1F1CC5FDEA00E5F61F /* STANDARD KEYBOARD VIEW.xib in Resources */ = {isa = PBXBuildFile; fileRef = 836F7F1E1CC5FDEA00E5F61F /* STANDARD KEYBOARD VIEW.xib */; };
 		83D5D2CB1CC025FA00EEB675 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D5D2CA1CC025FA00EEB675 /* AppDelegate.swift */; };
 		83D5D2D01CC025FA00EEB675 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83D5D2CE1CC025FA00EEB675 /* Main.storyboard */; };
@@ -170,8 +169,7 @@
 		831490911CC888F700B230A9 /* Doublecase.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Doublecase.xib; sourceTree = "<group>"; };
 		831490931CC8890000B230A9 /* Numbers1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Numbers1.xib; sourceTree = "<group>"; };
 		831490951CC8890800B230A9 /* Numbers2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Numbers2.xib; sourceTree = "<group>"; };
-		831490971CC9746100B230A9 /* DropdownNumbers.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DropdownNumbers.xib; sourceTree = "<group>"; };
-		831490991CC9748900B230A9 /* DropdownLetters.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DropdownLetters.xib; sourceTree = "<group>"; };
+		831490971CC9746100B230A9 /* DropdownText.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DropdownText.xib; sourceTree = "<group>"; };
 		836F7F1E1CC5FDEA00E5F61F /* STANDARD KEYBOARD VIEW.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "STANDARD KEYBOARD VIEW.xib"; sourceTree = "<group>"; };
 		83D5D2C71CC025FA00EEB675 /* Regular Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Regular Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		83D5D2CA1CC025FA00EEB675 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -375,8 +373,7 @@
 				831490931CC8890000B230A9 /* Numbers1.xib */,
 				831490951CC8890800B230A9 /* Numbers2.xib */,
 				83D5D2E21CC0268100EEB675 /* KeyboardViewController.swift */,
-				831490971CC9746100B230A9 /* DropdownNumbers.xib */,
-				831490991CC9748900B230A9 /* DropdownLetters.xib */,
+				831490971CC9746100B230A9 /* DropdownText.xib */,
 				83D5D2E41CC0268100EEB675 /* Info.plist */,
 			);
 			path = keyboard;
@@ -666,7 +663,7 @@
 				83D5D3E21CC0A1B600EEB675 /* nextKeyboard.png in Resources */,
 				83D5D32A1CC0722100EEB675 /* V.png in Resources */,
 				83D5D3D31CC093D100EEB675 /* bullet.png in Resources */,
-				831490981CC9746100B230A9 /* DropdownNumbers.xib in Resources */,
+				831490981CC9746100B230A9 /* DropdownText.xib in Resources */,
 				83D5D3951CC08F2B00EEB675 /* -.png in Resources */,
 				8314908C1CC87ED800B230A9 /* Assets.xcassets in Resources */,
 				83D5D3E61CC0BB2200EEB675 /* upperuppercase.png in Resources */,
@@ -734,7 +731,6 @@
 				83D5D31C1CC0722100EEB675 /* H.png in Resources */,
 				83D5D3A01CC08F2B00EEB675 /* $.png in Resources */,
 				83D5D3A21CC08F2B00EEB675 /* 1.png in Resources */,
-				8314909A1CC9748900B230A9 /* DropdownLetters.xib in Resources */,
 				83D5D3191CC0722100EEB675 /* E.png in Resources */,
 				83D5D3751CC0892200EEB675 /* zLow.png in Resources */,
 				83D5D3D01CC093D100EEB675 /* =.png in Resources */,

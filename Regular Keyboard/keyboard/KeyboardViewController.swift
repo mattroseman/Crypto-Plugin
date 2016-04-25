@@ -19,12 +19,9 @@ class KeyboardViewController: UIInputViewController
     var doublecaseLogic:Bool = false
     var numbersOneLogic:Bool = false
     var numbersTwoLogic:Bool = false
-    var dropDownNumbersLogic:Bool = false
-    var dropDownLettersLogic:Bool = false
     var trackError:Bool = false
     var lastString:String = ""
     var based64:String = ""
-    var buttonNorm = CGRect(origin: CGPoint(x: 0, y: 0), size: UIScreen.mainScreen().bounds.size)
     
     var timer = NSTimer()
     var timerTwo = NSTimer()
@@ -49,8 +46,8 @@ class KeyboardViewController: UIInputViewController
     @IBOutlet var doublecaseField: UILabel!
     @IBOutlet var numbersOneField: UILabel!
     @IBOutlet var numbersTwoField: UILabel!
-    @IBOutlet var dropdownNumbers: UITextView!
-    @IBOutlet var dropdownLetters: UITextView!
+    @IBOutlet var dropdownText: UITextView!
+
     
     override func updateViewConstraints()
     {
@@ -123,11 +120,10 @@ class KeyboardViewController: UIInputViewController
     @IBAction func decryptFunc()
     {
         trackError = false
-        let proxyField = findProxy()
         if UIPasteboard.generalPasteboard().string == " "
         {
+            //proxyField.text = lastString
             trackError = true
-            proxyField.text = lastString
         }
         while !trackError
         {
@@ -153,6 +149,8 @@ class KeyboardViewController: UIInputViewController
             //proxyField.text = "Decryption successful!"
             lastString = decryptedString!
             UIPasteboard.generalPasteboard().string = " "
+            toDropDown()
+            dropdownText.text = lastString
             trackError = true
         }
     }
@@ -179,8 +177,6 @@ class KeyboardViewController: UIInputViewController
         doublecaseLogic = false
         numbersOneLogic = false
         numbersTwoLogic = false
-        dropDownNumbersLogic = false
-        dropDownLettersLogic = false
         for view in keyboardView.subviews
         {
             view.removeFromSuperview()
@@ -198,8 +194,6 @@ class KeyboardViewController: UIInputViewController
         doublecaseLogic = false
         numbersOneLogic = false
         numbersTwoLogic = false
-        dropDownNumbersLogic = false
-        dropDownLettersLogic = false
         for view in keyboardView.subviews
         {
             view.removeFromSuperview()
@@ -217,8 +211,6 @@ class KeyboardViewController: UIInputViewController
         doublecaseLogic = true
         numbersOneLogic = false
         numbersTwoLogic = false
-        dropDownNumbersLogic = false
-        dropDownLettersLogic = false
         for view in keyboardView.subviews
         {
             view.removeFromSuperview()
@@ -239,8 +231,6 @@ class KeyboardViewController: UIInputViewController
         doublecaseLogic = false
         numbersOneLogic = true
         numbersTwoLogic = false
-        dropDownNumbersLogic = false
-        dropDownLettersLogic = false
         for view in keyboardView.subviews
         {
             view.removeFromSuperview()
@@ -258,8 +248,6 @@ class KeyboardViewController: UIInputViewController
         doublecaseLogic = false
         numbersOneLogic = false
         numbersTwoLogic = true
-        dropDownNumbersLogic = false
-        dropDownLettersLogic = false
         for view in keyboardView.subviews
         {
             view.removeFromSuperview()
@@ -274,45 +262,14 @@ class KeyboardViewController: UIInputViewController
     {
         let proxy = findProxy()
         proxy.text = ""
-        whichDropDown()
-    }
-    
-    func toDropDownLetters()
-    {
         for view in keyboardView.subviews
         {
             view.removeFromSuperview()
         }
-        keyboardNib = UINib(nibName: "DropdownLetters", bundle: nil)
+        keyboardNib = UINib(nibName: "DropdownText", bundle: nil)
         keyboardView = keyboardNib.instantiateWithOwner(self, options: nil)[0] as! UIView
         view.addSubview(keyboardView)
-        dropdownLetters.text = memoryDisplayString.description
-    }
-    
-    func toDropDownNumbers()
-    {
-        for view in keyboardView.subviews
-        {
-            view.removeFromSuperview()
-        }
-        keyboardNib = UINib(nibName: "DropdownNumbers", bundle: nil)
-        keyboardView = keyboardNib.instantiateWithOwner(self, options: nil)[0] as! UIView
-        view.addSubview(keyboardView)
-        dropdownNumbers.text = memoryDisplayString.description
-    }
-    
-    func whichDropDown()
-    {
-        if lowercaseLogic || uppercaseLogic || doublecaseLogic
-        {
-            toDropDownLetters()
-            dropDownLettersLogic = true
-        }
-        else if numbersOneLogic || numbersTwoLogic
-        {
-            toDropDownNumbers()
-            dropDownNumbersLogic = true
-        }
+        dropdownText.text = memoryDisplayString.description
     }
     
     @IBAction func returnToWhichView()
@@ -339,37 +296,37 @@ class KeyboardViewController: UIInputViewController
         }
     }
     
-    @IBAction func justForQPop(sender: UIButton!)
-    {
-        dispatch_async(dispatch_get_main_queue())
-        {
-            self.buttonNorm = sender.frame
-            let imagePop = sender.currentImage
-            sender.frame = CGRectMake(self.buttonNorm.origin.x, self.buttonNorm.origin.y, self.buttonNorm.size.width + 3, self.buttonNorm.size.height + 3)
-            sender.setImage(imagePop, forState: .Highlighted)
-        }
-    }
-    
     @IBAction func keypressPopup(sender: UIButton!)
     {
         dispatch_async(dispatch_get_main_queue())
         {
-            self.buttonNorm = sender.frame
+            let buttonNorm = sender.frame
             let imagePop = sender.currentImage
-            sender.frame = CGRectMake(self.buttonNorm.origin.x - 2.8, self.buttonNorm.origin.y - 5.6, self.buttonNorm.size.width + 5.6, self.buttonNorm.size.height + 5.6)
-            sender.setImage(imagePop, forState: .Highlighted)
+            if sender.titleLabel!.text != "q" && sender.titleLabel!.text != "Q" && sender.titleLabel!.text != "1" && sender.titleLabel!.text != "-" && sender.titleLabel!.text != "[" && sender.titleLabel!.text != "_"
+            {
+                sender.frame = CGRectMake(buttonNorm.origin.x - 2.8, buttonNorm.origin.y - 5.6, buttonNorm.size.width + 5.6, buttonNorm.size.height + 5.6)
+                sender.setImage(imagePop, forState: .Highlighted)
+            }
         }
     }
     
     @IBAction func keypressPopupEnd(sender: UIButton!)
     {
-        sender.frame = CGRectMake(self.buttonNorm.origin.x, self.buttonNorm.origin.y, self.buttonNorm.size.width, self.buttonNorm.size.height)
+        let buttonNorm = sender.frame
+        if sender.titleLabel!.text != "q" && sender.titleLabel!.text != "Q" && sender.titleLabel!.text != "1" && sender.titleLabel!.text != "-" && sender.titleLabel!.text != "[" && sender.titleLabel!.text != "_"
+        {
+            sender.frame = CGRectMake(buttonNorm.origin.x + 2.8, buttonNorm.origin.y + 5.6, buttonNorm.size.width - 5.6, buttonNorm.size.height - 5.6)
+        }
     }
     @IBAction func keypress(sender: UIButton!)
     {
-        dispatch_async(dispatch_get_main_queue())
+        let buttonNorm = sender.frame
+        if sender.titleLabel!.text != "q" && sender.titleLabel!.text != "Q" && sender.titleLabel!.text != "1" && sender.titleLabel!.text != "-" && sender.titleLabel!.text != "[" && sender.titleLabel!.text != "_"
         {
-            sender.frame = CGRectMake(self.buttonNorm.origin.x, self.buttonNorm.origin.y, self.buttonNorm.size.width, self.buttonNorm.size.height)
+            dispatch_async(dispatch_get_main_queue())
+            {
+                sender.frame = CGRectMake(buttonNorm.origin.x + 2.8, buttonNorm.origin.y + 5.6,     buttonNorm.size.width - 5.6, buttonNorm.size.height - 5.6)
+            }
         }
         let proxy = findProxy()
         let typedCharacter = sender.titleLabel?.text

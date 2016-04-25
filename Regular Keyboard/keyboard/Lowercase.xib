@@ -299,8 +299,8 @@
                     <rect key="frame" x="3" y="26" width="32" height="43"/>
                     <state key="normal" title="q" image="qLow.png"/>
                     <connections>
-                        <action selector="justForQPop:" destination="-1" eventType="touchDown" id="9KH-45-m2f"/>
                         <action selector="keypress:" destination="-1" eventType="touchUpInside" id="t80-Yj-h3E"/>
+                        <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="lax-La-iwx"/>
                         <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="KzY-S6-vjC"/>
                     </connections>
                 </button>

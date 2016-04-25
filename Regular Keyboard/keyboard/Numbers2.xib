@@ -303,7 +303,7 @@
             <connections>
                 <outletCollection property="gestureRecognizers" destination="TuA-it-jDx" appends="YES" id="4rZ-2I-q87"/>
             </connections>
-            <point key="canvasLocation" x="728.5" y="566"/>
+            <point key="canvasLocation" x="756.5" y="400"/>
         </view>
         <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="uMU-J0-dyS">
             <connections>

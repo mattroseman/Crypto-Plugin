@@ -40,7 +40,6 @@
                     <rect key="frame" x="3" y="26" width="32" height="43"/>
                     <state key="normal" title="Q" image="Q.png"/>
                     <connections>
-                        <action selector="justForQPop:" destination="-1" eventType="touchDown" id="RuA-dQ-LwP"/>
                         <action selector="keypress:" destination="-1" eventType="touchUpInside" id="73Q-jg-8xd"/>
                         <action selector="keypressPopup:" destination="-1" eventType="touchDown" id="JC4-Ql-tsS"/>
                         <action selector="keypressPopupEnd:" destination="-1" eventType="touchUpOutside" id="e4w-nA-rNr"/>
