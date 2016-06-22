@@ -37,7 +37,7 @@ int main() {
 
     printf ("RSA keys generated\n");
 
-    unsigned char *plaintext = "Hello World!";
+    unsigned char *plaintext = (unsigned char *)"Hello World!";
     unsigned int plaintext_length = 12;
 
     unsigned char *encrypted_message = (unsigned char *)malloc(RSA_size(key));
@@ -85,10 +85,16 @@ RSA *generate_rsa_keys() {
  * @return: the length of the encrypted message
  */
 unsigned int rsa_encrypt_message(unsigned char *message, unsigned int length, RSA *key, unsigned char **out) {
+    unsigned char *encrypted_message = (unsigned char *)malloc(RSA_size(key));
     unsigned int size;
 
-    if ((size = RSA_public_encrypt(length, message, *out, key, padding)) < 0) {
+    if ((size = RSA_public_encrypt(length, message, encrypted_message, key, padding)) < 0) {
         printf("RSA_public_encrypt() failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (Base64Encode(encrypted_message, RSA_size(key), (char **)out) < 0) {
+        printf("Base64Encode failed\n");
         exit(EXIT_FAILURE);
     }
 
@@ -103,9 +109,14 @@ unsigned int rsa_encrypt_message(unsigned char *message, unsigned int length, RS
  * @param out: the string to print plaintext to
  */
 void rsa_decrypt_message(unsigned char *encrypted_message, unsigned int length, RSA *key, unsigned char **out) {
-    unsigned char *decrypted_message = (unsigned char *)malloc(length*sizeof(unsigned char));
+    unsigned char *encrypted_ascii_message = (unsigned char *)malloc(RSA_size(key));
+    
+    if (Base64Decode((char *)encrypted_message, &encrypted_ascii_message, (size_t *)&length) < 0) {
+        printf("Base64Decode failed\n");
+        exit(EXIT_FAILURE);
+    }
 
-    if (RSA_private_decrypt(length, encrypted_message, *out, key, padding) < 0) {
+    if (RSA_private_decrypt(length, encrypted_ascii_message, *out, key, padding) < 0) {
         printf("RSA_private_decrypt() failed\n");
         exit(EXIT_FAILURE);
     }
