@@ -32,6 +32,33 @@ BIGNUM *kExp = NULL;
 const int aes_key_length = 256;
 
 
+int main() {
+    RSA *key = generate_rsa_keys();
+
+    printf ("RSA keys generated\n");
+
+    unsigned char *plaintext = "Hello World!";
+    unsigned int plaintext_length = 12;
+
+    unsigned char *encrypted_message = (unsigned char *)malloc(RSA_size(key));
+
+    printf ("beginning rsa encryption\n");
+
+    unsigned int encrypted_length = rsa_encrypt_message(plaintext, plaintext_length, key, &encrypted_message);
+
+    printf ("\'Hello World!\' encrypted is:\n");
+    printf ("%s\n", encrypted_message);
+    printf ("%u\n", encrypted_length);
+
+    unsigned char *decrypted_message = (unsigned char *)malloc(plaintext_length*sizeof(unsigned char));
+
+    rsa_decrypt_message(encrypted_message, encrypted_length, key, &decrypted_message);
+
+    printf("The decrypted message is:\n");
+    printf("%s\n", decrypted_message);
+}
+
+
 /*
  * Generates RSA public and private key
  * @return: pointer to RSA object
