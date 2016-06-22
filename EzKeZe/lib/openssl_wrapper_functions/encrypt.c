@@ -20,8 +20,8 @@ unsigned char *generate_aes_key();
 unsigned char *generate_aes_iv();
 unsigned int rsa_encrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
 unsigned int rsa_decrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
-void aes_encrypt_message(unsigned char *, unsigned int, unsigned char *, unsigned char *, unsigned char **);
-unsigned int aes_decrypt_message(unsigned char*, unsigned int, unsigned char*, unsigned char**, unsigned char**);
+unsigned int aes_encrypt_message(unsigned char *, unsigned int, unsigned char *, unsigned char *, unsigned char **);
+unsigned int aes_decrypt_message(unsigned char *, unsigned int, unsigned char *, unsigned char *, unsigned char **);
 
 //  RSA constants
 const int padding = RSA_PKCS1_PADDING;
@@ -70,10 +70,18 @@ int main() {
 
     printf ("beginning aes encryption\n");
 
-    aes_encrypt_message(plaintext, plaintext_length, aes_key, aes_iv, &aes_encrypted_message);
+    unsigned int aes_encrypted_length = aes_encrypt_message(plaintext, plaintext_length, aes_key, aes_iv, &aes_encrypted_message);
 
     printf ("\'Hello World encrypted is:\n");
     printf ("%s\n", aes_encrypted_message);
+    printf ("%u\n", aes_encrypted_length);
+
+    unsigned char *aes_decrypted_message = (unsigned char *)malloc(plaintext_length*(unsigned char) + AES_BLOCK_SIZE);
+
+    unsigned int aes_decrypted_length = aes_decrypt_message(aes_encrypted_message, aes_encrypted_length, aes_key, aes_iv, &aes_decrypted_message);
+
+    printf ("The decrypted message is:\n");
+    printf ("%s\n", aes_decrypted_message);
 
     exit(EXIT_SUCCESS);
 }
@@ -113,7 +121,7 @@ unsigned int rsa_encrypt_message(unsigned char *message, unsigned int length, RS
         exit(EXIT_FAILURE);
     }
 
-    if (Base64Encode(encrypted_message, RSA_size(key), (char **)out) < 0) {
+    if (Base64Encode(encrypted_message, size, (char **)out) < 0) {
         printf("Base64Encode failed\n");
         exit(EXIT_FAILURE);
     }
@@ -188,7 +196,7 @@ unsigned char *generate_aes_iv() {
  * @param encIv: the aes 128 iv
  * @param out: where the enc message is put
  */
-void aes_encrypt_message(unsigned char *message, unsigned int length, unsigned char *encKey, unsigned char *encIv, unsigned char **out) {
+unsigned int aes_encrypt_message(unsigned char *message, unsigned int length, unsigned char *encKey, unsigned char *encIv, unsigned char **out) {
     unsigned char *encMsg = (unsigned char *)malloc(length*(unsigned char) + AES_BLOCK_SIZE);
     EVP_CIPHER_CTX *ctx;
     int len;
@@ -222,7 +230,59 @@ void aes_encrypt_message(unsigned char *message, unsigned int length, unsigned c
 
     *(encMsg + ciphertext_len) = '\0';
 
-    if (Base64Encode(encMsg, sizeof encMsg, (char **)out) < 0) {
+    if (Base64Encode(encMsg, ciphertext_len, (char **)out) < 0) {
         printf ("Base64Encode in aes_encrypt_message failed\n");
     }
+
+    return ciphertext_len;
+}
+
+/* 
+ * Decrypts the aes encrypted text and sets it to out
+ */
+unsigned int aes_decrypt_message(unsigned char *encrypted_message, unsigned int length, unsigned char *encKey, unsigned char *encIv, unsigned char **out) {
+    unsigned char *encrypted_ascii_message = (unsigned char *)malloc(length*(unsigned char) + AES_BLOCK_SIZE);
+
+    if (Base64Decode((char *)encrypted_message, &encrypted_ascii_message, (size_t *)&length) < 0) {
+        printf("Base64Decode in aes_decrypt_message failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    EVP_CIPHER_CTX *ctx;
+    unsigned char *decMsg = (unsigned char *)malloc(length*(unsigned char) + AES_BLOCK_SIZE);
+
+    int plaintext_len;
+    int len;
+
+    if (!(ctx = EVP_CIPHER_CTX_new())) {
+        printf("EVP_CIPHER_CTX_new() failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, encKey, encIv)) {
+        printf("EVP_DecryptInit_ex() failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (1 != EVP_DecryptUpdate(ctx, decMsg, &len, encrypted_ascii_message, length)) {
+        printf("EVP_DecryptUpdate() failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    plaintext_len = len;
+
+    if (1 != EVP_DecryptFinal_ex(ctx, decMsg + len, &len)) {
+        printf("EVP_DecryptFinal_ex() failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    plaintext_len += len;
+
+    EVP_CIPHER_CTX_free(ctx);
+
+    *(decMsg + plaintext_len) = '\0';
+
+    *out = decMsg;
+
+    return plaintext_len;
 }
