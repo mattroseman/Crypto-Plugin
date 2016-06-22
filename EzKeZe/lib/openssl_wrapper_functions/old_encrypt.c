@@ -213,7 +213,7 @@ unsigned int rsa_encrypt_message(unsigned char* message, unsigned int length, RS
     unsigned char *encrypted_message = (unsigned char*)malloc(RSA_size(rsa));
     unsigned int size;
 
-    if ((size = RSA_public_encrypt(length, message, encrypted_message, key, padding)) < 0) {;
+    if ((size = RSA_public_encrypt(length, message, encrypted_message, key, padding)) < 0) {
         printf("RSA_public_encrypt() failed\n");
         exit(EXIT_FAILURE);
     }

@@ -18,7 +18,7 @@
 RSA *generate_rsa_keys();
 unsigned char *generate_aes_key();
 unsigned int rsa_encrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
-unsigned int rsa_decrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
+void rsa_decrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
 unsigned int aes_encrypt_message(unsigned char*, unsigned int, unsigned char*, unsigned char**, unsigned char**);
 unsigned int aes_decrypt_message(unsigned char*, unsigned int, unsigned char*, unsigned char**, unsigned char**);
 
@@ -47,4 +47,39 @@ RSA *generate_rsa_keys() {
     }
 
     return rsa;
+}
+
+/*
+ * Encrypts a plaintext and sets it to out
+ * @param message: the plaintext string
+ * @param length: the length of the plaintext string in bytes
+ * @param key: the RSA object that is the key
+ * @param out: where the output encrypted message is returned
+ * @return: the length of the encrypted message
+ */
+unsigned int rsa_encrypt_message(unsigned char *message, unsigned int length, RSA *key, unsigned char **out) {
+    unsigned int size;
+
+    if ((size = RSA_public_encrypt(length, message, *out, key, padding)) < 0) {
+        printf("RSA_public_encrypt() failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return size;
+}
+
+/* 
+ * Decyrpts an encrypted text and sets it to out
+ * @param encrypted_message: the RSA encrypted ciphertext
+ * @param length: the length of the original plaintext
+ * @param key: the RSA key to decrypt with
+ * @param out: the string to print plaintext to
+ */
+void rsa_decrypt_message(unsigned char *encrypted_message, unsigned int length, RSA *key, unsigned char **out) {
+    unsigned char *decrypted_message = (unsigned char *)malloc(length*sizeof(unsigned char));
+
+    if (RSA_private_decrypt(length, encrypted_message, *out, key, padding) < 0) {
+        printf("RSA_private_decrypt() failed\n");
+        exit(EXIT_FAILURE);
+    }
 }
