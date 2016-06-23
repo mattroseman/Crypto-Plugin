@@ -7,6 +7,7 @@
 #include "include/openssl/conf.h"
 #include "include/openssl/evp.h"
 #include "include/openssl/err.h"
+#include "include/openssl/pem.h"
 
 /* openssl base64 encypt/decrypt */
 #include "OpenSSL_B64/Base64Encode.c"
@@ -16,6 +17,8 @@
 #include <string.h>
 
 RSA *generate_rsa_keys();
+void print_rsa_public_key(RSA*, FILE*);
+RSA *read_rsa_public_key(FILE*);
 unsigned char *generate_aes_key();
 unsigned char *generate_aes_iv();
 unsigned int rsa_encrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
@@ -41,7 +44,7 @@ int main() {
     unsigned char *plaintext = (unsigned char *)"Hello World!";
     unsigned int plaintext_length = 12;
 
-    unsigned char *encrypted_message = (unsigned char *)malloc(RSA_size(rsa_key));
+    unsigned char *encrypted_message = (unsigned char *)malloc(kBits);
 
     printf ("beginning rsa encryption\n");
 
@@ -89,19 +92,42 @@ int main() {
 
 /*
  * Generates RSA public and private key
+ * @param public_key: where the DER encoded public key is put
+ * @param private_key: where the DER encoded private key is put
  * @return: pointer to RSA object
  */
-RSA *generate_rsa_keys() {
-    RSA *rsa = RSA_new();
+RSA *generate_rsa_keys(unsigned char **public_key, unsigned char **private_key) {
+    RSA *key = RSA_new();
     kExp = BN_new();
     BN_set_word(kExp, kExp_long);
 
-    if (RSA_generate_key_ex(rsa, kBits, kExp, 0) < 0) {
+    if (RSA_generate_key_ex(key, kBits, kExp, 0) < 0) {
         printf("RSA_generate_key_ex failed\n");
         exit(EXIT_FAILURE);
     }
 
-    return rsa;
+    return key;
+}
+
+
+/* 
+ * Prints the public part of a RSA key to a file
+ */
+void print_rsa_public_key(RSA* key, FILE* file) {
+
+    PEM_write_RSAPublicKey(file, key);
+}
+
+/*
+ * Reads a PEM file and gets the public RSA key
+ */
+RSA *read_rsa_public_key(FILE* file) {
+
+    RSA *key = RSA_new();
+
+    PEM_read_RSA_PUBKEY(file, &key, NULL, NULL);
+
+    return key;
 }
 
 /*
