@@ -120,12 +120,43 @@ unsigned char *get_rsa_public_key(RSA *key) {
 
     PEM_write_bio_RSA_PUBKEY(pubKey, key);
 
-    unsigned char *line;
+    unsigned char line[65];
+    int len = 0;
+    unsigned char *pem = NULL;
+    unsigned char *new_pem = NULL;
 
     while (!BIO_eof(pubKey)) {
         BIO_gets(pubKey, line, sizeof *pubKey);
-        printf("%s", line);
+        printf ("%s", line);
+
+        //  current length of PEM (including newlines)
+        len += strlen(line);
+        printf ("%d\n", len);
+
+        new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
+        if (!new_pem) {
+            printf("realloc failed at length:%d\n", len);
+            exit(EXIT_FAILURE);
+        } else {
+            memcpy(new_pem, strcat(new_pem, line), (size_t)len);
+            pem = new_pem;
+        }
     }
+    printf ("%d\n", len);
+    printf ("BIO read done\n");
+
+    /*
+    new_pem = (unsigned char *)realloc(pem, (size_t)(len + 1));
+    if (!new_pem) {
+        printf("realloc failed at length:%d\n", len + 1);
+    } else {
+        pem = new_pem;
+    }
+    pem[len] = '\0';
+    printf ("string append done\n");
+    */
+
+    return pem;
 }
 
 RSA *set_rsa_public_key(unsigned char *public_key, int length) {
