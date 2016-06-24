@@ -12,8 +12,7 @@
     "persistent": false
   },
   "browser_action": {
-    "default_title": "EncryptoMatic!!",
-    "default_popup": "src/popup/popup.html"
+    "default_title": "EzKeZe"
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*", "<all_urls>"],
@@ -37,7 +36,7 @@
             "mac": "Command+Shift+F",
             "linux": "Ctrl+Shift+F"
           },
-          "description": "encrypt the currently selected text"
+          "description": "decrypt the currently selected text"
       }
   },
   "manifest_version": 2

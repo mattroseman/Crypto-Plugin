@@ -65,3 +65,9 @@ chrome.extension.onMessage.addListener(
     }
   }
 );
+
+//Open the local html when the extension is clicked
+chrome.browserAction.onClicked.addListener(function(tab) {
+    console.log("The Extension Button was Clicked");
+    chrome.tabs.create({'url': chrome.extension.getURL('src/dashboard/index.html'), 'selected': true});
+});
