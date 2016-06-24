@@ -17,8 +17,8 @@
 #include <string.h>
 
 RSA *generate_rsa_keys();
-void print_rsa_public_key(RSA*, FILE*);
-RSA *read_rsa_public_key(FILE*);
+unsigned char *get_rsa_public_key(RSA*);
+RSA *set_rsa_public_key(unsigned char *, int);
 unsigned char *generate_aes_key();
 unsigned char *generate_aes_iv();
 unsigned int rsa_encrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
@@ -39,6 +39,10 @@ const int aes_key_length = 256;
 int main() {
     RSA *rsa_key = generate_rsa_keys();
 
+    unsigned char *rsa_pubkey = get_rsa_public_key(rsa_key);
+
+    printf ("%s\n", rsa_pubkey);
+
     printf ("RSA keys generated\n");
 
     unsigned char *plaintext = (unsigned char *)"Hello World!";
@@ -48,7 +52,9 @@ int main() {
 
     printf ("beginning rsa encryption\n");
 
-    unsigned int encrypted_length = rsa_encrypt_message(plaintext, plaintext_length, rsa_key, &encrypted_message);
+    RSA *rsa_pub_key = set_rsa_public_key(rsa_pubkey, strlen(rsa_pubkey));
+
+    unsigned int encrypted_length = rsa_encrypt_message(plaintext, plaintext_length, rsa_pub_key, &encrypted_message);
 
     printf ("\'Hello World!\' encrypted is:\n");
     printf ("%s\n", encrypted_message);
@@ -109,23 +115,25 @@ RSA *generate_rsa_keys(unsigned char **public_key, unsigned char **private_key) 
     return key;
 }
 
+unsigned char *get_rsa_public_key(RSA *key) {
+    BIO *pubKey = BIO_new(BIO_s_mem());
 
-/* 
- * Prints the public part of a RSA key to a file
- */
-void print_rsa_public_key(RSA* key, FILE* file) {
+    PEM_write_bio_RSA_PUBKEY(pubKey, key);
 
-    PEM_write_RSAPublicKey(file, key);
+    unsigned char *line;
+
+    while (!BIO_eof(pubKey)) {
+        BIO_gets(pubKey, line, sizeof *pubKey);
+        printf("%s", line);
+    }
 }
 
-/*
- * Reads a PEM file and gets the public RSA key
- */
-RSA *read_rsa_public_key(FILE* file) {
+RSA *set_rsa_public_key(unsigned char *public_key, int length) {
+    BIO *mem = BIO_new_mem_buf(public_key, -1);
 
-    RSA *key = RSA_new();
+    RSA *key;
 
-    PEM_read_RSA_PUBKEY(file, &key, NULL, NULL);
+    key = PEM_read_bio_RSA_PUBKEY(mem, &key, 0, NULL);
 
     return key;
 }
