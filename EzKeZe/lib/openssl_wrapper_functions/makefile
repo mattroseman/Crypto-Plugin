@@ -12,3 +12,5 @@ $(TARGET): $(TARGET).c
 clean:
 	$(RM) $(TARGET)
 
+lib: clean $(TARGET).c
+	$(CC) -c $(TARGET).c  $(CFLAGS)
