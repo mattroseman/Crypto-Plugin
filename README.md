@@ -1,22 +1,22 @@
 # API Endpoints
-
-- /api/invite - POST
+POST
+- /api/invite  
   user_id  
   pub_key  
 
-- /api/server_sync
+- /api/server_sync  
   user_id
   keys
 
-- /api/id_to_pub
+- /api/id_to_pub  
   user_id
   
-- /api/register
+- /api/register  
   user  
   pass  
   pub_key
 
-- /api/login
+- /api/login  
   user_id  
   pass  
   
