@@ -16,7 +16,10 @@
     "url": "https://github.com/gatesyp/restful-nm/issues"
   },
   "dependencies": {
-	  "express": "~4.10.2",
-	  "body-parser": "~1.15.0"
+    "body-parser": "~1.15.0",
+    "deep-diff": "^0.3.4",
+    "express": "~4.10.2",
+    "mysql": "^2.11.1",
+    "request": "^2.72.0"
   }
 }
