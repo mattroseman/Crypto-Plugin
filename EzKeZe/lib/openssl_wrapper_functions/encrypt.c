@@ -17,20 +17,24 @@
 #include <string.h>
 
 RSA *generate_rsa_keys();
-unsigned int get_rsa_public_key(RSA*, unsigned char **);
-RSA *set_rsa_public_key(unsigned char *);
+unsigned int rsa_publickey_to_pem(RSA*, unsigned char**);
+RSA *rsa_pem_to_publickey(unsigned char*);
+unsigned int rsa_privatekey_to_pem(RSA*, unsigned char**, unsigned char*);
+RSA *rsa_pem_to_privatekey(unsigned char*, RSA*);
 unsigned char *generate_aes_key();
 unsigned char *generate_aes_iv();
 unsigned int rsa_encrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
 unsigned int rsa_decrypt_message(unsigned char*, unsigned int, RSA*, unsigned char**);
-unsigned int aes_encrypt_message(unsigned char *, unsigned int, unsigned char *, unsigned char *, unsigned char **);
-unsigned int aes_decrypt_message(unsigned char *, unsigned int, unsigned char *, unsigned char *, unsigned char **);
+unsigned int aes_encrypt_message(unsigned char*, unsigned int, unsigned char*, unsigned char*, unsigned char**);
+unsigned int aes_decrypt_message(unsigned char*, unsigned int, unsigned char*, unsigned char*, unsigned char**);
 
 //  RSA constants
 const int padding = RSA_PKCS1_PADDING;
 const int kBits = 2048;
+const int key_length = 2048/8;
 const unsigned long kExp_long = 65537;
 BIGNUM *kExp = NULL;
+
 
 //  AES constants
 const int aes_key_length = 256;
@@ -40,10 +44,14 @@ int main() {
     RSA *rsa_key = generate_rsa_keys();
 
     unsigned char *rsa_pubkey_pem; 
-    unsigned int pem_size = get_rsa_public_key(rsa_key, &rsa_pubkey_pem);
+    unsigned int pub_pem_size = rsa_publickey_to_pem(rsa_key, &rsa_pubkey_pem);
 
     printf ("%s\n", rsa_pubkey_pem);
 
+    unsigned char *rsa_privkey_pem;
+    unsigned int priv_pem_size = rsa_privatekey_to_pem(rsa_key, &rsa_privkey_pem, NULL);
+
+    printf ("%s\n", rsa_privkey_pem);
 
     printf ("RSA keys generated\n");
 
@@ -54,7 +62,7 @@ int main() {
 
     printf ("beginning rsa encryption\n");
 
-    RSA *rsa_pubkey = set_rsa_public_key(rsa_pubkey_pem);
+    RSA *rsa_pubkey = rsa_pem_to_publickey(rsa_pubkey_pem);
 
     unsigned int encrypted_length = rsa_encrypt_message(plaintext, plaintext_length, rsa_pubkey, &encrypted_message);
 
@@ -63,7 +71,11 @@ int main() {
 
     unsigned char *decrypted_message = (unsigned char *)malloc(plaintext_length*sizeof(unsigned char));
 
-    rsa_decrypt_message(encrypted_message, encrypted_length, rsa_key, &decrypted_message);
+    printf ("beginning rsa decryption\n");
+
+    RSA *rsa_privkey = rsa_pem_to_privatekey(rsa_privkey_pem, rsa_key);
+
+    rsa_decrypt_message(encrypted_message, encrypted_length, rsa_privkey, &decrypted_message);
 
     printf ("The decrypted message is:\n");
     printf ("%s\n", decrypted_message);
@@ -117,7 +129,13 @@ RSA *generate_rsa_keys(unsigned char **public_key, unsigned char **private_key) 
     return key;
 }
 
-unsigned int get_rsa_public_key(RSA *key, unsigned char **out) {
+/* 
+ * Takes in an RSA object and PEM encodes it in out
+ * @param key: the RSA key
+ * @param out: the string the PEM encoding goes to
+ * @return: the length of the PEM encoding
+ */
+unsigned int rsa_publickey_to_pem(RSA *key, unsigned char **out) {
     BIO *pubKey = BIO_new(BIO_s_mem());
 
     PEM_write_bio_RSA_PUBKEY(pubKey, key);
@@ -129,10 +147,8 @@ unsigned int get_rsa_public_key(RSA *key, unsigned char **out) {
 
     if (!BIO_eof(pubKey)) {
         BIO_gets(pubKey, line, sizeof *pubKey);
-        //printf ("%s", line);
 
         len += strlen(line);
-        //printf ("%d\n", len);
 
         new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
         if (!new_pem) {
@@ -145,11 +161,9 @@ unsigned int get_rsa_public_key(RSA *key, unsigned char **out) {
 
     while (!BIO_eof(pubKey)) {
         BIO_gets(pubKey, line, sizeof *pubKey);
-        //printf ("%s", line);
 
         //  current length of PEM (including newlines)
         len += strlen(line);
-        //printf ("%d\n", len);
 
         new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
         if (!new_pem) {
@@ -160,18 +174,70 @@ unsigned int get_rsa_public_key(RSA *key, unsigned char **out) {
             pem = new_pem;
         }
     }
-    printf ("%d\n", len);
-    printf ("BIO read done\n");
 
     *out = pem;
 
     return len;
 }
 
-RSA *set_rsa_public_key(unsigned char *public_key) {
-    printf ("set_rsa_public_key started\n");
-    printf ("%s\n", public_key);
+/* 
+ * Takes in an RSA object and PEM encodes it in out
+ * @param key: the RSA private key
+ * @param out: the string the PEM encoding goes to
+ * @param pem_password: the password to unlock the pem encoding
+ * @return: the length of the PEM encoding
+ */
+unsigned int rsa_privatekey_to_pem(RSA *key, unsigned char **out, unsigned char *password) {
+    BIO *pubKey = BIO_new(BIO_s_mem());
 
+    PEM_write_bio_RSAPrivateKey(pubKey, key, NULL, NULL, 0, NULL, NULL);
+
+    unsigned char line[65];
+    int len = 0;
+    unsigned char *pem = NULL;
+    unsigned char *new_pem = NULL;
+
+    if (!BIO_eof(pubKey)) {
+        BIO_gets(pubKey, line, sizeof *pubKey);
+
+        len += strlen(line);
+
+        new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
+        if (!new_pem) {
+            printf("realloc failed at length:%d\n", len);
+        } else {
+            memcpy(new_pem, "-----BEGIN PRIVATE KEY-----\n", (size_t)len);
+            pem = new_pem;
+        }
+    }
+
+    while (!BIO_eof(pubKey)) {
+        BIO_gets(pubKey, line, sizeof *pubKey);
+
+        //  current length of PEM (including newlines)
+        len += strlen(line);
+
+        new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
+        if (!new_pem) {
+            printf("realloc failed at length:%d\n", len);
+            exit(EXIT_FAILURE);
+        } else {
+            memcpy(new_pem, strcat(new_pem, line), (size_t)len);
+            pem = new_pem;
+        }
+    }
+
+    *out = pem;
+
+    return len;
+}
+
+/* 
+ * Takes a PEM encoding of a public rsa key and converts it to an RSA object
+ * @param public_key: the PEM encoding
+ * @return: the RSA public key (no private key)
+ */
+RSA *rsa_pem_to_publickey(unsigned char *public_key) {
     RSA *key = RSA_new();
     BIO *pubKey = BIO_new(BIO_s_mem());
     int len;
@@ -184,6 +250,25 @@ RSA *set_rsa_public_key(unsigned char *public_key) {
     PEM_read_bio_RSA_PUBKEY(pubKey, &key, NULL, NULL);
 
     return key;
+}
+
+/* 
+ * Takes a PEM encoding of a private rsa key and converts it to an RSA object
+ * @param private_key: the PEM encoding
+ * @return: the RSA private key
+ */
+RSA *rsa_pem_to_privatekey(unsigned char *private_key, RSA *public_key) {
+    BIO *privKey = BIO_new(BIO_s_mem());
+    int len;
+
+    if ((len = BIO_puts(privKey, private_key)) <= 0) {
+        printf ("BIO_puts in set_rsa_public_key failed\n");
+        exit(EXIT_FAILURE);
+    }
+    
+    PEM_read_bio_RSAPrivateKey(privKey, &public_key, NULL, NULL);
+
+    return public_key;
 }
 
 /*
@@ -219,7 +304,7 @@ unsigned int rsa_encrypt_message(unsigned char *message, unsigned int length, RS
  * @param out: the string to print plaintext to
  */
 unsigned int rsa_decrypt_message(unsigned char *encrypted_message, unsigned int length, RSA *key, unsigned char **out) {
-    unsigned char *encrypted_ascii_message = (unsigned char *)malloc(RSA_size(key));
+    unsigned char *encrypted_ascii_message = (unsigned char *)malloc(key_length);
     unsigned char *decrypted_message = (unsigned char *)malloc(length);
     unsigned int size;
     
@@ -228,10 +313,14 @@ unsigned int rsa_decrypt_message(unsigned char *encrypted_message, unsigned int 
         exit(EXIT_FAILURE);
     }
 
+    printf ("message decoded\n");
+
     if ((size = RSA_private_decrypt(length, encrypted_ascii_message, decrypted_message, key, padding)) < 0) {
         printf("RSA_private_decrypt() failed\n");
         exit(EXIT_FAILURE);
     }
+
+    printf ("message decrypted\n");
 
     *(decrypted_message + size) = '\0';
 
