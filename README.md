@@ -5,7 +5,7 @@ POST
   pub_key  
 
 - /api/server_sync  
-  user_id
+  user_id  
   keys
 
 - /api/id_to_pub  
