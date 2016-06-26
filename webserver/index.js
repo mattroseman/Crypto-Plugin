@@ -9,14 +9,18 @@ var bodyParser = require('body-parser'); // parse responses
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// First you need to create a connection to the db
+var knurld_oauth = "Bearer ";
+var knurld_dev_id = 'Bearer: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4MTY5MDUsInJvbGUiOiJhZG1pbiIsImlkIjoiNTU3MWMzYTVjMjAzZjE3ODI2NzQwZTkwMTlhMGVjYTQiLCJ0ZW5hbnQiOiJ0ZW5hbnRfbXJwdGF4M29tejJoaXkzbm5ucXhhMnR2cGJxdGk2dHBuNTNoYzUzeGdyMmhhM3R6cGJ0d3c2dGVveSsrKysrKyIsIm5hbWUiOiJhZG1pbiJ9.8sdpttZ7h7FWVqaaFzhxpwlYCl7I8ePHkXzhSjrvrIYZ4y8g0Fn40riDvCupSxjh6Rq00NXlgc5ikd0fOUQpyw';
+
+// create connection to db
 var con = mysql.createConnection({
-	host: "stoh.io",
+	host: "localhost",
     user: "root",
-    password: "admin",
+    password: "lolipop123",
     database: "ezkeze"
 
 });
+
 // get access token from knurld
 request.post({
 	url:'https://api.knurld.io/oauth/client_credential/accesstoken?grant_type=client_credentials', 
@@ -29,19 +33,69 @@ request.post({
 		console.log('Error in getting OAuth key');
 		return;
 	}
-	console.log(httpResponse.body);
+	knurld_oauth = knurld_oauth + JSON.parse(body).access_token;
+	//console.log(knurld_auth);
 	  });
 
+// connect to database 
 con.connect(function(err){
 	if(err){
 		console.log('Error connecting to Db');
+		console.log(err);
 		return;
 	}
 	console.log('Connection established');
 });
 
-// ----------return json of public keys associated with user id
+// -----------works to register a user
+app.post('/api/register', function(req, res) {
+	data = [];
+	// construct a JSON from the http request
+	var user_data = [];
+	var email = mysql.escape(req.headers.email);
+	var password = mysql.escape(req.headers.password);
+	var public_key = req.headers.public_key;
+	var knurld_consumer_id;
+	// register the consumer to knurld, and get their consumer ID
+	request.post({
+			url: 'https://api.knurld.io/v1/consumers', 
+			headers:  {
+				"Authorization" : knurld_oauth,
+				"Developer-Id" : knurld_dev_id
+			}, 
+			json: {
+				username: String(email),
+				gender: String(req.headers.gender),
+				password: String(password)
+			}
+			}, function(err, response, body){
+				if(err) {
+					console.log(err);
+				} else {
+					body = JSON.stringify(body);
+				       	knurld_consumer_id = body.substring(44, body.length - 2); 
+					console.log(knurld_consumer_id);
+				}
+				user_data.push({email: email, password: password, public_key: public_key, knurld_id: knurld_consumer_id});
+				console.log(user_data);
+				if(con.query('INSERT INTO users SET ?', user_data, function(err,mysql_res){
+					if(err) {data.push({data: "fail"}); 
+						res.send(JSON.stringify(data));
+					} else {
+						console.log('Last insert ID:', res.insertId);
+						data.push({data: "success"}); 
+						res.send(JSON.stringify(data));
+					}
+				})) console.log("message sent back");	  
+			});
 
+	// insert row to database
+	// TODO check for duplicate registered username, or client id
+
+});
+// TODO get pending invitations
+
+// ----------return json of public keys associated with user id
 app.post('/api/server_sync', function(req, res) {
 	// get array of origin keys
 	var rhs = {}, keys = [];
@@ -77,28 +131,6 @@ app.post('/api/id_to_pub', function(req, res) {
 	// 	});	  
 });
 
-// -----------works to register a user
-app.post('/api/register', function(req, res) {
-	// WHERE name = ' + mysql.escape(username),
-	var user_data = [];
-	var name = mysql.escape(req.headers.user);
-	var h_pass = mysql.escape(req.headers.pass);
-	var pub_key = req.headers.pub_key;
-	// 	var insertion = [];
-	// 	insertion.push({pub_key: pub_key, placeholder: '0', second_hold: '1'});
-	// 	var sql = 'INSERT INTO keys SET ?';
-	// 	con.query(sql, insertion, function(err,res){
-	// 		if(err) throw err;
-	//		user_data.push({user: name, h_pass: h_pass, key: res.insertId});
-	user_data.push({user: name, h_pass: h_pass, pub_key: pub_key});
-	console.log(user_data);
-	con.query('INSERT INTO authenticate SET ?', user_data, function(err,res){
-		if(err) throw err;
-
-		console.log('Last insert ID:', res.insertId);
-	});	  
-	//	});	  
-});
 
 // -----------returns success if login works, else wrong password
 // not a comprehensive authentication solution
@@ -132,7 +164,7 @@ app.post('/api/invite', function(req, res) {
 });
 // start the server
 app.listen(port);
-console.log('Server started!'); 
+console.log('Server started: localhost:'+port); 
 // con.end(function(err) {
 // 	console.log('mysql con terminated - error?');
 // 	// The connection is terminated gracefully
