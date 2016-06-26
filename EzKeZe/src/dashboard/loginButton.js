@@ -26,7 +26,7 @@ if (! dialog.showModal) {
 }
 var registerClickHandeler = function(event) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "http://stoh.io/api/register", true);
+    xhttp.open("POST", "http://localhost:8080/api/register", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     var email = emailField.value.toString();
     var password = passwordField.value.toString();
@@ -36,7 +36,8 @@ var registerClickHandeler = function(event) {
       'gender': 'M',
       'public_key': 'alphaTest'
     }
-    var registerString = JSON.stringify(registerJSON);
+    var data = {"data": registerJSON};
+    var registerString = JSON.stringify(data);
     console.log(registerString);
     xhttp.send(registerString);
     registerDialog.close();
