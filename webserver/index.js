@@ -78,6 +78,7 @@ app.post('/api/register', function(req, res) {
 				}
 				user_data.push({email: email, password: password, public_key: public_key, knurld_id: knurld_consumer_id});
 				console.log(user_data);
+	// TODO check for duplicate registered username, or client id
 				if(con.query('INSERT INTO users SET ?', user_data, function(err,mysql_res){
 					if(err) {data.push({data: "fail"}); 
 						res.send(JSON.stringify(data));
@@ -89,8 +90,6 @@ app.post('/api/register', function(req, res) {
 				})) console.log("message sent back");	  
 			});
 
-	// insert row to database
-	// TODO check for duplicate registered username, or client id
 
 });
 // TODO get pending invitations
