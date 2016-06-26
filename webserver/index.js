@@ -134,16 +134,18 @@ app.post('/api/id_to_pub', function(req, res) {
 // -----------returns success if login works, else wrong password
 // TODO fix function properly - send response codes, and check email/pass combo
 app.post('/api/login', function(req, res) {
-	var h_pass = mysql.escape(req.headers.pass);
-	con.query('SELECT COUNT(*) AS pass FROM `authenticate` WHERE h_pass = ' + h_pass,  function(err,rows){
+	var h_pass = mysql.escape(req.headers.password);
+	var h_user = mysql.escape(req.headers.email);
+	var query = "SELECT *  FROM users where email = " + h_user + " AND password = " + h_pass;
+	con.query(query,  function(err,rows){
 		if(err) throw err;
-		console.log(rows[0].pass);
-		if(rows[0].pass == '0')
-		{
-			res.send('wrong password');
-			return;
-		} else
-			res.send('success');
+		else{
+			if(rows.length > 0) {
+				console.log(rows);
+				res.send("success");
+			}
+			else res.send("fail");
+		}
 	});
 });
 
