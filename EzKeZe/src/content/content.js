@@ -150,5 +150,8 @@ function replaceSelectedText(replacementText) {
     } else if (document.selection && document.selection.createRange) {
         range = document.selection.createRange();
         range.text = replacementText;
+        if(document.getElementsByClassName('data-text').size != 0){
+
+        }
     }
 }
