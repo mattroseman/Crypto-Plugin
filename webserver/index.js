@@ -4,19 +4,33 @@ var mysql = require("mysql");
 var app = express();
 var port = process.env.PORT || 8080;
 var diff = require('deep-diff').diff;
-
-var bodyParser = require('body-parser');
+var request = require('request'); // make http calls to knurld
+var bodyParser = require('body-parser'); // parse responses
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // First you need to create a connection to the db
 var con = mysql.createConnection({
-	host: "localhost",
+	host: "stoh.io",
     user: "root",
     password: "admin",
-    database: "chicagohack"
+    database: "ezkeze"
 
 });
+// get access token from knurld
+request.post({
+	url:'https://api.knurld.io/oauth/client_credential/accesstoken?grant_type=client_credentials', 
+	form: {
+		'client_id':' 0gHhDE2O9So0sBfSdA7ur4cvNI8qV6dm', 
+		'client_secret':'piYbA87jmWUKpNbj'
+		}
+	}, function(err,httpResponse,body){
+	if(err){
+		console.log('Error in getting OAuth key');
+		return;
+	}
+	console.log(httpResponse.body);
+	  });
 
 con.connect(function(err){
 	if(err){
@@ -25,22 +39,8 @@ con.connect(function(err){
 	}
 	console.log('Connection established');
 });
-// put up an encrypted AES key for another user to download
-app.post('/api/invite', function(req, res) {
-	// take the key, add record under a persons name
-	var user_data = [];
-	var name = req.headers.user_id;
-	var pub_key = req.headers.pub_key;
-	user_data.push({username: name, key: pub_key});
-	console.log(user_data);
-	con.query('INSERT INTO user_maps SET ?', user_data, function(err,res){
-		if(err) throw err;
-		console.log('Last insert ID:', res.insertId);
-	});	  
-});
 
-// ----------return json of new public keys
-// compare list being sent to me with list on the server
+// ----------return json of public keys associated with user id
 
 app.post('/api/server_sync', function(req, res) {
 	// get array of origin keys
@@ -61,28 +61,9 @@ app.post('/api/server_sync', function(req, res) {
 	con.query('SELECT `key` FROM `user_maps` WHERE username = ' + user, function(err,rows){
 		if(err) throw err;
 		for(i in rows)
-	{
-		lhs.keys.push(rows[i].key);
-	}
-	// console.log(lhs);
-	// console.log(rhs);
-	var differences = diff(lhs, rhs);
-	var key_list = [];
-
-	for(i in differences){
-		if(differences[i].kind == "A")
-		key_list.push(differences[i].item.lhs);
-	}
-	// now have a list of id's for the missing pub keys
-	// get a list of the actual pub keys from DB
-	con.query('SELECT pub_key FROM `keys` WHERE id IN (?) ', [ key_list ], function (err, results) {
-		var data_results = [];
-		if(err) throw err;
-		for(i in results){
-			data_results.push(results[i].pub_key);
+		{
+			lhs.keys.push(rows[i].key);
 		}
-		res.send(data_results);
-	});
 	});
 });
 // ---------------fetch a pub key, given a userID
@@ -127,15 +108,28 @@ app.post('/api/login', function(req, res) {
 		if(err) throw err;
 		console.log(rows[0].pass);
 		if(rows[0].pass == '0')
-	{
-		res.send('wrong password');
-		return;
-	} else
-		res.send('success');
+		{
+			res.send('wrong password');
+			return;
+		} else
+			res.send('success');
 	});
 });
 
 
+// put up an encrypted AES key for another user to download
+app.post('/api/invite', function(req, res) {
+	// take the key, add record under a persons name
+	var user_data = [];
+	var name = req.headers.user_id;
+	var pub_key = req.headers.pub_key;
+	user_data.push({username: name, key: pub_key});
+	console.log(user_data);
+	con.query('INSERT INTO user_maps SET ?', user_data, function(err,res){
+		if(err) throw err;
+		console.log('Last insert ID:', res.insertId);
+	});	  
+});
 // start the server
 app.listen(port);
 console.log('Server started!'); 
