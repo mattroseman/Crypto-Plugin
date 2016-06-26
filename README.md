@@ -1,23 +1,43 @@
 # API Endpoints
-POST
-- /api/invite  
-  user_id  
-  pub_key  
+## POST
 
-- /api/server_sync  
-  user_id  
-  keys
+```
+/api/register
+SEND
+- email
+- password
+- public_key
+- gender
+RECEIVE
+- state : "success"
+- state : "fail"
 
-- /api/id_to_pub  
-  user_id
+/api/login
+SEND
+- email
+- password
+RECEIVE
+- state : "success"
+- state : "fail"
+```
+## GET
+
+```
+/api/server_sync
+SEND
+- email
+RECEIVE
+- keys : { 0 : {"key" : "..", "status" : "0"}, 1 : {"key" : "..", "status" : "0"}, ... , n : {"key" : "..", "status" : "1"} }
+
+/api/id_to_pub
+SEND
+- email
+RECEIVE
+- key : ".."
+```
+
+
+TODO  
+  invite
+  join
   
-- /api/register  
-  user  
-  pass  
-  pub_key
-
-- /api/login  
-  user_id  
-  pass  
-  
-

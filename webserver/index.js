@@ -132,7 +132,7 @@ app.post('/api/id_to_pub', function(req, res) {
 
 
 // -----------returns success if login works, else wrong password
-// not a comprehensive authentication solution
+// TODO fix function properly - send response codes, and check email/pass combo
 app.post('/api/login', function(req, res) {
 	var h_pass = mysql.escape(req.headers.pass);
 	con.query('SELECT COUNT(*) AS pass FROM `authenticate` WHERE h_pass = ' + h_pass,  function(err,rows){
@@ -148,7 +148,8 @@ app.post('/api/login', function(req, res) {
 });
 
 
-// put up an encrypted AES key for another user to download
+// -----------put up an encrypted AES key for another user to download
+// TODO change to reflect the new database
 app.post('/api/invite', function(req, res) {
 	// take the key, add record under a persons name
 	var user_data = [];
