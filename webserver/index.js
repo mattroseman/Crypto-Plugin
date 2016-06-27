@@ -121,13 +121,15 @@ app.post('/api/server_sync', function(req, res) {
 });
 // ---------------fetch a pub key, given a userID
 app.get('/api/id_to_pub', function(req, res) {
+	console.log("inside of id to pub");
 	console.log(req.headers.email);
 	var email = mysql.escape(req.headers.email);
-	con.query('SELECT * FROM `users` JOIN key_dump ON key_dump.id = users.public_key WHERE `email` = ?', email, function(err, result){
+	//con.query('SELECT * FROM `users` JOIN key_dump ON key_dump.id = users.public_key WHERE email = ?', email, function(err, result){
+	con.query('SELECT * FROM users JOIN key_dump ON key_dump.id = users.public_key WHERE email = "' + email + '"', function(err, result){
 		if(err) throw err;
 		console.log(result);
-		//console.log("pub key: ?", result.public_key);
-		//res.send(result.public_key);
+		console.log("pub key: ", result.public_key);
+		res.send(result.public_key);
 	
 	});
 });
