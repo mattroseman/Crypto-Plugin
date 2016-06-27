@@ -7,13 +7,11 @@ var diff = require('deep-diff').diff;
 var request = require('request'); // make http calls to knurld
 var bodyParser = require('body-parser'); // parse responses
 var tesseract = require('node-tesseract'); // OCR for image recognition - mobile
-var multer = require('multer'); // middleware to make file upload easy
 var path = require('path');
 var multiparty = require('multiparty');
 var util = require('util');
 
 
-//app.use(multer({dest:'./uploads/'})); // configure express to use multer
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
@@ -23,9 +21,9 @@ var knurld_dev_id = 'Bearer: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MD
 // create connection to db
 var con = mysql.createConnection({
 	host: "localhost",
-    user: "root",
-    password: "lolipop123",
-    database: "ezkeze"
+	user: "root",
+	password: "lolipop123",
+	database: "ezkeze"
 
 });
 
@@ -55,15 +53,16 @@ con.connect(function(err){
 	console.log('Connection established');
 });
 
-// -----------works to register a user
+// -----------register a user
 app.post('/api/register', function(req, res) {
 	data = [];
 	// construct a JSON from the http request
 	var user_data = [];
-	var email = mysql.escape(req.headers.email);
-	var password = mysql.escape(req.headers.password);
-	var public_key = req.headers.public_key;
+	var email = mysql.escape(req.body.email);
+	var password = mysql.escape(req.body.password);
+	var public_key = req.body.public_key;
 	var knurld_consumer_id;
+	console.log(email);
 	// register the consumer to knurld, and get their consumer ID
 	request.post({
 			url: 'https://api.knurld.io/v1/consumers', 
@@ -72,9 +71,9 @@ app.post('/api/register', function(req, res) {
 				"Developer-Id" : knurld_dev_id
 			}, 
 			json: {
-				username: String(email),
-				gender: String(req.headers.gender),
-				password: String(password)
+				username: email,
+				gender: req.body.gender,
+				password: password
 			}
 			}, function(err, response, body){
 				if(err) {
@@ -89,6 +88,7 @@ app.post('/api/register', function(req, res) {
 	// TODO check for duplicate registered username, or client id
 				if(con.query('INSERT INTO users SET ?', user_data, function(err,mysql_res){
 					if(err) {data.push({data: "fail"}); 
+						console.log(err);
 						res.send(JSON.stringify(data));
 					} else {
 						console.log('Last insert ID:', res.insertId);
@@ -101,16 +101,16 @@ app.post('/api/register', function(req, res) {
 
 });
 // test endpoint for uploading an image
-//app.get('/uploadImage', function (req, res) {
-    //res.writeHead(200, {'content-type': 'text/html'});
-    //res.end(
-        //'<form action="/api/get_text" enctype="multipart/form-data" method="post">'+
-        //'<input type="text" name="title"><br>'+
-        //'<input type="file" name="upload" multiple="multiple"><br>'+
-        //'<input type="submit" value="Upload">'+
-        //'</form>'
-    //);
-//})
+app.get('/uploadImage', function (req, res) {
+    res.writeHead(200, {'content-type': 'text/html'});
+    res.end(
+	'<form action="/api/get_text" enctype="multipart/form-data" method="post">'+
+	'<input type="text" name="title"><br>'+
+	'<input type="file" name="upload" multiple="multiple"><br>'+
+	'<input type="submit" value="Upload">'+
+	'</form>'
+    );
+})
 // ----------return text content of image
 // enctype="multipart/form-data" is required
 app.post('/api/get_text', function(req, res) {
@@ -123,7 +123,6 @@ app.post('/api/get_text', function(req, res) {
 			if(err) {
 				console.error(err);
 				res.writeHead(500, {'content-type': 'text/plain'});
-				res.write(err);
 				res.end("end");
 			} else {
 				res.writeHead(200, {'content-type': 'text/plain'});
@@ -138,26 +137,31 @@ app.post('/api/get_text', function(req, res) {
 // ----------return json of public keys associated with user id
 app.post('/api/server_sync', function(req, res) {
 	// get array of origin keys
-	var rhs = {}, keys = [];
-	keys = JSON.parse(req.headers.keys);
-	rhs.keys = keys;
-
-	// console.log("KEYS  " + rhs.keys);
-	var user = req.headers.user_id;
-	rhs.user_id = user;
-
-	// now get list of keys where headers.user
-	var lhs = {}, lhs_keys = [];
-	lhs.keys = lhs_keys;
-	lhs.user_id = user;	
-
-
-	con.query('SELECT `key` FROM `user_maps` WHERE username = ' + user, function(err,rows){
+	var keys = [];
+	console.log(req.headers.email);
+	email = mysql.escape(req.headers.email);
+	con.query('SELECT original_keys.id, original_keys.encrypted_keys FROM users JOIN original_keys ON original_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
+	//con.query('SELECT * FROM users WHERE email = ' + email  , function(err,rows){
 		if(err) throw err;
+		console.log(rows);
+		
 		for(i in rows)
 		{
-			lhs.keys.push(rows[i].key);
+			keys.push({'id' : rows[i].id, 'key' : rows[i].encrypted_keys});
 		}
+
+		con.query('SELECT chat_keys.orig_id, chat_keys.chat_key FROM users JOIN chat_keys ON chat_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
+			if(err) throw err;
+			console.log(rows);
+			
+			for(i in rows)
+			{
+				keys.push({'id' : rows[i].orig_id, 'key' : rows[i].chat_key});
+			}
+			console.log(keys);
+			res.contentType('application/json');
+			res.send(JSON.stringify(keys));
+		});
 	});
 });
 // ---------------fetch a pub key, given a userID
@@ -166,11 +170,15 @@ app.get('/api/id_to_pub', function(req, res) {
 	console.log(req.headers.email);
 	var email = mysql.escape(req.headers.email);
 	//con.query('SELECT * FROM `users` JOIN key_dump ON key_dump.id = users.public_key WHERE email = ?', email, function(err, result){
-	con.query('SELECT * FROM users JOIN key_dump ON key_dump.id = users.public_key WHERE email = "' + email + '"', function(err, result){
+	con.query('SELECT public_key FROM users WHERE email = ' + email, function(err, rows){
 		if(err) throw err;
-		console.log(result);
-		console.log("pub key: ", result.public_key);
-		res.send(result.public_key);
+		var tmp = [];
+		res.contentType('application/json');
+		for(i in rows){
+			tmp.push({'public_key' : rows[i].public_key});
+
+		}
+			res.send(JSON.stringify(tmp));
 
 	});
 });
@@ -181,6 +189,7 @@ app.get('/api/id_to_pub', function(req, res) {
 app.post('/api/login', function(req, res) {
 	var h_pass = mysql.escape(req.headers.password);
 	var h_user = mysql.escape(req.headers.email);
+	console.log(h_pass, h_user);
 	var query = "SELECT *  FROM users where email = " + h_user + " AND password = " + h_pass;
 	con.query(query,  function(err,rows){
 		if(err) throw err;
@@ -202,18 +211,28 @@ app.post('/api/login', function(req, res) {
 
 
 // -----------put up an encrypted AES key for another user to download
-// TODO change to reflect the new database
+// given orig_id and chat_key, and email, add entry for a person
 app.post('/api/invite', function(req, res) {
 	// take the key, add record under a persons name
 	var user_data = [];
-	var name = req.headers.user_id;
-	var pub_key = req.headers.pub_key;
-	user_data.push({username: name, key: pub_key});
-	console.log(user_data);
-	con.query('INSERT INTO user_maps SET ?', user_data, function(err,res){
-		if(err) throw err;
-		console.log('Last insert ID:', res.insertId);
-	});	  
+	// convert email to a user_id
+	var email = mysql.escape(req.headers.email);
+	var orig_id = req.headers.key_id;
+	var chat_key = mysql.escape(req.headers.chat_key);
+	console.log(email);
+	con.query('SELECT id FROM users WHERE email=' + email, function(err, rows){
+		for(i in rows)
+		var user_id = rows[i].id;
+		user_data.push({ orig_id: orig_id, chat_key : chat_key, user_id : user_id});
+		console.log(user_data);
+		con.query('INSERT INTO chat_keys SET ?', user_data, function(err,row){
+			if(err) throw err;
+			console.log('Last insert ID:', row.insertId);
+			res.writeHead(200, {'content-type': 'text/plain'});
+			res.write("success");
+			res.end();
+		});	  
+	});
 });
 // start the server
 app.listen(port);
