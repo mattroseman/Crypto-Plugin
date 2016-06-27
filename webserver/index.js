@@ -6,6 +6,14 @@ var port = process.env.PORT || 8080;
 var diff = require('deep-diff').diff;
 var request = require('request'); // make http calls to knurld
 var bodyParser = require('body-parser'); // parse responses
+var tesseract = require('node-tesseract'); // OCR for image recognition - mobile
+var multer = require('multer'); // middleware to make file upload easy
+var path = require('path');
+var multiparty = require('multiparty');
+var util = require('util');
+
+
+//app.use(multer({dest:'./uploads/'})); // configure express to use multer
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
@@ -92,8 +100,41 @@ app.post('/api/register', function(req, res) {
 
 
 });
-// TODO get pending invitations
+// test endpoint for uploading an image
+//app.get('/uploadImage', function (req, res) {
+    //res.writeHead(200, {'content-type': 'text/html'});
+    //res.end(
+        //'<form action="/api/get_text" enctype="multipart/form-data" method="post">'+
+        //'<input type="text" name="title"><br>'+
+        //'<input type="file" name="upload" multiple="multiple"><br>'+
+        //'<input type="submit" value="Upload">'+
+        //'</form>'
+    //);
+//})
+// ----------return text content of image
+// enctype="multipart/form-data" is required
+app.post('/api/get_text', function(req, res) {
+	// accept the file upload using multer
+	var form = new multiparty.Form();
+	form.parse(req, function (err, fields, files) {
+		console.log('files received', files.upload[0].path);
+		// use tesseract ocr model
+		tesseract.process(files.upload[0].path,function(err, text) {
+			if(err) {
+				console.error(err);
+				res.writeHead(500, {'content-type': 'text/plain'});
+				res.write(err);
+				res.end("end");
+			} else {
+				res.writeHead(200, {'content-type': 'text/plain'});
+				res.write('received upload:\n\n');
+				res.end(text);
+				console.log(text);
+			}
+		});
+	});
 
+});
 // ----------return json of public keys associated with user id
 app.post('/api/server_sync', function(req, res) {
 	// get array of origin keys
@@ -130,7 +171,7 @@ app.get('/api/id_to_pub', function(req, res) {
 		console.log(result);
 		console.log("pub key: ", result.public_key);
 		res.send(result.public_key);
-	
+
 	});
 });
 
@@ -146,9 +187,15 @@ app.post('/api/login', function(req, res) {
 		else{
 			if(rows.length > 0) {
 				console.log(rows);
-				res.send("success");
+				res.writeHead(200, {'content-type': 'text/plain'});
+				res.write("success");
+				res.end("end");
 			}
-			else res.send("fail");
+			else{
+				res.writeHead(200, {'content-type': 'text/plain'});
+				res.write("fail");
+				res.end("end");
+			}
 		}
 	});
 });

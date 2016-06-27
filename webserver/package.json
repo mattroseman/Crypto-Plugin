@@ -19,7 +19,10 @@
     "body-parser": "~1.15.0",
     "deep-diff": "^0.3.4",
     "express": "~4.10.2",
+    "multer": "^1.1.0",
+    "multiparty": "^4.1.2",
     "mysql": "^2.11.1",
+    "node-tesseract": "^0.2.7",
     "request": "^2.72.0"
   }
 }
