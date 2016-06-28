@@ -27,16 +27,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kwv-x4-31E">
                                 <rect key="frame" x="52" y="20" width="77" height="30"/>
                                 <state key="normal" title="screenshot"/>
-                                <connections>
-                                    <action selector="screenShotToText" destination="BYZ-38-t0r" eventType="touchUpInside" id="5zy-lf-ZRz"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zbS-DC-tlb">
                                 <rect key="frame" x="256" y="20" width="51" height="30"/>
                                 <state key="normal" title="camera"/>
-                                <connections>
-                                    <action selector="cameraToText" destination="BYZ-38-t0r" eventType="touchUpInside" id="aGt-qD-Zvg"/>
-                                </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="utW-SJ-85B">
                                 <rect key="frame" x="20" y="278" width="335" height="323"/>
@@ -48,12 +42,6 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
-                    <connections>
-                        <outlet property="cameraButton" destination="zbS-DC-tlb" id="Tto-vS-z8m"/>
-                        <outlet property="simpleButton" destination="Kwv-x4-31E" id="rbs-nl-qQi"/>
-                        <outlet property="simpleView" destination="opQ-yF-1ZG" id="OOc-Lb-dhG"/>
-                        <outlet property="simpleView2" destination="utW-SJ-85B" id="wmE-Hy-sxV"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

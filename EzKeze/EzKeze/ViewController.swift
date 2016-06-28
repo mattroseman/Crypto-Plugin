@@ -7,10 +7,8 @@
 //
 
 import UIKit
-import CryptoSwift
-import TesseractOCR
 
-class ViewController: UIViewController, G8TesseractDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class ViewController: UIViewController
 {
     @IBOutlet var cameraButton: UIButton!
     @IBOutlet var simpleButton: UIButton!
@@ -29,56 +27,6 @@ class ViewController: UIViewController, G8TesseractDelegate, UIImagePickerContro
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func screenShotToText()
-    {
-        let testImage = screenShotMethod()
-        let scaledImage = scaleImage(testImage, maxDimension: 2000)
-        recognizeText(scaledImage)
-    }
-    
-    @IBAction func cameraToText()
-    {
-        view.endEditing(true)
-        // 2
-        let imagePickerActionSheet = UIAlertController(title: "Snap/Upload Photo",
-                                                       message: nil, preferredStyle: .ActionSheet)
-        // 3
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
-            let cameraButton = UIAlertAction(title: "Take Photo",
-                                             style: .Default) { (alert) -> Void in
-                                                let imagePicker = UIImagePickerController()
-                                                imagePicker.delegate = self
-                                                imagePicker.sourceType = .Camera
-                                                self.presentViewController(imagePicker,
-                                                                           animated: true,
-                                                                           completion: nil)
-            }
-            imagePickerActionSheet.addAction(cameraButton)
-        }
-        // 4
-        let libraryButton = UIAlertAction(title: "Choose Existing",
-                                          style: .Default) { (alert) -> Void in
-                                            let imagePicker = UIImagePickerController()
-                                            imagePicker.delegate = self
-                                            imagePicker.sourceType = .PhotoLibrary
-                                            self.presentViewController(imagePicker,
-                                                                       animated: true,
-                                                                       completion: nil)
-        }
-        imagePickerActionSheet.addAction(libraryButton)
-        // 5
-        let cancelButton = UIAlertAction(title: "Cancel",
-                                         style: .Cancel) { (alert) -> Void in
-        }
-        imagePickerActionSheet.addAction(cancelButton)
-        // 6
-        presentViewController(imagePickerActionSheet, animated: true,
-                              completion: nil)
-        
-    }
-    
-    
     
     func screenShotMethod() -> UIImage
     {
@@ -115,19 +63,6 @@ class ViewController: UIViewController, G8TesseractDelegate, UIImagePickerContro
         return scaledImage
     }
     
-    func recognizeText(image:UIImage)
-    {
-        let tesseract:G8Tesseract = G8Tesseract(language:"eng");
-        //tesseract.language = "eng+ita";
-        tesseract.engineMode = .TesseractCubeCombined
-        tesseract.pageSegmentationMode = .Auto
-        tesseract.delegate = self
-        tesseract.image = image.g8_blackAndWhite()
-        tesseract.recognize()
-        simpleView2.text = tesseract.recognizedText
-        removeActivityIndicator()
-    }
-    
     func addActivityIndicator()
     {
         activityIndicator = UIActivityIndicatorView(frame: view.bounds)
@@ -142,17 +77,6 @@ class ViewController: UIViewController, G8TesseractDelegate, UIImagePickerContro
         activityIndicator.removeFromSuperview()
         activityIndicator = nil
     }
-    
-    func imagePickerController(picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let selectedPhoto = info[UIImagePickerControllerOriginalImage] as! UIImage
-        let scaledImage = scaleImage(selectedPhoto, maxDimension: 2000)
-        
-        addActivityIndicator()
-        
-        dismissViewControllerAnimated(true, completion: {
-            self.recognizeText(scaledImage)
-        })
-    }
+
 }
 

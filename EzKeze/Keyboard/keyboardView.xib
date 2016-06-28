@@ -72,7 +72,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view autoresizesSubviews="NO" contentMode="scaleToFill" horizontalHuggingPriority="375" verticalHuggingPriority="225" preservesSuperviewLayoutMargins="YES" id="1hV-9l-TDQ" userLabel="lowercase">
+        <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" horizontalHuggingPriority="375" verticalHuggingPriority="225" preservesSuperviewLayoutMargins="YES" id="1hV-9l-TDQ" userLabel="lowercase">
             <rect key="frame" x="0.0" y="0.0" width="375" height="448"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -143,6 +143,7 @@
                     <gestureRecognizers/>
                     <state key="normal" title="encrypt" image="encrypt.png"/>
                     <connections>
+                        <action selector="decryptUp" destination="-1" eventType="touchUpInside" id="Igz-bh-hcG"/>
                         <action selector="encryptFunc" destination="-1" eventType="touchUpInside" id="CPG-AM-2wn"/>
                         <outletCollection property="gestureRecognizers" destination="4fc-Yw-qa6" appends="YES" id="nAW-hL-XV2"/>
                     </connections>
@@ -621,6 +622,7 @@
                     </connections>
                 </button>
             </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <gestureRecognizers/>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>

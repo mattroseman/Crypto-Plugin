@@ -7,8 +7,7 @@
 //
 
 import UIKit
-import CryptoSwift
-import TesseractOCR
+import Alamofire
 
 class KeyboardViewController: UIInputViewController
 {
@@ -26,6 +25,7 @@ class KeyboardViewController: UIInputViewController
     var decryptedLogic:Bool = false
     var lastString:String = ""
     var based64:String = ""
+    var decrypting:Bool = false
     
     var timer = NSTimer()
     var timerTwo = NSTimer()
@@ -180,30 +180,7 @@ class KeyboardViewController: UIInputViewController
     
     @IBAction func encryptFunc()
     {
-        while displayString != ""
-        {
-            let proxy = textDocumentProxy as UITextDocumentProxy
-            let proxyField = viewLabel
-            let tempString = String(memoryDisplayString)
-            let input = [UInt8](tempString.utf8)
-            let encrypted: [UInt8] = try! AES(key: key, blockMode: .CTR).encrypt(input)
-            let encryptedString = encrypted.description
-            
-            UIPasteboard.generalPasteboard().string = (encryptedString)
-            let temp = UIPasteboard.generalPasteboard().string
-            
-            let base64String = try! temp!.encrypt(AES(key: based64Key, iv: based64IV)).toBase64()
-            proxy.insertText(identifier + base64String! + identifierTwo)
-            
-            based64 = base64String!
-            UIPasteboard.generalPasteboard().string = based64
-            
-            dropdownTextProxy.text = ""
-            proxyField.text = ""
-            displayString = ""
-            memoryDisplayString = ""
-            globalMemoryIndex = 0
-        }
+        
     }
     
     func turnDescriptionIntoJson(descriptionInput: String) -> [UInt8]
@@ -227,48 +204,39 @@ class KeyboardViewController: UIInputViewController
     
     @IBAction func decryptFunc()
     {
-        trackError = false
-        if UIPasteboard.generalPasteboard().string == " "
+        if !decrypting
         {
-            trackError = true
-        }
-        while !trackError
-        {
-            let clipboard = UIPasteboard.generalPasteboard().string
-            var changingString:String = clipboard!
-            changingString = changingString.stringByReplacingOccurrencesOfString(identifier, withString: "")
-            changingString = changingString.stringByReplacingOccurrencesOfString(identifierTwo, withString: "")
-            var decryptedFirst:String
-            do
-            {
-                decryptedFirst = try changingString.decryptBase64ToString(AES(key: based64Key, iv: based64IV))
+            decrypting = true
+            addActivityIndicator()
+            Alamofire.request(.GET, "https://httpbin.org/deny", parameters: [:]).responseString
+                { response in
+                    //let value = response.result.value
+                    let seconds = 2.0
+                    let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                    
+                    dispatch_after(dispatchTime, dispatch_get_main_queue(),
+                    {
+                        if !self.dropdownLogic
+                        {
+                            self.toDropUp()
+                        }
+                        self.removeActivityIndicator()
+                        self.dropdownTextProxy.text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."
+                        self.decryptUp()
+                    })
             }
-            catch
-            {
-                lastString = " "
-                trackError = true
-                break
-            }
-            decryptedFirst = try! changingString.decryptBase64ToString(AES(key: based64Key, iv: based64IV))
-            
-            let input: [UInt8] = turnDescriptionIntoJson(decryptedFirst)
-            let decrypted: [UInt8] = try! AES(key: key, blockMode: .CTR).decrypt(input)
-            let decryptedData: NSData = NSData(bytes: decrypted)
-            let decryptedString = NSString(data: decryptedData, encoding: NSUTF8StringEncoding) as? String
-            
-            decryptedLogic = true
-            lastString = decryptedString!
-            UIPasteboard.generalPasteboard().string = " "
-            toDropUp()
-            dropdownTextProxy.text = lastString
-            
-            trackError = true
         }
     }
     
     @IBAction func nextKeyboard()
     {
         advanceToNextInputMode()
+    }
+    
+    @IBAction func decryptUp()
+    {
+        decrypting = false
     }
     
     func loadKeyboard()
@@ -499,12 +467,6 @@ class KeyboardViewController: UIInputViewController
     
     @IBAction func toNormalDown()
     {
-        slideImage.image = UIImage(named: "slideUp.png")
-        
-        viewLabel.center.x += view.center.x
-        normalDownButton.center.x -= view.bounds.width
-        dropUpButton.center.x += view.bounds.width
-        
         UIView.animateWithDuration(0.2)
         {
             let size = CGSize(width: self.dropdownTextProxy.frame.width, height: 0)
@@ -538,12 +500,24 @@ class KeyboardViewController: UIInputViewController
         viewLabel.text = displayString
         dropdownTextProxy.text = ""
         
-        self.heightConstraint!.constant = (216 + (e.frame.width / 2))
-        self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.Height, relatedBy:.Equal, toItem:nil, attribute:.NotAnAttribute, multiplier:0, constant:0)
-        self.heightConstraint!.active = true
+        let seconds = 0.19
+        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         
-        let height:CGFloat = -216
-        editKeyboardKeysHeight(height)
+        dispatch_after(dispatchTime, dispatch_get_main_queue(),
+        {
+            self.slideImage.image = UIImage(named: "slideUp.png")
+
+            self.viewLabel.center.x += self.view.center.x
+            self.normalDownButton.center.x -= self.view.bounds.width
+            self.dropUpButton.center.x += self.view.bounds.width
+            
+            self.heightConstraint!.constant = (216 + (self.e.frame.width / 2))
+            self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.Height, relatedBy:.Equal, toItem:nil, attribute:.NotAnAttribute, multiplier:0, constant:0)
+            self.heightConstraint!.active = true
+            let height:CGFloat = -216
+            self.editKeyboardKeysHeight(height)
+        })
         
         dropdownLogic = false
     }
@@ -885,4 +859,20 @@ class KeyboardViewController: UIInputViewController
         }
 
     }
+    
+    func addActivityIndicator()
+    {
+        activityIndicator = UIActivityIndicatorView(frame: view.bounds)
+        activityIndicator.activityIndicatorViewStyle = .WhiteLarge
+        activityIndicator.backgroundColor = UIColor(white: 0, alpha: 0.25)
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
+    }
+    
+    func removeActivityIndicator()
+    {
+        activityIndicator.removeFromSuperview()
+        activityIndicator = nil
+    }
+
 }

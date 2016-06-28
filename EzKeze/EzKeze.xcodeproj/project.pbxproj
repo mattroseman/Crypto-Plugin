@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		833DE7EE1CF3E2CE002C78D0 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 833DE7ED1CF3E2CE002C78D0 /* tessdata */; };
 		83517FE61CF662F900090DEE /* keyboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83517FE51CF662F900090DEE /* keyboardView.xib */; };
 		8351805E1CF666DD00090DEE /* 123.png in Resources */ = {isa = PBXBuildFile; fileRef = 83517FEC1CF666DD00090DEE /* 123.png */; };
 		8351805F1CF666DD00090DEE /* ABC.png in Resources */ = {isa = PBXBuildFile; fileRef = 83517FED1CF666DD00090DEE /* ABC.png */; };
@@ -161,7 +160,6 @@
 		4D95907E40D36C932E07A488 /* Pods-EzKeze.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EzKeze.release.xcconfig"; path = "Pods/Target Support Files/Pods-EzKeze/Pods-EzKeze.release.xcconfig"; sourceTree = "<group>"; };
 		53069EB7076174951056B8F2 /* Pods-Keyboard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Keyboard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Keyboard/Pods-Keyboard.release.xcconfig"; sourceTree = "<group>"; };
 		6A07C8F20B3BA36B0325862E /* Pods_EzKeze.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EzKeze.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		833DE7ED1CF3E2CE002C78D0 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = ../EzKeze/tessdata; sourceTree = "<group>"; };
 		83517FE51CF662F900090DEE /* keyboardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = keyboardView.xib; sourceTree = "<group>"; };
 		83517FEC1CF666DD00090DEE /* 123.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 123.png; sourceTree = "<group>"; };
 		83517FED1CF666DD00090DEE /* ABC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ABC.png; sourceTree = "<group>"; };
@@ -522,7 +520,6 @@
 			children = (
 				83517FEA1CF666DD00090DEE /* keyboard keys */,
 				83517FE51CF662F900090DEE /* keyboardView.xib */,
-				833DE7ED1CF3E2CE002C78D0 /* tessdata */,
 				835F5BF61CF3D794004894DA /* KeyboardViewController.swift */,
 				835F5BF81CF3D794004894DA /* Info.plist */,
 			);
@@ -547,12 +544,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 835F5BED1CF3D622004894DA /* Build configuration list for PBXNativeTarget "EzKeze" */;
 			buildPhases = (
-				6AC8D37A1AA84EF285ED8869 /* 📦 Check Pods Manifest.lock */,
+				6AC8D37A1AA84EF285ED8869 /* [CP] Check Pods Manifest.lock */,
 				835F5BD71CF3D622004894DA /* Sources */,
 				835F5BD81CF3D622004894DA /* Frameworks */,
 				835F5BD91CF3D622004894DA /* Resources */,
-				259E6EF509F0DE91074B7BE9 /* 📦 Embed Pods Frameworks */,
-				AD1F09746622238B742D5E20 /* 📦 Copy Pods Resources */,
+				259E6EF509F0DE91074B7BE9 /* [CP] Embed Pods Frameworks */,
+				AD1F09746622238B742D5E20 /* [CP] Copy Pods Resources */,
 				835F5BFF1CF3D794004894DA /* Embed App Extensions */,
 			);
 			buildRules = (
@@ -569,12 +566,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 835F5BFC1CF3D794004894DA /* Build configuration list for PBXNativeTarget "Keyboard" */;
 			buildPhases = (
-				3ADDDBCB32999A153488423E /* 📦 Check Pods Manifest.lock */,
+				3ADDDBCB32999A153488423E /* [CP] Check Pods Manifest.lock */,
 				835F5BF01CF3D794004894DA /* Sources */,
 				835F5BF11CF3D794004894DA /* Frameworks */,
 				835F5BF21CF3D794004894DA /* Resources */,
-				92917FD0730AA557AD042B98 /* 📦 Embed Pods Frameworks */,
-				CCE86A11C17358D383B716FE /* 📦 Copy Pods Resources */,
+				92917FD0730AA557AD042B98 /* [CP] Embed Pods Frameworks */,
+				CCE86A11C17358D383B716FE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -597,9 +594,11 @@
 				TargetAttributes = {
 					835F5BDA1CF3D622004894DA = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 463X4DVTMN;
 					};
 					835F5BF31CF3D794004894DA = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 463X4DVTMN;
 					};
 				};
 			};
@@ -628,7 +627,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				835F5BE91CF3D622004894DA /* LaunchScreen.storyboard in Resources */,
-				833DE7EE1CF3E2CE002C78D0 /* tessdata in Resources */,
 				835F5BE61CF3D622004894DA /* Assets.xcassets in Resources */,
 				835F5BE41CF3D622004894DA /* Main.storyboard in Resources */,
 			);
@@ -758,14 +756,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		259E6EF509F0DE91074B7BE9 /* 📦 Embed Pods Frameworks */ = {
+		259E6EF509F0DE91074B7BE9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -773,14 +771,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EzKeze/Pods-EzKeze-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3ADDDBCB32999A153488423E /* 📦 Check Pods Manifest.lock */ = {
+		3ADDDBCB32999A153488423E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -788,14 +786,14 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		6AC8D37A1AA84EF285ED8869 /* 📦 Check Pods Manifest.lock */ = {
+		6AC8D37A1AA84EF285ED8869 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -803,14 +801,14 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		92917FD0730AA557AD042B98 /* 📦 Embed Pods Frameworks */ = {
+		92917FD0730AA557AD042B98 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -818,14 +816,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Keyboard/Pods-Keyboard-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AD1F09746622238B742D5E20 /* 📦 Copy Pods Resources */ = {
+		AD1F09746622238B742D5E20 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -833,14 +831,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EzKeze/Pods-EzKeze-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CCE86A11C17358D383B716FE /* 📦 Copy Pods Resources */ = {
+		CCE86A11C17358D383B716FE /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -988,6 +986,7 @@
 			baseConfigurationReference = CCEAD701AC860F0CEDB3DB3F /* Pods-EzKeze.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = EzKeze/Info.plist;
@@ -1002,6 +1001,7 @@
 			baseConfigurationReference = 4D95907E40D36C932E07A488 /* Pods-EzKeze.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = EzKeze/Info.plist;
@@ -1015,10 +1015,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DB3119DE50A21BD0B3C437B8 /* Pods-Keyboard.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Keyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tech.geczy.EzKeze.EzKeze.Keyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -1027,10 +1030,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 53069EB7076174951056B8F2 /* Pods-Keyboard.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Keyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tech.geczy.EzKeze.EzKeze.Keyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

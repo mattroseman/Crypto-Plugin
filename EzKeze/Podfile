@@ -6,12 +6,9 @@ target 'EzKeze' do
   use_frameworks!
 
   # Pods for EzKeze
-pod 'CryptoSwift', '~> 0.3'
-pod 'TesseractOCRiOS', '4.0.0'
 end
 
 target 'Keyboard' do
+  pod 'Alamofire', '~> 3.4'
   use_frameworks!
-pod 'CryptoSwift', '~> 0.3'
-pod 'TesseractOCRiOS', '4.0.0'
 end
