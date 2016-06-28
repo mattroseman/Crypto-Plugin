@@ -1,14 +1,14 @@
 /* openssl headers */
 //#include "include/openssl/opensslconf.h"
-#include "include/openssl/rsa.h"
-#include "include/openssl/bn.h"
-#include "include/openssl/evp.h"
-#include "include/openssl/aes.h"
-#include "include/openssl/rand.h"
-#include "include/openssl/conf.h"
-#include "include/openssl/evp.h"
-#include "include/openssl/err.h"
-#include "include/openssl/pem.h"
+#include "openssl/rsa.h"
+#include "openssl/bn.h"
+#include "openssl/evp.h"
+#include "openssl/aes.h"
+#include "openssl/rand.h"
+#include "openssl/conf.h"
+#include "openssl/evp.h"
+#include "openssl/err.h"
+#include "openssl/pem.h"
 
 /* general headers */
 #include <string.h>
