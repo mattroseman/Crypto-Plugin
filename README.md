@@ -41,3 +41,11 @@ TODO
   invite
   join
   
+
+
+## Dependencies
+```
+sudo apt-get install build-essential tesseract-ocr tesseract-ocr-dev tesseract-ocr-eng
+
+
+```
