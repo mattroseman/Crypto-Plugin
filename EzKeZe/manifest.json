@@ -5,7 +5,8 @@
   "permissions": [
     "activeTab",
     "http://*/*",
-    "webNavigation"
+    "webNavigation",
+    "fileSystem"
   ],
   "background": {
     "scripts": ["lib/jquery-1.12.2.min.js", "lib/aesjs_index.js", "lib/cryptico.js", "src/encrypt.js", "src/background/background.js"],
