@@ -58,8 +58,8 @@ app.post('/api/register', function(req, res) {
 	data = [];
 	// construct a JSON from the http request
 	var user_data = [];
-	var email = mysql.escape(req.body.email);
-	var password = mysql.escape(req.body.password);
+	var email = req.body.email;
+	var password = req.body.password;
 	var public_key = req.body.public_key;
 	var knurld_consumer_id;
 	console.log(email);
@@ -138,8 +138,8 @@ app.post('/api/get_text', function(req, res) {
 app.post('/api/server_sync', function(req, res) {
 	// get array of origin keys
 	var keys = [];
-	console.log(req.headers.email);
-	email = mysql.escape(req.headers.email);
+	console.log(req.body.email);
+	email = mysql.escape(req.body.email);
 	con.query('SELECT original_keys.id, original_keys.encrypted_keys FROM users JOIN original_keys ON original_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
 	//con.query('SELECT * FROM users WHERE email = ' + email  , function(err,rows){
 		if(err) throw err;
@@ -167,8 +167,8 @@ app.post('/api/server_sync', function(req, res) {
 // ---------------fetch a pub key, given a userID
 app.get('/api/id_to_pub', function(req, res) {
 	console.log("inside of id to pub");
-	console.log(req.headers.email);
-	var email = mysql.escape(req.headers.email);
+	console.log(req.body.email);
+	var email = mysql.escape(req.body.email);
 	//con.query('SELECT * FROM `users` JOIN key_dump ON key_dump.id = users.public_key WHERE email = ?', email, function(err, result){
 	con.query('SELECT public_key FROM users WHERE email = ' + email, function(err, rows){
 		if(err) throw err;
@@ -185,10 +185,9 @@ app.get('/api/id_to_pub', function(req, res) {
 
 
 // -----------returns success if login works, else wrong password
-// TODO fix function properly - send response codes, and check email/pass combo
 app.post('/api/login', function(req, res) {
-	var h_pass = mysql.escape(req.headers.password);
-	var h_user = mysql.escape(req.headers.email);
+	var h_pass = mysql.escape(req.body.password);
+	var h_user = mysql.escape(req.body.email);
 	console.log(h_pass, h_user);
 	var query = "SELECT *  FROM users where email = " + h_user + " AND password = " + h_pass;
 	con.query(query,  function(err,rows){
@@ -216,9 +215,9 @@ app.post('/api/invite', function(req, res) {
 	// take the key, add record under a persons name
 	var user_data = [];
 	// convert email to a user_id
-	var email = mysql.escape(req.headers.email);
-	var orig_id = req.headers.key_id;
-	var chat_key = mysql.escape(req.headers.chat_key);
+	var email = mysql.escape(req.body.email);
+	var orig_id = req.body.key_id;
+	var chat_key = req.body.chat_key;
 	console.log(email);
 	con.query('SELECT id FROM users WHERE email=' + email, function(err, rows){
 		for(i in rows)
