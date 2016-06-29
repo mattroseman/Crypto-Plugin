@@ -66,15 +66,25 @@ class EncryptInstance : public pp::Instance {
                     char *rsa_privkey_pem;
                     rsa_publickey_to_pem(rsa_key, &rsa_pubkey_pem);
                     rsa_privatekey_to_pem(rsa_key, &rsa_privkey_pem, password);
+
+                    std::string public_key(rsa_pubkey_pem);
+                    std::string private_key(rsa_privkey_pem);
+
+                    var_reply.Set(pp::Var("public_key"), pp::Var(public_key));
+                    var_reply.Set(pp::Var("private_key"), pp::Var(private_key));
                 }
 
                 //  if asked to encrypt a string with a given rsa key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("encrypt_rsa") == 0) {
                     char *rsa_pub_pem = string2char_array(dictionary.Get(pp::Var("public_key")).AsString());
                     char *plaintext = string2char_array(dictionary.Get(pp::Var("message")).AsString());
-                    char *encrypted_message = (char *)malloc(kBits);
+                    char *rsa_encrypted_message = (char *)malloc(kBits);
                     RSA *key = rsa_pem_to_publickey(rsa_pub_pem);
-                    unsigned int encrypted_length = rsa_encrypt_message(plaintext, strlen(plaintext), key, &encrypted_message);
+                    unsigned int encrypted_length = rsa_encrypt_message(plaintext, strlen(plaintext), key, &rsa_encrypted_message);
+
+                    std::string encrypted_message(rsa_encrypted_message);
+
+                    var_reply.Set(pp::Var("encrypted_message"), pp::Var(encrypted_message));
                 }
 
                 //  if asked to decrypt a string with a given rsa key
@@ -83,16 +93,26 @@ class EncryptInstance : public pp::Instance {
                     char *rsa_pub_pem = string2char_array(dictionary.Get(pp::Var("public_key")).AsString());
                     char *encrypted_message = string2char_array(dictionary.Get(pp::Var("message")).AsString());
                     //  TODO possible point of error
-                    char *decrypted_message = (char *)malloc(kBits);
+                    char *rsa_decrypted_message = (char *)malloc(kBits);
                     RSA *key = rsa_pem_to_publickey(rsa_pub_pem);
                     key = rsa_pem_to_privatekey(rsa_priv_pem, key);
-                    rsa_decrypt_message(encrypted_message, strlen(encrypted_message), key, &decrypted_message);
+                    rsa_decrypt_message(encrypted_message, strlen(encrypted_message), key, &rsa_decrypted_message);
+
+                    std::string decrypted_message(rsa_decrypted_message);
+
+                    var_reply.Set(pp::Var("decrypted_message"), pp::Var(decrypted_message));
                 }
 
                 //  if asked to generate an aes key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("generate_aes_keys") == 0) {
                     char *aes_key = generate_aes_key();
                     char *aes_iv = generate_aes_iv();
+
+                    std::string key(aes_key);
+                    std::string iv(aes_iv);
+
+                    var_reply.Set(pp::Var("aes_key"), pp::Var(key));
+                    var_reply.Set(pp::Var("aes_iv"), pp::Var(iv));
                 }
 
                 //  if asked to encrypt a string with a given aes key
@@ -102,6 +122,10 @@ class EncryptInstance : public pp::Instance {
                     char *plaintext = string2char_array(dictionary.Get(pp::Var("message")).AsString());
                     char *aes_encrypted_message = (char *)malloc(strlen(plaintext) + AES_BLOCK_SIZE);
                     unsigned int aes_encrypted_length = aes_encrypt_message(plaintext, strlen(plaintext), aes_key, aes_iv, &aes_encrypted_message);
+
+                    std::string encrypted_message(aes_encrypted_message);
+
+                    var_reply.Set(pp::Var("encrypted_message"), pp::Var(encrypted_message));
                 }
 
                 //  if asked to decrypt a string with a given aes key
@@ -111,6 +135,10 @@ class EncryptInstance : public pp::Instance {
                     char *encrypted_message = string2char_array(dictionary.Get(pp::Var("message")).AsString());
                     char *aes_decrypted_message = (char *)malloc(strlen(encrypted_message));
                     unsigned int aes_decrypted_length = aes_decrypt_message(encrypted_message, strlen(encrypted_message), aes_key, aes_iv, &aes_decrypted_message);
+
+                    std::string decrypted_message(aes_decrypted_message);
+
+                    var_reply.Set(pp::Var("decrypted_message"), pp::Var(decrypted_message));
                 }
 
             }
