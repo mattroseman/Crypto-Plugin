@@ -4,6 +4,61 @@ var current_chat_key;
 //This is the key used to encode all the chats at the moment, it is temporary until the backend is up and running
 current_chat_key = [115, 98, 103, 111, 108, 121, 112, 105, 101, 115, 114, 100, 97, 105, 105, 97];
 
+console.log("fuck");
+
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+
+function onInitFs(fs) {
+  fs.root.getFile('blaiseFUCKINGmarchetti.txt', {create: true}, function(fileEntry) {
+
+    console.log(fileEntry.toURL());
+
+    fileEntry.file(function(file) {
+       var reader = new FileReader();
+
+       reader.onloadend = function(e) {
+         console.log(this.result);
+       };
+
+       reader.readAsText(file);
+    }, errorHandler);
+
+  }, errorHandler);
+}
+
+function errorHandler(e) {
+  var msg = '';
+
+  switch (e.code) {
+    case FileError.QUOTA_EXCEEDED_ERR:
+      msg = 'QUOTA_EXCEEDED_ERR';
+      break;
+    case FileError.NOT_FOUND_ERR:
+      msg = 'NOT_FOUND_ERR';
+      break;
+    case FileError.SECURITY_ERR:
+      msg = 'SECURITY_ERR';
+      break;
+    case FileError.INVALID_MODIFICATION_ERR:
+      msg = 'INVALID_MODIFICATION_ERR';
+      break;
+    case FileError.INVALID_STATE_ERR:
+      msg = 'INVALID_STATE_ERR';
+      break;
+    default:
+      msg = 'Unknown Error';
+      break;
+  };
+
+  console.log('Error: ' + msg);
+}
+
+window.webkitStorageInfo.requestQuota(PERSISTENT, 5*1024*1024, function(grantedBytes) {
+  window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
+}, function(e) {
+  console.log('Error', e);
+});
+
 
 //The listener for keyboard commands from the user
 chrome.commands.onCommand.addListener(function(command){
