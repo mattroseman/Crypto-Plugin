@@ -141,6 +141,7 @@ class EncryptInstance : public pp::Instance {
                     var_reply.Set(pp::Var("decrypted_message"), pp::Var(decrypted_message));
                 }
 
+                PostMessage(var_reply);
             }
         }
 };
