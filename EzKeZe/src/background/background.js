@@ -48,7 +48,7 @@ function errorHandler(e) {
     default:
       msg = 'Unknown Error';
       break;
-  };
+  }
 
   console.log('Error: ' + msg);
 }
@@ -72,8 +72,14 @@ chrome.commands.onCommand.addListener(function(command){
         //When a response is received from the active page, this code executes
 	      if(!response) console.log("response was null");
         //Encrypt the string that the active page sends you
-        var ciphertext = encrypt_sym_message(response.text, current_chat_key);
+        //var ciphertext = encrypt_sym_message(response.text, current_chat_key);
+        var generate_keys_context = {
+            request_type: "generate_rsa_keys",
+            password: "P@ssw0rd"
+        };
+        background.naclModule.postMessage(generate_keys_context);
 
+        /*
         //Add the encrypted text to an object with an identifier
         var encryptedmessage =  {'identifier': 'MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM', 'content': ciphertext};
         //Turn the object into a JSON formatted string
@@ -86,6 +92,7 @@ chrome.commands.onCommand.addListener(function(command){
             chrome.tabs.sendMessage(tabs[0].id, data, function(response) {
             });
         });
+        */
     });
 
   });
@@ -99,7 +106,7 @@ chrome.commands.onCommand.addListener(function(command){
       chrome.tabs.sendMessage(tabs[0].id, {action: "decrypt_request"}, function(request){
         //Decrypt the text
         var array = request.content;
-        plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key)
+        plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key);
         var data = {action: 'decrypted_text', text: plaintext};
       });
     });
@@ -115,7 +122,7 @@ chrome.extension.onMessage.addListener(
     if(request.msg == "decrypt_this"){
       //Decrypt the text and send it back
       var array = request.content;
-      plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key)
+      plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key);
       sendResponse(plaintext);
     }
   }
@@ -126,3 +133,29 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     console.log("The Extension Button was Clicked");
     chrome.tabs.create({'url': chrome.extension.getURL('src/dashboard/index.html'), 'selected': true});
 });
+
+function attachDefaultListeners() {
+    //  The NaCl module embed is created within the listenerDiv
+    var listenerDiv = document.getElementById('listener');
+
+    //  register the handle Message function as the message event handler.
+    listenerDiv.addEventListener('message', handleMessage, true);
+}
+
+function handleMessage(message) {
+    //  handle a message from NaCl
+    console.log(message.data);
+
+        //Add the encrypted text to an object with an identifier
+        var encryptedmessage =  {'identifier': 'MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM', 'content': ciphertext};
+        //Turn the object into a JSON formatted string
+        var messageString = JSON.stringify(encryptedmessage);
+        //Create an object to pass on to the active page
+        var data = {action: 'encrypted_text', text: messageString};
+
+        //Send the complete object to the active page
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, data, function(response) {
+            });
+        });
+}
