@@ -107,7 +107,7 @@ var loadingDialogHTML = '<div class="mdl-spinner mdl-spinner--single-color mdl-j
 function saveRecording(blob) {
 var time = new Date(),
     url = URL.createObjectURL(blob),
-    html = "<audio controls src='" + url + "'></audio> ";
+    html = "<audio controls style='width: 256px;' src='" + url + "'></audio> ";
   var div = document.createElement('div');
   div.innerHTML = html;
   document.getElementById("audioPreview").innerHTML = "";
