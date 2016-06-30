@@ -285,7 +285,8 @@ app.post('/api/get_text', function(req, res) {
 app.post('/api/server_sync', function(req, res) {
 	// perform knurld voice authentication first
 	// step 6a, create verification work order
-	if(!req.body.email) return res.send("send me a json {email:'ig11'}");
+	console.log(knurld_oauth);
+	if(!req.body.email) return res.send("send me a json {email:'ig11', blob:<blob>, blob_name:'filenamedontincludefiletype'}");
 	var blob_name = req.body.blob_name;
 	con.query('SELECT knurld_id FROM users WHERE email = ' + mysql.escape(req.body.email), function(err, rows){
 				request.post({
@@ -328,6 +329,7 @@ app.post('/api/server_sync', function(req, res) {
 										console.log(err, '-- error in part 6d');
 									} else {
 										console.log(body);
+										if(body.errorCode) return ;
 										// sleep for 3 seconds while waiting for knurld to provide analysis
 										sleep.sleep(3);
 								 		request.get('https://api.knurld.io/v1/endpointAnalysis/' + body.taskName,
