@@ -4,12 +4,14 @@
   "version": "0.1",
   "permissions": [
     "activeTab",
+    "tabs",
     "http://*/*",
     "webNavigation",
     "fileSystem"
   ],
   "background": {
-      "page": "src/background/background.html"
+      "scripts": ["lib/jquery-1.12.2.min.js", "lib/aesjs_index.js", "lib/cryptico.js", "src/encrypt.js", "src/background/background.js"],
+      "persistent": false
   },
   "browser_action": {
     "default_title": "EzKeZe"

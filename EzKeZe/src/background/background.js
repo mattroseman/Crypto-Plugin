@@ -10,6 +10,16 @@ console.log("fuck");
 
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 
+var listenerDiv = document.createElement('div');
+listenerDiv.id = "listener";
+document.getElementsByTagName('body')[0].appendChild(listenerDiv);
+var embed = document.createElement('embed');
+embed.id = "nacl_module";
+embed.width = 0;
+embed.height = 0;
+embed.src = "src/background/encrypt.nmf";
+embed.type = "application/x-pnacl";
+document.getElementById('listener').appendChild(embed);
 document.getElementById('listener').addEventListener('load', moduleDidLoad, true); 
 
 function moduleDidLoad() {
