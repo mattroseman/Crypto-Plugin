@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "body-parser": "~1.15.0",
+    "cors": "^2.7.1",
     "deep-diff": "^0.3.4",
     "express": "~4.10.2",
     "multer": "^1.1.0",
