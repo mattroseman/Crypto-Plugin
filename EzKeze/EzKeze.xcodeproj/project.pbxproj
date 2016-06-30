@@ -8,7 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		0A3401241D24D2DF00959313 /* keychainAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3401231D24D2DF00959313 /* keychainAccessibility.swift */; };
+		0AB046841D25D081000A3A4E /* record.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AB046831D25D081000A3A4E /* record.png */; };
+		0AB046861D25D2F5000A3A4E /* logout_rounded_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AB046851D25D2F5000A3A4E /* logout_rounded_left.png */; };
 		0ABC6E071D2594D500CE5DAB /* lock-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABC6E061D2594D500CE5DAB /* lock-open.png */; };
+		0ABC6E091D25B19300CE5DAB /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABC6E081D25B19300CE5DAB /* checkmark.png */; };
+		0ABC6E0B1D25B2F700CE5DAB /* Informational.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABC6E0A1D25B2F700CE5DAB /* Informational.png */; };
+		0ABC6E0E1D25B82F00CE5DAB /* NotesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABC6E0D1D25B82F00CE5DAB /* NotesController.swift */; };
+		0ABC6E111D25B9DD00CE5DAB /* LoggedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABC6E101D25B9DD00CE5DAB /* LoggedController.swift */; };
+		0ABC6E161D25C70100CE5DAB /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABC6E151D25C70100CE5DAB /* play.png */; };
+		0ABC6E181D25C71900CE5DAB /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ABC6E171D25C71900CE5DAB /* stop.png */; };
 		0AF9BFC21D257E760014CE43 /* EzKzLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9BFC11D257E760014CE43 /* EzKzLogo.png */; };
 		0AF9BFC41D2580950014CE43 /* LoginBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9BFC31D2580950014CE43 /* LoginBackground.png */; };
 		0AF9BFC61D2583D80014CE43 /* Success.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9BFC51D2583D80014CE43 /* Success.png */; };
@@ -167,7 +175,15 @@
 		0A34011B1D24528C00959313 /* EzKeze.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = EzKeze.entitlements; sourceTree = "<group>"; };
 		0A34011C1D245F9900959313 /* EzKeze-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EzKeze-Bridging-Header.h"; sourceTree = "<group>"; };
 		0A3401231D24D2DF00959313 /* keychainAccessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = keychainAccessibility.swift; path = Keychain/keychainAccessibility.swift; sourceTree = "<group>"; };
+		0AB046831D25D081000A3A4E /* record.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = record.png; path = ../../../../../../../var/folders/6m/dsrlgvnn4tlgp0h3s7fh7wcc0000gn/T/Android/SVG/Media_Controls/record.png; sourceTree = "<group>"; };
+		0AB046851D25D2F5000A3A4E /* logout_rounded_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logout_rounded_left.png; path = ../../../../../../../var/folders/6m/dsrlgvnn4tlgp0h3s7fh7wcc0000gn/T/Color/SVG/User_Interface/logout_rounded_left.png; sourceTree = "<group>"; };
 		0ABC6E061D2594D500CE5DAB /* lock-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lock-open.png"; sourceTree = "<group>"; };
+		0ABC6E081D25B19300CE5DAB /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		0ABC6E0A1D25B2F700CE5DAB /* Informational.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Informational.png; sourceTree = "<group>"; };
+		0ABC6E0D1D25B82F00CE5DAB /* NotesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesController.swift; sourceTree = "<group>"; };
+		0ABC6E101D25B9DD00CE5DAB /* LoggedController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggedController.swift; sourceTree = "<group>"; };
+		0ABC6E151D25C70100CE5DAB /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play.png; path = ../../../../../../../var/folders/6m/dsrlgvnn4tlgp0h3s7fh7wcc0000gn/T/Android/SVG/Media_Controls/play.png; sourceTree = "<group>"; };
+		0ABC6E171D25C71900CE5DAB /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop.png; path = ../../../../../../../var/folders/6m/dsrlgvnn4tlgp0h3s7fh7wcc0000gn/T/Android/SVG/Media_Controls/stop.png; sourceTree = "<group>"; };
 		0AF9BFC11D257E760014CE43 /* EzKzLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EzKzLogo.png; sourceTree = "<group>"; };
 		0AF9BFC31D2580950014CE43 /* LoginBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoginBackground.png; sourceTree = "<group>"; };
 		0AF9BFC51D2583D80014CE43 /* Success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Success.png; sourceTree = "<group>"; };
@@ -334,11 +350,33 @@
 			name = Keychain;
 			sourceTree = "<group>";
 		};
+		0ABC6E0C1D25B81D00CE5DAB /* NotesController */ = {
+			isa = PBXGroup;
+			children = (
+				0ABC6E0D1D25B82F00CE5DAB /* NotesController.swift */,
+			);
+			path = NotesController;
+			sourceTree = "<group>";
+		};
+		0ABC6E0F1D25B9D100CE5DAB /* LoggedController */ = {
+			isa = PBXGroup;
+			children = (
+				0ABC6E101D25B9DD00CE5DAB /* LoggedController.swift */,
+			);
+			path = LoggedController;
+			sourceTree = "<group>";
+		};
 		0AF9BFC01D257E760014CE43 /* Image Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0AB046851D25D2F5000A3A4E /* logout_rounded_left.png */,
+				0ABC6E151D25C70100CE5DAB /* play.png */,
 				0ABC6E061D2594D500CE5DAB /* lock-open.png */,
+				0AB046831D25D081000A3A4E /* record.png */,
+				0ABC6E081D25B19300CE5DAB /* checkmark.png */,
 				0AF9BFC51D2583D80014CE43 /* Success.png */,
+				0ABC6E171D25C71900CE5DAB /* stop.png */,
+				0ABC6E0A1D25B2F700CE5DAB /* Informational.png */,
 				0AF9BFC71D25853B0014CE43 /* Default.png */,
 				0AF9BFC11D257E760014CE43 /* EzKzLogo.png */,
 				0AF9BFC31D2580950014CE43 /* LoginBackground.png */,
@@ -540,6 +578,8 @@
 		835F5BDD1CF3D622004894DA /* EzKeze */ = {
 			isa = PBXGroup;
 			children = (
+				0ABC6E0F1D25B9D100CE5DAB /* LoggedController */,
+				0ABC6E0C1D25B81D00CE5DAB /* NotesController */,
 				0A3401201D24D04600959313 /* Keychain */,
 				0A34011B1D24528C00959313 /* EzKeze.entitlements */,
 				0AF9BFC01D257E760014CE43 /* Image Resources */,
@@ -676,14 +716,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AB046861D25D2F5000A3A4E /* logout_rounded_left.png in Resources */,
 				0ABC6E071D2594D500CE5DAB /* lock-open.png in Resources */,
 				0AF9BFC21D257E760014CE43 /* EzKzLogo.png in Resources */,
+				0AB046841D25D081000A3A4E /* record.png in Resources */,
 				0AF9BFC61D2583D80014CE43 /* Success.png in Resources */,
+				0ABC6E0B1D25B2F700CE5DAB /* Informational.png in Resources */,
 				0AF9BFC41D2580950014CE43 /* LoginBackground.png in Resources */,
+				0ABC6E181D25C71900CE5DAB /* stop.png in Resources */,
 				835F5BE91CF3D622004894DA /* LaunchScreen.storyboard in Resources */,
 				0AF9BFC81D25853B0014CE43 /* Default.png in Resources */,
+				0ABC6E161D25C70100CE5DAB /* play.png in Resources */,
 				835F5BE61CF3D622004894DA /* Assets.xcassets in Resources */,
 				835F5BE41CF3D622004894DA /* Main.storyboard in Resources */,
+				0ABC6E091D25B19300CE5DAB /* checkmark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -909,7 +955,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				835F5BE11CF3D622004894DA /* ViewController.swift in Sources */,
+				0ABC6E0E1D25B82F00CE5DAB /* NotesController.swift in Sources */,
 				0A3401241D24D2DF00959313 /* keychainAccessibility.swift in Sources */,
+				0ABC6E111D25B9DD00CE5DAB /* LoggedController.swift in Sources */,
 				835F5BDF1CF3D622004894DA /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
