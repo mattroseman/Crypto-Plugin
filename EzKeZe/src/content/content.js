@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener(
     //The extension wants to decrypt all the text on the DOM
     if(msg.action == 'decrypt_request'){
       //The identifier should be changed sometime
-      findEncryptedText(document.body, "MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM");
+      findEncryptedText(document.body, "a23cj35");
       sendResponse("Finished Decrypting");
     }
 

@@ -75,7 +75,7 @@ chrome.commands.onCommand.addListener(function(command){
         var ciphertext = encrypt_sym_message(response.text, current_chat_key);
 
         //Add the encrypted text to an object with an identifier
-        var encryptedmessage =  {'identifier': 'MmmmMMMMmmmm_Dat_Some_GOOOOOOOOOOD_encRYPTION_mmmmMMMMMmmmmMM', 'content': ciphertext};
+        var encryptedmessage =  {'ident': 'a23cj35', 'payload': ciphertext};
         //Turn the object into a JSON formatted string
         var messageString = JSON.stringify(encryptedmessage);
         //Create an object to pass on to the active page
@@ -98,7 +98,7 @@ chrome.commands.onCommand.addListener(function(command){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {action: "decrypt_request"}, function(request){
         //Decrypt the text
-        var array = request.content;
+        var array = request.payload;
         plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key)
         var data = {action: 'decrypted_text', text: plaintext};
       });
@@ -114,7 +114,7 @@ chrome.extension.onMessage.addListener(
     //If the request is for a deccryption
     if(request.msg == "decrypt_this"){
       //Decrypt the text and send it back
-      var array = request.content;
+      var array = request.payload;
       plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key)
       sendResponse(plaintext);
     }
