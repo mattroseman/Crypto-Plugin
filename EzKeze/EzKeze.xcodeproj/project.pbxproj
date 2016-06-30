@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A3401241D24D2DF00959313 /* keychainAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3401231D24D2DF00959313 /* keychainAccessibility.swift */; };
 		83517FE61CF662F900090DEE /* keyboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83517FE51CF662F900090DEE /* keyboardView.xib */; };
 		8351805E1CF666DD00090DEE /* 123.png in Resources */ = {isa = PBXBuildFile; fileRef = 83517FEC1CF666DD00090DEE /* 123.png */; };
 		8351805F1CF666DD00090DEE /* ABC.png in Resources */ = {isa = PBXBuildFile; fileRef = 83517FED1CF666DD00090DEE /* ABC.png */; };
@@ -157,6 +158,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A34011A1D24527F00959313 /* Keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Keyboard.entitlements; sourceTree = "<group>"; };
+		0A34011B1D24528C00959313 /* EzKeze.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = EzKeze.entitlements; sourceTree = "<group>"; };
+		0A34011C1D245F9900959313 /* EzKeze-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EzKeze-Bridging-Header.h"; sourceTree = "<group>"; };
+		0A3401231D24D2DF00959313 /* keychainAccessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = keychainAccessibility.swift; path = Keychain/keychainAccessibility.swift; sourceTree = "<group>"; };
 		4D95907E40D36C932E07A488 /* Pods-EzKeze.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EzKeze.release.xcconfig"; path = "Pods/Target Support Files/Pods-EzKeze/Pods-EzKeze.release.xcconfig"; sourceTree = "<group>"; };
 		53069EB7076174951056B8F2 /* Pods-Keyboard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Keyboard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Keyboard/Pods-Keyboard.release.xcconfig"; sourceTree = "<group>"; };
 		6A07C8F20B3BA36B0325862E /* Pods_EzKeze.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EzKeze.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -311,6 +316,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A3401201D24D04600959313 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				0A3401231D24D2DF00959313 /* keychainAccessibility.swift */,
+			);
+			name = Keychain;
+			sourceTree = "<group>";
+		};
 		602D0010858A2DE368AE367B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -505,12 +518,15 @@
 		835F5BDD1CF3D622004894DA /* EzKeze */ = {
 			isa = PBXGroup;
 			children = (
+				0A3401201D24D04600959313 /* Keychain */,
+				0A34011B1D24528C00959313 /* EzKeze.entitlements */,
 				835F5BDE1CF3D622004894DA /* AppDelegate.swift */,
 				835F5BE01CF3D622004894DA /* ViewController.swift */,
 				835F5BE21CF3D622004894DA /* Main.storyboard */,
 				835F5BE51CF3D622004894DA /* Assets.xcassets */,
 				835F5BE71CF3D622004894DA /* LaunchScreen.storyboard */,
 				835F5BEA1CF3D622004894DA /* Info.plist */,
+				0A34011C1D245F9900959313 /* EzKeze-Bridging-Header.h */,
 			);
 			path = EzKeze;
 			sourceTree = "<group>";
@@ -518,6 +534,7 @@
 		835F5BF51CF3D794004894DA /* Keyboard */ = {
 			isa = PBXGroup;
 			children = (
+				0A34011A1D24527F00959313 /* Keyboard.entitlements */,
 				83517FEA1CF666DD00090DEE /* keyboard keys */,
 				83517FE51CF662F900090DEE /* keyboardView.xib */,
 				835F5BF61CF3D794004894DA /* KeyboardViewController.swift */,
@@ -595,10 +612,20 @@
 					835F5BDA1CF3D622004894DA = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 463X4DVTMN;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					835F5BF31CF3D794004894DA = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 463X4DVTMN;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -854,6 +881,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				835F5BE11CF3D622004894DA /* ViewController.swift in Sources */,
+				0A3401241D24D2DF00959313 /* keychainAccessibility.swift in Sources */,
 				835F5BDF1CF3D622004894DA /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -986,13 +1014,15 @@
 			baseConfigurationReference = CCEAD701AC860F0CEDB3DB3F /* Pods-EzKeze.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = EzKeze/EzKeze.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = EzKeze/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tech.geczy.EzKeze.EzKeze;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "EzKeze/EzKeze-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1001,13 +1031,14 @@
 			baseConfigurationReference = 4D95907E40D36C932E07A488 /* Pods-EzKeze.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = EzKeze/EzKeze.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = EzKeze/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tech.geczy.EzKeze.EzKeze;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "EzKeze/EzKeze-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -1015,6 +1046,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DB3119DE50A21BD0B3C437B8 /* Pods-Keyboard.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Keyboard/Keyboard.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Keyboard/Info.plist;
@@ -1030,6 +1062,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 53069EB7076174951056B8F2 /* Pods-Keyboard.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Keyboard/Keyboard.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Keyboard/Info.plist;

@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+import SwiftyJSON
+import CryptoSwift
 
 class KeyboardViewController: UIInputViewController
 {
@@ -180,7 +182,14 @@ class KeyboardViewController: UIInputViewController
     
     @IBAction func encryptFunc()
     {
-        
+        let temp:String = memoryDisplayString as String
+        let bytes = temp.utf8.map({$0})
+        let encrypted = try! AES(key: key, iv: iv, blockMode: .CBC, padding: PKCS7()).encrypt(bytes)
+        (textDocumentProxy as UIKeyInput).insertText(encrypted.description)
+        UIPasteboard.generalPasteboard().string = encrypted.description
+        displayString = ""
+        memoryDisplayString = ""
+        globalMemoryIndex = 0
     }
     
     func turnDescriptionIntoJson(descriptionInput: String) -> [UInt8]
@@ -207,25 +216,26 @@ class KeyboardViewController: UIInputViewController
         if !decrypting
         {
             decrypting = true
-            addActivityIndicator()
-            Alamofire.request(.GET, "https://httpbin.org/deny", parameters: [:]).responseString
-                { response in
-                    //let value = response.result.value
-                    let seconds = 2.0
-                    let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                    
-                    dispatch_after(dispatchTime, dispatch_get_main_queue(),
-                    {
-                        if !self.dropdownLogic
-                        {
-                            self.toDropUp()
-                        }
-                        self.removeActivityIndicator()
-                        self.dropdownTextProxy.text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."
-                        self.decryptUp()
-                    })
+            let encryptedString = UIPasteboard.generalPasteboard().string
+            var temp = encryptedString!.stringByReplacingOccurrencesOfString(" ", withString: "")
+            temp = temp.stringByReplacingOccurrencesOfString("[", withString: "")
+            temp = temp.stringByReplacingOccurrencesOfString("]", withString: "")
+            let tempArray = temp.componentsSeparatedByString(",")
+            let bytes = tempArray.map { UInt8($0)!}
+            do
+            {
+                let decrypted = try AES(key: key, iv: iv, blockMode: .CBC, padding: PKCS7()).decrypt(bytes)
+                if !self.dropdownLogic
+                {
+                    toDropUp()
+                }
+                let decryptedString = String(bytes: decrypted, encoding: NSUTF8StringEncoding)
+                self.dropdownTextProxy.text = decryptedString
+            }catch
+            {
+                
             }
+            decryptUp()
         }
     }
     
@@ -804,7 +814,7 @@ class KeyboardViewController: UIInputViewController
         }
             while index < buttonArray.endIndex
         
-        UIView.animateWithDuration(0.4, animations: {
+        UIView.animateWithDuration(0.3, animations: {
             self.slideImage.center.x += self.view.bounds.width
             
             index = buttonArray.startIndex
@@ -816,7 +826,7 @@ class KeyboardViewController: UIInputViewController
                 while index < 10
         })
         
-        UIView.animateWithDuration(0.4, delay: 0.1, options: [], animations: {
+        UIView.animateWithDuration(0.3, delay: 0.1, options: [], animations: {
             repeat
             {
                 buttonArray[index].center.x += self.view.bounds.width
@@ -825,7 +835,7 @@ class KeyboardViewController: UIInputViewController
                 while index >= 10 && index < 19
             }, completion: nil)
         
-        UIView.animateWithDuration(0.4, delay: 0.2, options: [], animations: {
+        UIView.animateWithDuration(0.3, delay: 0.2, options: [], animations: {
             repeat
             {
                 buttonArray[index].center.x += self.view.bounds.width
@@ -834,7 +844,7 @@ class KeyboardViewController: UIInputViewController
                 while index >= 19 && index < 28
             }, completion: nil)
         
-        UIView.animateWithDuration(0.4, delay: 0.3, options: [], animations: {
+        UIView.animateWithDuration(0.3, delay: 0.3, options: [], animations: {
             repeat
             {
                 buttonArray[index].center.x += self.view.bounds.width

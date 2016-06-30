@@ -7,14 +7,25 @@
 //
 
 import UIKit
+import Locksmith
+import Alamofire
+import SwiftyJSON
 
 class ViewController: UIViewController
 {
-    @IBOutlet var cameraButton: UIButton!
-    @IBOutlet var simpleButton: UIButton!
-    @IBOutlet var simpleView: UITextView!
-    @IBOutlet var simpleView2: UITextView!
+    @IBOutlet var loginPage: UIView!
+    let keychain = Keychain()
     var activityIndicator:UIActivityIndicatorView!
+    
+    @IBOutlet weak var testingText: UITextView!
+    
+    @IBOutlet weak var usernameField: UITextField!
+    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var logButton: UIButton!
+    
+    @IBOutlet weak var usernameRegis: UITextField!
+    @IBOutlet weak var passwordRegis: UITextField!
+    @IBOutlet weak var regisButton: UIButton!
     
     override func viewDidLoad()
     {
@@ -28,41 +39,59 @@ class ViewController: UIViewController
         // Dispose of any resources that can be recreated.
     }
     
-    func screenShotMethod() -> UIImage
+    @IBAction func log()
     {
-        //Create the UIImage
-        UIGraphicsBeginImageContext(view.frame.size)
-        view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        addActivityIndicator()
-        return image
-        //Save it to the camera roll
-    }
-    
-    func scaleImage(image: UIImage, maxDimension: CGFloat) -> UIImage {
+        let username = usernameField.text
+        let password = passwordField.text
         
-        var scaledSize = CGSize(width: maxDimension, height: maxDimension)
-        var scaleFactor: CGFloat
-        
-        if image.size.width > image.size.height {
-            scaleFactor = image.size.height / image.size.width
-            scaledSize.width = maxDimension
-            scaledSize.height = scaledSize.width * scaleFactor
-        } else {
-            scaleFactor = image.size.width / image.size.height
-            scaledSize.height = maxDimension
-            scaledSize.width = scaledSize.height * scaleFactor
+        if keychain.keyExists(username!, password: password!)
+        {
+            addActivityIndicator()
+            let seconds = 2.0
+            let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+            let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+            dispatch_after(dispatchTime, dispatch_get_main_queue(),{
+                self.removeActivityIndicator()
+                self.loginSucess()
+            })
         }
-        
-        UIGraphicsBeginImageContext(scaledSize)
-        image.drawInRect(CGRectMake(0, 0, scaledSize.width, scaledSize.height))
-        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return scaledImage
     }
     
+    @IBAction func register()
+    {
+        let newUser = usernameRegis.text
+        let newPass = passwordRegis.text
+        keychain.saveNewKey(newUser!, newPass: newPass!)
+    }
+    
+    @IBAction func getKeys()
+    {
+        let parameters = [
+            "email" : "ig11"
+        ]
+        Alamofire.request(.POST, "http://stoh.io:8080/api/server_sync", parameters: parameters, encoding: .JSON, headers: nil)
+            .validate()
+            .responseJSON { response in
+            if let value: AnyObject = response.result.value
+            {
+                switch response.result {
+                case .Success:
+                    let json = JSON(value)
+                    self.testingText.text = json.arrayObject?.debugDescription
+                    break
+                case .Failure:
+                    // Handle failure case...
+                    break
+                }
+            }
+        }
+    }
+    
+    func loginSucess()
+    {
+        performSegueWithIdentifier("loginPage", sender: nil)
+    }
+
     func addActivityIndicator()
     {
         activityIndicator = UIActivityIndicatorView(frame: view.bounds)
@@ -77,6 +106,6 @@ class ViewController: UIViewController
         activityIndicator.removeFromSuperview()
         activityIndicator = nil
     }
-
+    
 }
 
