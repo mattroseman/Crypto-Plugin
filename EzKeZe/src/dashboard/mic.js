@@ -1,103 +1,3 @@
-/*
-// success callback when requesting audio input stream
-var audioContext = new AudioContext();
-var microphone;
-var testToneLevel = audioContext.createGain(),
-    microphone = undefined,     // obtained by user click
-    microphoneLevel = audioContext.createGain(),
-    mixer = audioContext.createGain(),
-    input = audioContext.createGain(),
-    processor = undefined;      // created on recording
-microphoneLevel.gain.value = 0.5;
-microphoneLevel.connect(mixer);
-mixer.connect(input);
-mixer.connect(audioContext.destination);
-
-if (audioContext.createScriptProcessor == null){
-  audioContext.createScriptProcessor = audioContext.createJavaScriptNode;
-}
-
-var defaultBufSz = (function() {
-  processor = audioContext.createScriptProcessor(undefined, 2, 2);
-  return processor.bufferSize;
-})();
-
-function successCallback(stream) {
-    if (audioContext.createScriptProcessor == null){
-      audioContext.createScriptProcessor = audioContext.createJavaScriptNode;
-    }
-    audioStream = stream;
-
-
-    // Create an AudioNode from the stream.
-    microphone = audioContext.createMediaStreamSource( stream );
-
-    // Connect it to the destination to hear yourself (or any other node for processing!)
-    microphone.connect( microphoneLevel );
-}
-
-function errorCallback() {
-    console.log("The following error occurred: " + err);
-}
-
-var audioStream;
-
-navigator.webkitGetUserMedia( {audio:true}, successCallback, errorCallback );
-
-var WavEncoder;
-
-
-function getBuffers(event) {
-  var buffers = [];
-  for (var ch = 0; ch < 2; ++ch)
-    buffers[ch] = event.inputBuffer.getChannelData(ch);
-  return buffers;
-}
-
-function startRecordingProcess() {
-  var bufSz = 2048;
-  console.log("starting to record");
-  input = audioContext.createGain();
-  processor = audioContext.createScriptProcessor(bufSz, 2, 2);
-  input.gain.value = 0.5;
-  input.connect(processor);
-  processor.connect(audioContext.destination);
-  console.log(audioContext.sampleRate);
-
-    WavEncoder = new WavAudioEncoder(audioContext.sampleRate, 2);
-    processor.onaudioprocess = function(event) {
-      WavEncoder.encode(getBuffers(event));
-    }
-  }
-
-function stopRecordingProcess() {
-  input.disconnect();
-  processor.disconnect();
-  saveRecording(WavEncoder.finish());
-}
-
-
-
-  function saveRecording(blob) {
-  var time = new Date(),
-      url = URL.createObjectURL(blob),
-      html = "<p recording='" + url + "'>" +
-             "<audio controls src='" + url + "'></audio> " +
-             time +
-             " <a class='btn btn-default' href='" + url +
-                  "' download='recording.wav'>" +
-             "Save...</a> " +
-             "<button class='btn btn-danger' recording='" +
-                      url + "'>Delete</button>" +
-             "</p>";
-    var div = document.createElement('div');
-    div.innerHTML = html;
-    document.body.appendChild(div);
-  //$recordingList.prepend($(html));
-  console.log(url);
-}
-*/
-
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 var keyData;
@@ -173,6 +73,8 @@ var serverSync = function(){
         data: wavData
       }).done(function(data) {
           micSpinner.classList.remove("is-active");
+          document.getElementById("fabIcon").innerHTML = "check";
+          recordButton.style.color = "green";
           keyData = data;
           createKeyList(data);
       });
