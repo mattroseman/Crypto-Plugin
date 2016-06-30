@@ -58,6 +58,8 @@ class EncryptInstance : public pp::Instance {
 
                 pp::VarDictionary var_reply;
 
+                fprintf(stdout, "nacl log: %s\n", dictionary.Get(pp::Var("request_type")).AsString().c_str());
+
                 //  if asked to generate an rsa key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("generate_rsa_keys") == 0) {
                     char *password = string2char_array(dictionary.Get(pp::Var("password")).AsString());
@@ -143,6 +145,8 @@ class EncryptInstance : public pp::Instance {
 
                 PostMessage(var_reply);
             }
+
+            PostMessage(pp::Var("test"));
         }
 };
 

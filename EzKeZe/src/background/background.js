@@ -12,7 +12,7 @@ window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFile
 
 var listenerDiv = document.createElement('div');
 listenerDiv.id = "listener";
-document.getElementsByTagName('body')[0].appendChild(listenerDiv);
+document.getElementsByTagName('body')[0].insertBefore(listenerDiv, document.getElementsByTagName('body')[0].firstChild);
 var embed = document.createElement('embed');
 embed.id = "nacl_module";
 embed.width = 0;
@@ -91,6 +91,13 @@ chrome.commands.onCommand.addListener(function(command){
 
   //The command to encrypt the currently selected text
   if(command == 'encrypt_userText'){
+
+
+    var generate_keys_context = {
+        request_type: "generate_rsa_keys",
+        password: "P@ssw0rd"
+    };
+    encrypt_module.postMessage(generate_keys_context);
 
     //Send a message to the current active page that you want to encrypt text
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
