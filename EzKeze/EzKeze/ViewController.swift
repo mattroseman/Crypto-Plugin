@@ -10,14 +10,14 @@ import UIKit
 import Locksmith
 import Alamofire
 import SwiftyJSON
+import ChameleonFramework
 
 class ViewController: UIViewController
 {
+    @IBOutlet var LoginView: UIView!
     @IBOutlet var loginPage: UIView!
     let keychain = Keychain()
     var activityIndicator:UIActivityIndicatorView!
-    
-    @IBOutlet weak var testingText: UITextView!
     
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
@@ -27,9 +27,16 @@ class ViewController: UIViewController
     @IBOutlet weak var passwordRegis: UITextField!
     @IBOutlet weak var regisButton: UIButton!
     
+    var firstColor = UIColor.flatWhiteColor()
+    var secondColor = UIColor.flatMintColor()
+    var gradient = UIGradientStyle.Radial
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        chamelonChangeColor(firstColor, secondColor: secondColor, gradientType: gradient)
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -76,11 +83,11 @@ class ViewController: UIViewController
             {
                 switch response.result {
                 case .Success:
-                    let json = JSON(value)
-                    self.testingText.text = json.arrayObject?.debugDescription
+                    //use received key json here
+                    //let json = JSON(value)
+                    //self.testingText.text = json.arrayObject?.debugDescription
                     break
                 case .Failure:
-                    // Handle failure case...
                     break
                 }
             }
@@ -90,6 +97,15 @@ class ViewController: UIViewController
     func loginSucess()
     {
         performSegueWithIdentifier("loginPage", sender: nil)
+    }
+    
+    func chamelonChangeColor(firstColor: UIColor, secondColor: UIColor, gradientType: UIGradientStyle)
+    {
+        let colors:[UIColor] = [
+            firstColor,
+            secondColor,
+            ]
+        super.view.backgroundColor = GradientColor(gradientType, frame: view.frame, colors: colors)
     }
 
     func addActivityIndicator()

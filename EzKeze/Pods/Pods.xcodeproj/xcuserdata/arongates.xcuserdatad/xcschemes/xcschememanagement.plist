@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>ChameleonFramework.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>CryptoSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -47,7 +52,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>5172ACAB7FEA22813859DC97CA0AA16F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7F60E6360230CC39627A19D7A3CA1361</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -57,12 +72,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D3F49D1CFEBA6E91BAB1D55163E11671</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>DEAE52718F93C0435CEEC21CA74288D4</key>
+		<key>A89ABE61484063EF12F461038EE3F7A6</key>
 		<dict>
 			<key>primary</key>
 			<true/>

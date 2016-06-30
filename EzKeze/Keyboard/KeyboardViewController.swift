@@ -192,25 +192,6 @@ class KeyboardViewController: UIInputViewController
         globalMemoryIndex = 0
     }
     
-    func turnDescriptionIntoJson(descriptionInput: String) -> [UInt8]
-    {
-        var replaced = descriptionInput.stringByReplacingOccurrencesOfString(" ", withString: "")
-        replaced = String(replaced.characters.map {
-            $0 == "[" ? "," : $0
-            })
-        replaced = String(replaced.characters.map {
-            $0 == "]" ? "," : $0
-            })
-        let index1 = replaced.endIndex.advancedBy(-1)
-        replaced = replaced.substringToIndex(index1)
-        replaced = String(replaced.characters.dropFirst())
-        
-        let myArray = replaced.componentsSeparatedByString(",")
-        let jsonEncrypted: [UInt8] = myArray.map { UInt8($0)!}
-        
-        return jsonEncrypted
-    }
-    
     @IBAction func decryptFunc()
     {
         if !decrypting
