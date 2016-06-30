@@ -91,7 +91,7 @@
         <header class="demo-drawer-header">
           <img src="images/user.jpg" class="demo-avatar">
           <div class="demo-avatar-dropdown">
-            <span id="name">Please Log-In</span>
+            <span id="name"></span>
             <div class="mdl-layout-spacer"></div>
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
               <li class="mdl-menu__item">hello@example.com</li>
@@ -115,7 +115,7 @@
             <form action="#">
             <div class="mdl-textfield mdl-js-textfield">
                 Email<input class="mdl-textfield__input" type="text" id="logInEmail"><br>
-                Password<input class="mdl-textfield__input" type="text" id="logInPassword"><br>
+                Password<input class="mdl-textfield__input" type="password" id="logInPassword"><br>
             </div>
             </form>
           </div>
@@ -129,8 +129,8 @@
             <form action="#">
             <div class="mdl-textfield mdl-js-textfield">
                 Email<input id="registerEmail" class="mdl-textfield__input" type="text"><br>
-                Password<input id="registerPassword" class="mdl-textfield__input" type="text"><br>
-                Confirm Password<input class="mdl-textfield__input" type="text" id="registerConfirmPassword"><br>
+                Password<input id="registerPassword" class="mdl-textfield__input" type="password"><br>
+                Confirm Password<input class="mdl-textfield__input" type="password" id="registerConfirmPassword"><br>
             </div>
             </form>
           </div>
@@ -143,7 +143,9 @@
       <dialog class="mdl-dialog" id="syncDialog">
           <div class="mdl-dialog__content" id="syncPrompt">
             <div class="mdl-textfield mdl-js-textfield">
-                Say Cleveland Denver Triangle slowly and clearly into your microphone
+		    	Say<br> 
+			<b>Cleveland Denver Triangle</b><br>
+		    	slowly and clearly
             </div>
             <div id="micDiv" class = "microphone-button">
               <button id="recordButton" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored microphone-button">
