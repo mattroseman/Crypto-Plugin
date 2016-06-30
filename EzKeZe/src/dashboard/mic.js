@@ -100,21 +100,16 @@ function stopRecordingProcess() {
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
+var keyData;
+
 function saveRecording(blob) {
 var time = new Date(),
     url = URL.createObjectURL(blob),
-    html = "<p recording='" + url + "'>" +
-           "<audio controls src='" + url + "'></audio> " +
-           time +
-           " <a class='btn btn-default' href='" + url +
-                "' download='recording.wav'>" +
-           "Save...</a> " +
-           "<button class='btn btn-danger' recording='" +
-                    url + "'>Delete</button>" +
-           "</p>";
+    html = "<audio controls src='" + url + "'></audio> ";
   var div = document.createElement('div');
   div.innerHTML = html;
-  document.body.appendChild(div);
+  document.getElementById("audioPreview").innerHTML = "";
+  document.getElementById("audioPreview").appendChild(div);
 //$recordingList.prepend($(html));
   console.log('recording saved!');
 }
@@ -145,29 +140,38 @@ function saveAudio() {
 function gotBuffers( buffers ) {
     var canvas = document.getElementById( "wavedisplay" );
 
-    //drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
+    drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
 
     // the ONLY time gotBuffers is called is right after a new recording is completed -
     // so here's where we should set up the download.
     audioRecorder.exportWAV( doneEncoding );
 }
 
+var encodedBlob;
 function doneEncoding( blob ) {
     saveRecording(blob);
+    encodedBlob = blob;
+    console.log("Encoding finished")
+}
+
+var serverSync = function(){
+  if(encodedBlob){
+    console.log("sending data to the server");
     var timestamp = new Date().getTime();
-    console.log(timestamp);
-    blobToBase64(blob, function(base64){ // encode
+    blobToBase64(encodedBlob, function(base64){ // encode
       var update = {'blob': base64};
-      var wavData = { email : '420blaiseit@gmail.com', blob : base64, time_stamp: timestamp};
+      var wavData = { email : 'ig11', blob : base64, blob_name: 'ig11' + timestamp};
       $.ajax({
         type: 'POST',
-        url: 'http://stoh.io:8080/api/blobs',
+        url: 'http://stoh.io:8080/api/server_sync',
         dataType: 'json',
         data: wavData
       }).done(function(data) {
-          console.log(data);
+          keyData = data;
+          createKeyList(data);
       });
     })
+  }
 }
 
 var toggleRecording = function( e ) {
@@ -270,3 +274,39 @@ var blobToBase64 = function(blob, cb) {
   };
   reader.readAsDataURL(blob);
 };
+
+function drawBuffer( width, height, context, data ) {
+    var step = Math.ceil( data.length / width );
+    var amp = height / 2;
+    context.fillStyle = "silver";
+    context.clearRect(0,0,width,height);
+    for(var i=0; i < width; i++){
+        var min = 1.0;
+        var max = -1.0;
+        for (j=0; j<step; j++) {
+            var datum = data[(i*step)+j];
+            if (datum < min)
+                min = datum;
+            if (datum > max)
+                max = datum;
+        }
+        context.fillRect(i,(1+min)*amp,1,Math.max(1,(max-min)*amp));
+    }
+}
+
+var createKeyList = function(list){
+  var lst = document.getElementById('keyList');
+  console.log(list);
+  for(var i = 0; i < list.length; i++){
+    var entry = list[i];
+    console.log(entry);
+    var entryID = entry.id;
+    var entryKey = entry.key;
+    var rawHTML = '<span class="mdl-list__item-primary-content"> <i class="material-icons  mdl-list__item-avatar">lock</i>' +
+        'Unlock Wtih Custom Key' + '</span> <span class="mdl-list__item-secondary-action"> <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-1"> <input type="checkbox" id="list-checkbox-1" class="mdl-checkbox__input"/> </label> </span>';
+    var listingItem = document.createElement('li');
+    listingItem.className = "mdl-list__item";
+    listingItem.innerHTML = rawHTML;
+    lst.appendChild(listingItem);
+  }
+}

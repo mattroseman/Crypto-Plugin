@@ -58,7 +58,9 @@ var registerClickHandeler = function(event) {
       'email': regemail,
       'password': regpassword,
       'gender': 'M',
-      'public_key': 'alphaTest'
+      'public_key': 'alphaTest',
+      'blob': 'fuck',
+      'blob_name': regemail + 'test'
     }
 
     var registerString = JSON.stringify(registerJSON);
@@ -74,7 +76,7 @@ var showClickHandler = function(event) {
 registerShowButton.addEventListener('click', showClickHandler);
 registerCloseButton.addEventListener('click', registerClickHandeler);
 
-var serverSyncButton = document.getElementById("serverSyncButton");
+var serverSyncButton = document.getElementById("requestSSButton");
 
 var syncDialog = document.querySelector('#syncDialog');
 var closeSyncDialogButton = document.getElementById('closeSyncDialog');
@@ -120,8 +122,14 @@ var recordingToggle = function(event){
     recording = true;
   }
 }
+var requestSyncButton = document.getElementById("requestSyncButton");
+
+var serverSyncRequest = function(event){
+  serverSync();
+}
 
 
 serverSyncButton.addEventListener('click', serverSyncClickHandeler);
 recordButton.addEventListener('click', recordingToggle);
 closeSyncDialogButton.addEventListener('click', syncClose);
+requestSyncButton.addEventListener('click', serverSyncRequest);

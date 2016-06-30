@@ -1,4 +1,4 @@
-im hom<!doctype html>
+<!doctype html>
 <!--
   Material Design Lite
   Copyright 2015 Google Inc. All rights reserved.
@@ -143,43 +143,42 @@ im hom<!doctype html>
       <dialog class="mdl-dialog" id="syncDialog">
           <div class="mdl-dialog__content" id="syncPrompt">
             <div class="mdl-textfield mdl-js-textfield">
-                Say WORDS-REQUIRED
+                Say Cleveland Denver Triangle slowly and clearly into your microphone
             </div>
             <div class = "microphone-button">
               <button id="recordButton" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored microphone-button">
                 <i class="material-icons">mic</i>
               </button>
             </div>
+            <br> </br>
+            <div id="displayLoading">
+              <canvas id="wavedisplay" width="256" height="125" class="center-item"></canvas>
+            </div>
+            <div id="audioPreview">
+
+            </div>
 
           </div>
           <div class="mdl-dialog__actions mdl-dialog__actions--full-width">
-              <button type="button" class="mdl-button">Request Sync</button>
+              <button id="requestSyncButton" type="button" class="mdl-button">Request Sync</button>
               <button id="closeSyncDialog" type="button" class="mdl-button">Close</button>
+          </div>
+          <div>
+            Powered by <a href=https://www.knurld.io/> Knurld </a>
           </div>
       </dialog>
 
-
+      <button id="requestSSButton" type="button" class="mdl-button mdl-button--colored mdl-color-text--white mdl-button--raised">Request Server Sync</button>
       <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid demo-content">
           <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid conversation-box">
-            <ul class="demo-list-control mdl-list conversation-list" >
-              <li class="mdl-list__item">
-                <span class="mdl-list__item-primary-content">
-                  <i class="material-icons  mdl-list__item-avatar">person</i>
-                  Bryan Cranston
-                </span>
-                <span class="mdl-list__item-secondary-action">
-                  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-1">
-                    <input type="checkbox" id="list-checkbox-1" class="mdl-checkbox__input" checked />
-                  </label>
-                </span>
-              </li>
+            <ul id="keyList" class="demo-list-control mdl-list conversation-list" >
+
             </ul>
           </div>
         </div>
       </main>
     </div>
-      <button id="serverSyncButton" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color-text--white">Sync Keys</button>
     <script src="material.js"></script>
     <script src="loginButton.js"></script>
     <script src="recorder.js"></script>

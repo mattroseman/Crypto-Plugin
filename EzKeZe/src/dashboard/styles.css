@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ canvas {
+   display: inline-block;
+   background: #202020;
+   box-shadow: 0px 0px 10px blue;
+ }
 
 html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
 }
 
+.center-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .microphone-button {
   display: flex;
   align-items: center;

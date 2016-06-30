@@ -1,7 +1,7 @@
 {
   "name": "EzKeZe",
   "description": "Making Secure Communcation Ez Pz",
-  "version": "0.1",
+  "version": "0.69",
   "permissions": [
     "activeTab",
     "http://*/*",
@@ -39,6 +39,11 @@
           },
           "description": "decrypt the currently selected text"
       }
+  },
+  "icons": {
+    "16": "icon/16logo.png",
+    "48": "icon/48logo.png",
+    "128": "icon/128logo.png"
   },
   "manifest_version": 2
 }
