@@ -101,6 +101,8 @@ function stopRecordingProcess() {
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 var keyData;
+var micButtonHTML;
+var loadingDialogHTML = '<div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>';
 
 function saveRecording(blob) {
 var time = new Date(),
@@ -155,8 +157,11 @@ function doneEncoding( blob ) {
 }
 
 var serverSync = function(){
+  var micSpinner = document.getElementById("micSpinner");
   if(encodedBlob){
     console.log("sending data to the server");
+    micSpinner.classList.add("is-active");
+
     var timestamp = new Date().getTime();
     blobToBase64(encodedBlob, function(base64){ // encode
       var update = {'blob': base64};
@@ -167,6 +172,7 @@ var serverSync = function(){
         dataType: 'json',
         data: wavData
       }).done(function(data) {
+          micSpinner.classList.remove("is-active");
           keyData = data;
           createKeyList(data);
       });
