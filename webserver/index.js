@@ -28,7 +28,7 @@ app.post("/api/blobs", function(req, res){
 		} else {
 			return res.json({'status': 'success'});
 		}
-	}); 
+	});
 });
 
 // do not modify
@@ -48,9 +48,9 @@ var con = mysql.createConnection({
 
 // get access token from knurld
 request.post({
-	url:'https://api.knurld.io/oauth/client_credential/accesstoken?grant_type=client_credentials', 
+	url:'https://api.knurld.io/oauth/client_credential/accesstoken?grant_type=client_credentials',
 		form: {
-			'client_id':' 0gHhDE2O9So0sBfSdA7ur4cvNI8qV6dm', 
+			'client_id':' 0gHhDE2O9So0sBfSdA7ur4cvNI8qV6dm',
 			'client_secret':'piYbA87jmWUKpNbj'
 		}
 }, function(err,httpResponse,body){
@@ -62,7 +62,7 @@ request.post({
 	//console.log(knurld_auth);
 });
 
-// connect to database 
+// connect to database
 con.connect(function(err){
 	if(err){
 		console.log('Error connecting to Db');
@@ -88,11 +88,11 @@ app.post('/api/register', function(req, res) {
 	if(!email || !password || !public_key  === 'undefined')
 		res.send("a field you sent is null");
 	request.post({
-		url: 'https://api.knurld.io/v1/consumers', 
+		url: 'https://api.knurld.io/v1/consumers',
 			headers:  {
 				"Authorization" : knurld_oauth,
 				"Developer-Id" : knurld_dev_id
-			}, 
+			},
 		json: {
 			username: email,
 			gender: req.body.gender,
@@ -103,14 +103,14 @@ app.post('/api/register', function(req, res) {
 			console.log(err);
 		} else {
 			body = JSON.stringify(body);
-			knurld_consumer_id = body.substring(44, body.length - 2); 
+			knurld_consumer_id = body.substring(44, body.length - 2);
 			console.log(knurld_consumer_id);
 		}
 		user_data.push({email: email, password: password, public_key: public_key, knurld_id: knurld_consumer_id});
 		console.log(user_data);
-		// TODO check for duplicate registered username, or client id
+
 		if(con.query('INSERT INTO users SET ?', user_data, function(err,mysql_res){
-			if(err) {data.push({data: "fail"}); 
+			if(err) {data.push({data: "fail"});
 				console.log(err);
 				res.send(JSON.stringify(data));
 			} else {
@@ -128,8 +128,8 @@ app.post('/api/register', function(req, res) {
 				}, function(err, response, body){
 					if(err) {
 						console.log(err + ' -- error in enrolling someone to the app model');
-					} else { 
-				data.push({data: "success"}); 
+					} else {
+				data.push({data: "success"});
 				res.send(JSON.stringify(data));
 				console.log("their response: ");
 						console.log("Enrollment ID: " + body.href);
@@ -144,38 +144,41 @@ app.post('/api/register', function(req, res) {
 							} else {
 								console.log("successfully saved file to public folder - /var/www/html/uploads" + blob_name);
 							}
-						}); 
+							// move all code in here for asynch
+						});
 						// save the blob file to folder
 						// step 5c, extract word endpoints in enrollment audio file
-						//request.post({
-							//url: 'https://api.knurld.io/v1/endpointAnalysis/url',
-							//headers: {
-								//"Authorization": knurld_oauth
-								//},
-							//json: {
-								//"audioUrl": "http://stoh.io/uploads/" + blob_name
-							//}
-						//}, function(err, response, body){
-							//if(err) {
-								//console.log(err + ' -- error in step 5c - extract word endpoints in enrollment audio file');
+						request.post({
+							url: 'https://api.knurld.io/v1/endpointAnalysis/url',
+							headers: {
+								"Authorization": knurld_oauth
+								},
+							json: {
+								"audioUrl": "http://stoh.io/uploads/" + blob_name
+							}
+						}, function(err, response, body){
+							if(err) {
+								console.log(err + ' -- error in step 5c - extract word endpoints in enrollment audio file');
 
-							//} else { 
-								//console.log(body);
-								//console.log(body.taskName);
-								//request.get('https://api.knurld.io/v1/endpointAnalysis/' + body.taskName, 
-										//{headers: {
-												  //"Authorization": knurld_oauth
-											  //}
-										//});
-
-							//}
-					//});
+							} else {
+								console.log(body);
+								console.log(body.taskName);
+								// request.get('https://api.knurld.io/v1/endpointAnalysis/' + body.taskName,
+								// 		{
+								// 			headers:
+								// 			{
+								// 				  "Authorization": knurld_oauth
+								// 			  }
+								// 		});
+							}
+					});
 				}
-					
 			});
-		})) console.log("message sent back");	  
-	});
+		} console.log("message sent back");
+	}));
 });
+});
+
 // test endpoint for uploading an image
 app.get('/uploadImage', function (req, res) {
 	res.writeHead(200, {'content-type': 'text/html'});
@@ -306,16 +309,15 @@ app.post('/api/server_sync', function(req, res) {
 				res.writeHead(200, {'content-type': 'text/plain'});
 				res.write("success");
 				res.end();
-			});	  
+			});
 		});
 	});
 	// start the server
 	app.listen(port);
-	console.log('Server started: localhost:'+port); 
+	console.log('Server started: localhost:'+port);
 	// con.end(function(err) {
 	// 	console.log('mysql con terminated - error?');
 	// 	// The connection is terminated gracefully
 	// 	// Ensures all previously enqueued queries are still
 	// 	// before sending a COM_QUIT packet to the MySQL server.
 	// });
-
