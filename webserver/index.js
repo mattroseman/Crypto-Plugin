@@ -12,6 +12,8 @@ var util = require('util');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var suspend = require('suspend');
+var sleep = require('sleep');
 
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
@@ -21,7 +23,7 @@ app.post("/api/blobs", function(req, res){
 	console.log(req.body.blob);
 	var buf = new Buffer(req.body.blob, 'base64'); // decode
 	console.log("CREATED BUFFER");
-	var filename = 'uploads/' + req.body.email + '.wav';
+	var filename = '../../html/uploads/' + req.body.email + req.body.time_stamp + '.wav';
 	fs.writeFile(filename, buf, function(err) {
 		if(err) {
 			console.log("err", err);
@@ -46,6 +48,19 @@ var con = mysql.createConnection({
 
 });
 
+//function1() {
+//console.log("hello, run this right away");
+//}
+//function2( {
+//console.log("run this every 2 seconds");
+//}
+//function3() {
+
+//setTimeout(function2, 3000);
+//function3();
+//}
+//function3();
+//function1();
 // get access token from knurld
 request.post({
 	url:'https://api.knurld.io/oauth/client_credential/accesstoken?grant_type=client_credentials',
@@ -133,28 +148,31 @@ app.post('/api/register', function(req, res) {
 				res.send(JSON.stringify(data));
 				console.log("their response: ");
 						console.log("Enrollment ID: " + body.href);
-						knurld_enrollment_id = body.href;
+						knurld_enrollment_id = body.href.substring(37, body.href.length);
+						console.log("ENROLLMENT ID", knurld_enrollment_id);
+						console.log("OAUTH TOKEN", knurld_oauth);
 						// step 5b, record enrollment audio in the user's voice
-						var buf = new Buffer(req.body.blob, 'base64'); // decode
-						console.log("CREATED BUFFER");
-						var filename = '/var/www/html/uploads/' + req.body.blod_name + '.wav';
-						fs.writeFile(filename, buf, function(err) {
-							if(err) {
-								console.log("err", err);
-							} else {
-								console.log("successfully saved file to public folder - /var/www/html/uploads" + blob_name);
-							}
-							// move all code in here for asynch
-						});
+						//var buf = new Buffer(req.body.blob, 'base64'); // decode
+						//console.log("CREATED BUFFER");
+						//var filename = '/var/www/html/uploads/' + req.body.blob_name + '.wav';
+						//fs.writeFile(filename, buf, function(err) {
+							//if(err) {
+								//console.log("err", err);
+							//} else {
+								//console.log("successfully saved file to public folder - /var/www/html/uploads" + blob_name);
+							//}
+							 //move all code in here for asynch
+						//});
 						// save the blob file to folder
 						// step 5c, extract word endpoints in enrollment audio file
+						blob_name = '420blaiseit@gmail.com1467251134197';
 						request.post({
 							url: 'https://api.knurld.io/v1/endpointAnalysis/url',
 							headers: {
 								"Authorization": knurld_oauth
 								},
 							json: {
-								"audioUrl": "http://stoh.io/uploads/" + blob_name
+								"audioUrl": "http://stoh.io/uploads/" + blob_name +  '.wav'
 							}
 						}, function(err, response, body){
 							if(err) {
@@ -162,14 +180,64 @@ app.post('/api/register', function(req, res) {
 
 							} else {
 								console.log(body);
-								console.log(body.taskName);
-								// request.get('https://api.knurld.io/v1/endpointAnalysis/' + body.taskName,
-								// 		{
-								// 			headers:
-								// 			{
-								// 				  "Authorization": knurld_oauth
-								// 			  }
-								// 		});
+								console.log(body.taskName + ' one more print statment left');
+								sleep.sleep(3);
+								// second part of task 6d, extract work endpoints in enrollment audio file
+								request.get('https://api.knurld.io/v1/endpointAnalysis/' + body.taskName,
+										 {
+											 headers:
+											 {
+												   "Authorization": knurld_oauth
+											   }
+										 }, function (error, response, body) {
+											var taskStatus = JSON.parse(body).taskStatus;
+											var taskBody = JSON.parse(body); 
+											console.log(taskStatus);
+										// perform task 6e, complelete enrollment work order	 
+										taskBody.intervals[0]['phrase'] = "Cleveland";
+										taskBody.intervals[1]['phrase'] = "Cleveland";
+										taskBody.intervals[2]['phrase'] = "Cleveland";
+										taskBody.intervals[3]['phrase'] = "Denver";
+										taskBody.intervals[4]['phrase'] = "Denver";
+										taskBody.intervals[5]['phrase'] = "Denver";
+										taskBody.intervals[6]['phrase'] = "Triangle";
+										taskBody.intervals[7]['phrase'] = "Triangle";
+										taskBody.intervals[8]['phrase'] = "Triangle";
+
+										intervals = taskBody.intervals;
+										console.log(intervals);
+										request.post({
+											url: 'https://api.knurld.io/v1/enrollments/' + knurld_enrollment_id,
+											headers: {
+												"Authorization": knurld_oauth,
+												"Developer-Id": knurld_dev_id
+												},
+											json: {
+												"verification.wav": "http://stoh.io/uploads/" + blob_name + '.wav',
+												"intervals": intervals
+
+											}
+										}, function(err, response, body){
+											if(err) {
+												console.log(err + ' -- error in 5d');
+
+											} else {
+												console.log(body);
+												console.log("http://stoh.io/uploads/" + blob_name + '.wav');
+												//knurld_enrollment_id = body.href.substring(37, body.href.length);
+												//console.log(knurld_enrollment_id);
+												// if interested, perform task 5e - get enrollment completion status
+												//sleep.sleep(3);
+
+
+											
+											}
+										});
+
+
+
+											 
+										 });
 							}
 					});
 				}
@@ -215,109 +283,250 @@ app.post('/api/get_text', function(req, res) {
 });
 // ----------return json of public keys associated with user id
 app.post('/api/server_sync', function(req, res) {
-	// get array of origin keys
-	var keys = [];
-	console.log(req.body.email);
-	email = mysql.escape(req.body.email);
-	con.query('SELECT original_keys.id, original_keys.encrypted_keys FROM users JOIN original_keys ON original_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
-		//con.query('SELECT * FROM users WHERE email = ' + email  , function(err,rows){
-		if(err) throw err;
-		console.log(rows);
+	// perform knurld voice authentication first
+	// step 6a, create verification work order
+	if(!req.body.email) return res.send("send me a json {email:'ig11'}");
+	var blob_name = req.body.blob_name;
+	con.query('SELECT knurld_id FROM users WHERE email = ' + mysql.escape(req.body.email), function(err, rows){
+				request.post({
+					url: 'https://api.knurld.io/v1/verifications',
+					headers: {
+						"Authorization": knurld_oauth,
+						"Developer-Id": knurld_dev_id
+						},
+					json: {
+						"consumer": "https://api.knurld.io/v1/consumers/" + rows[0].knurld_id,
+						"application": "https://api.knurld.io/v1/app-models/" + knurld_app_model_id
+					}
+				}, function(err, response, body){
+					if(err) {
+						console.log(err + ' -- error in beginning verification process, part 6a');
+					} else {
+						knurld_verification_id= body.href.substring(39, body.href.length);
+						console.log(knurld_verification_id);
+						// save blob to an openly accessible URL
+						//console.log(req.body.blob);
+						//var buf = new Buffer(req.body.blob, 'base64'); 
+						//console.log("CREATED BUFFER");
+						//var filename = '../../html/uploads/' + req.body.email + req.body.time_stamp + '.wav';
+						//fs.writeFile(filename, buf, function(err) {
+							//if(err) {
+								//console.log("err", err);
+							//} else {
+								// openly accessible is here now
+								// perform task 6d, extract word endpoints in verification audio file
+								request.post({
+									url: 'https://api.knurld.io/v1/endpointAnalysis/url',
+									headers: {
+										"Authorization": knurld_oauth
+										},
+									json: {
+										"audioUrl" : 'http://stoh.io/uploads/' + blob_name + '.wav'
+									}
+								}, function(err, response, body){
+									if(err) {
+										console.log(err, '-- error in part 6d');
+									} else {
+										console.log(body);
+										// sleep for 3 seconds while waiting for knurld to provide analysis
+										sleep.sleep(3);
+								 		request.get('https://api.knurld.io/v1/endpointAnalysis/' + body.taskName,
+											 {
+												 headers:
+												 {
+													   "Authorization": knurld_oauth
+												   }
+											 }, function (error, response, body) {
+												if(error) throw error;
 
-		for(i in rows)
-		{
-			keys.push({'id' : rows[i].id, 'key' : rows[i].encrypted_keys});
-		}
+												var taskStatus = JSON.parse(body).taskStatus;
+												var taskBody = JSON.parse(body); 
+												console.log(taskStatus);
+												// perform task 6e, complelete enrollment work order	 
+												taskBody.intervals[0]['phrase'] = "Cleveland";
+												taskBody.intervals[1]['phrase'] = "Denver";
+												taskBody.intervals[2]['phrase'] = "Triangle";
 
-		con.query('SELECT chat_keys.orig_id, chat_keys.chat_key FROM users JOIN chat_keys ON chat_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
-			if(err) throw err;
-			console.log(rows);
+												intervals = taskBody.intervals;
+												console.log(intervals);
+												request.post({
+													url: 'https://api.knurld.io/v1/verifications/' + knurld_verification_id,
+													headers: {
+														"Authorization": knurld_oauth,
+														"Developer-Id": knurld_dev_id
+														},
+													json: {
+														"verification.wav": "http://stoh.io/uploads/" + blob_name + '.wav',
+														intervals
+													}
+												}, function(err, response, body){
+													if(err) {
+														console.log(err + ' -- error in 6e');
+													} else {
+														console.log("finished in this code here", body);
+														knurld_verification_id = body.href.substring(39, body.href.length);
+														console.log(knurld_verification_id);
+														// task 6f - get verification completion status
+														sleep.sleep(3);
+								 						request.get('https://api.knurld.io/v1/verifications/' + knurld_verification_id,
+															 {
+																 headers:
+																 {
+																	"Authorization": knurld_oauth,
+																	"Developer-Id": knurld_dev_id
+																   }
+															 }, function (error, response, body) {
+																if(error) throw error;
+																else
+																	body = JSON.parse(body);
+																	console.log(body);
+																	console.log(body.verified);
+																	if(body.verified == "true"){
+																		var keys = [];
+																		console.log(req.body.email);
+																		email = mysql.escape(req.body.email);
+																		con.query('SELECT original_keys.id, original_keys.encrypted_keys FROM users JOIN original_keys ON original_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
+																			//con.query('SELECT * FROM users WHERE email = ' + email  , function(err,rows){
+																			if(err) throw err;
+																			console.log(rows);
 
-			for(i in rows)
-			{
-				keys.push({'id' : rows[i].orig_id, 'key' : rows[i].chat_key});
-			}
-			console.log(keys);
-			res.contentType('application/json');
-			res.send(JSON.stringify(keys));
-		});
-	});
-	});
-	// ---------------fetch a pub key, given a userID
-	app.get('/api/id_to_pub', function(req, res) {
-		console.log("inside of id to pub");
-		console.log(req.body.email);
-		var email = mysql.escape(req.body.email);
-		//con.query('SELECT * FROM `users` JOIN key_dump ON key_dump.id = users.public_key WHERE email = ?', email, function(err, result){
-		con.query('SELECT public_key FROM users WHERE email = ' + email, function(err, rows){
-			if(err) throw err;
-			var tmp = [];
-			res.contentType('application/json');
-			for(i in rows){
-				tmp.push({'public_key' : rows[i].public_key});
+																			for(i in rows)
+																			{
+																				keys.push({'id' : rows[i].id, 'key' : rows[i].encrypted_keys});
+																			}
 
-			}
-			res.send(JSON.stringify(tmp));
+																			con.query('SELECT chat_keys.orig_id, chat_keys.chat_key FROM users JOIN chat_keys ON chat_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
+																				if(err) throw err;
+																				console.log(rows);
 
-		});
-	});
+																				for(i in rows)
+																				{
+																					keys.push({'id' : rows[i].orig_id, 'key' : rows[i].chat_key});
+																				}
+																				console.log(keys);
+																				res.contentType('application/json');
+																				res.send(JSON.stringify(keys));
+																			});
+																		});
 
 
-	// -----------returns success if login works, else wrong password
-	app.post('/api/login', function(req, res) {
-		var h_pass = mysql.escape(req.body.password);
-		var h_user = mysql.escape(req.body.email);
-		console.log(h_pass, h_user);
-		var query = "SELECT *  FROM users where email = " + h_user + " AND password = " + h_pass;
-		con.query(query,  function(err,rows){
-			if(err) throw err;
-			else{
-				if(rows.length > 0) {
+																		}
+																		console.log(body.verified_phrases);
+																	});
+															 }
+													});
+												});
+											 }
+									});
+								}
+					});
+					// below is for the buffer closing parenthesis
+					//}
+					//});
+				});
+				// get array of origin keys
+				var keys = [];
+				console.log(req.body.email);
+				email = mysql.escape(req.body.email);
+				con.query('SELECT original_keys.id, original_keys.encrypted_keys FROM users JOIN original_keys ON original_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
+					//con.query('SELECT * FROM users WHERE email = ' + email  , function(err,rows){
+					if(err) throw err;
 					console.log(rows);
-					res.writeHead(200, {'content-type': 'text/plain'});
-					res.write("success");
-					res.end("end");
-				}
-				else{
-					res.writeHead(200, {'content-type': 'text/plain'});
-					res.write("fail");
-					res.end("end");
-				}
-			}
-		});
-	});
+
+					for(i in rows)
+					{
+						keys.push({'id' : rows[i].id, 'key' : rows[i].encrypted_keys});
+					}
+
+					con.query('SELECT chat_keys.orig_id, chat_keys.chat_key FROM users JOIN chat_keys ON chat_keys.user_id = users.id WHERE users.email = ' +  email, function(err,rows){
+						if(err) throw err;
+						console.log(rows);
+
+						for(i in rows)
+						{
+							keys.push({'id' : rows[i].orig_id, 'key' : rows[i].chat_key});
+						}
+						console.log(keys);
+						res.contentType('application/json');
+						res.send(JSON.stringify(keys));
+					});
+				});
+				});
+				// ---------------fetch a pub key, given a userID
+				app.get('/api/id_to_pub', function(req, res) {
+					console.log("inside of id to pub");
+					console.log(req.body.email);
+					var email = mysql.escape(req.body.email);
+					//con.query('SELECT * FROM `users` JOIN key_dump ON key_dump.id = users.public_key WHERE email = ?', email, function(err, result){
+					con.query('SELECT public_key FROM users WHERE email = ' + email, function(err, rows){
+						if(err) throw err;
+						var tmp = [];
+						res.contentType('application/json');
+						for(i in rows){
+							tmp.push({'public_key' : rows[i].public_key});
+
+						}
+						res.send(JSON.stringify(tmp));
+
+					});
+				});
 
 
-	// -----------put up an encrypted AES key for another user to download
-	// given orig_id and chat_key, and email, add entry for a person
-	app.post('/api/invite', function(req, res) {
-		// take the key, add record under a persons name
-		var user_data = [];
-		// convert email to a user_id
-		var email = mysql.escape(req.body.email);
-		var orig_id = req.body.key_id;
-		var chat_key = req.body.chat_key;
-		console.log(email);
-		con.query('SELECT id FROM users WHERE email=' + email, function(err, rows){
-			for(i in rows)
-				var user_id = rows[i].id;
-			user_data.push({ orig_id: orig_id, chat_key : chat_key, user_id : user_id});
-			console.log(user_data);
-			con.query('INSERT INTO chat_keys SET ?', user_data, function(err,row){
-				if(err) throw err;
-				console.log('Last insert ID:', row.insertId);
-				res.writeHead(200, {'content-type': 'text/plain'});
-				res.write("success");
-				res.end();
-			});
-		});
-	});
-	// start the server
-	app.listen(port);
-	console.log('Server started: localhost:'+port);
-	// con.end(function(err) {
-	// 	console.log('mysql con terminated - error?');
-	// 	// The connection is terminated gracefully
-	// 	// Ensures all previously enqueued queries are still
-	// 	// before sending a COM_QUIT packet to the MySQL server.
-	// });
+				// -----------returns success if login works, else wrong password
+				app.post('/api/login', function(req, res) {
+					var h_pass = mysql.escape(req.body.password);
+					var h_user = mysql.escape(req.body.email);
+					console.log(h_pass, h_user);
+					var query = "SELECT *  FROM users where email = " + h_user + " AND password = " + h_pass;
+					con.query(query,  function(err,rows){
+						if(err) throw err;
+						else{
+							if(rows.length > 0) {
+								console.log(rows);
+								res.writeHead(200, {'content-type': 'text/plain'});
+								res.write("success");
+								res.end("end");
+							}
+							else{
+								res.writeHead(200, {'content-type': 'text/plain'});
+								res.write("fail");
+								res.end("end");
+							}
+						}
+					});
+				});
+
+
+				// -----------put up an encrypted AES key for another user to download
+				// given orig_id and chat_key, and email, add entry for a person
+				app.post('/api/invite', function(req, res) {
+					// take the key, add record under a persons name
+					var user_data = [];
+					// convert email to a user_id
+					var email = mysql.escape(req.body.email);
+					var orig_id = req.body.key_id;
+					var chat_key = req.body.chat_key;
+					console.log(email);
+					con.query('SELECT id FROM users WHERE email=' + email, function(err, rows){
+						for(i in rows)
+							var user_id = rows[i].id;
+						user_data.push({ orig_id: orig_id, chat_key : chat_key, user_id : user_id});
+						console.log(user_data);
+						con.query('INSERT INTO chat_keys SET ?', user_data, function(err,row){
+							if(err) throw err;
+							console.log('Last insert ID:', row.insertId);
+							res.writeHead(200, {'content-type': 'text/plain'});
+							res.write("success");
+							res.end();
+						});
+					});
+				});
+				// start the server
+				app.listen(port);
+				console.log('Server started: localhost:'+port);
+				// con.end(function(err) {
+				// 	console.log('mysql con terminated - error?');
+				// 	// The connection is terminated gracefully
+				// 	// Ensures all previously enqueued queries are still
+				// 	// before sending a COM_QUIT packet to the MySQL server.
+				// });
