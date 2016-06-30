@@ -75,9 +75,14 @@ registerShowButton.addEventListener('click', showClickHandler);
 registerCloseButton.addEventListener('click', registerClickHandeler);
 
 var serverSyncButton = document.getElementById("serverSyncButton");
-console.log(serverSyncButton)
+
+var syncDialog = document.querySelector('#syncDialog');
+var closeSyncDialogButton = document.getElementById('closeSyncDialog');
+var recordButton = document.getElementById('recordButton');
 
 var serverSyncClickHandeler = function(event) {
+  syncDialog.showModal();
+  /*
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function(e) {
       if (this.readyState == 4 && this.status == 200) {
@@ -94,7 +99,29 @@ var serverSyncClickHandeler = function(event) {
     var serverSyncString = JSON.stringify(serverSyncJSON);
 
     xhttp.send(serverSyncString);
+    */
 
 };
 
+var syncClose = function(event){
+  syncDialog.close();
+}
+var recording = false;
+var defaultColor = recordButton.style.color
+
+var recordingToggle = function(event){
+  if(recording){
+    toggleRecording(recording);
+    recordButton.style.color = defaultColor;
+    recording = false;
+  }else{
+    toggleRecording(recording);
+    recordButton.style.color = "red";
+    recording = true;
+  }
+}
+
+
 serverSyncButton.addEventListener('click', serverSyncClickHandeler);
+recordButton.addEventListener('click', recordingToggle);
+closeSyncDialogButton.addEventListener('click', syncClose);

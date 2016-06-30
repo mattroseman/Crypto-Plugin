@@ -116,7 +116,7 @@ var time = new Date(),
   div.innerHTML = html;
   document.body.appendChild(div);
 //$recordingList.prepend($(html));
-  console.log(url);
+  console.log('recording saved!');
 }
 
 
@@ -154,20 +154,23 @@ function gotBuffers( buffers ) {
 
 function doneEncoding( blob ) {
     saveRecording(blob);
+    var timestamp = new Date().getTime();
+    console.log(timestamp);
     blobToBase64(blob, function(base64){ // encode
       var update = {'blob': base64};
+      var wavData = { email : '420blaiseit@gmail.com', blob : base64, time_stamp: timestamp};
       $.ajax({
         type: 'POST',
-        url: 'http://stoh.io/blobs.php',
-        data: base64,
-        dataType: 'text'
+        url: 'http://stoh.io:8080/api/blobs',
+        dataType: 'json',
+        data: wavData
       }).done(function(data) {
           console.log(data);
       });
     })
 }
 
-function toggleRecording( e ) {
+var toggleRecording = function( e ) {
     if (e) {
         // stop recording
         audioRecorder.stop();
@@ -256,25 +259,6 @@ function initAudio() {
 }
 
 window.addEventListener('load', initAudio );
-
-function uploadAudio( blob ) {
-  var reader = new FileReader();
-  reader.onload = function(event){
-    var fd = {};
-    fd["fname"] = "test.wav";
-    fd["data"] = event.target.result;
-    $.ajax({
-      type: 'POST',
-      url: 'http://stoh.io:8080/api/blobs',
-      data: fd,
-      dataType: 'text'
-    }).done(function(data) {
-        console.log(data);
-    });
-  };
-  reader.readAsDataURL(blob);
-}
-
 
 // converts blob to base64
 var blobToBase64 = function(blob, cb) {
