@@ -1,0 +1,43 @@
+{
+  "name": "EzKeZe",
+  "description": "Making Secure Communcation Ez Pz",
+  "version": "0.1",
+  "permissions": [
+    "activeTab",
+    "http://*/*",
+    "webNavigation"
+  ],
+  "background": {
+    "scripts": ["lib/jquery-1.12.2.min.js", "lib/aesjs_index.js", "lib/cryptico.js", "src/encrypt.js", "src/background/background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "EzKeZe"
+  },
+  "content_scripts": [{
+    "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+          "all_frames": true,
+          "match_about_blank": true,
+    "js": ["src/content/content.js"],
+    "run_at": "document_end"
+    }],
+  "commands": {
+      "encrypt_userText": {
+          "suggested_key": {
+            "default": "Ctrl+Shift+V",
+            "mac": "Command+Shift+V",
+            "linux": "Ctrl+Shift+V"
+          },
+          "description": "encrypt the currently selected text"
+      },
+      "decrypt_userText": {
+          "suggested_key": {
+            "default": "Ctrl+Shift+F",
+            "mac": "Command+Shift+F",
+            "linux": "Ctrl+Shift+F"
+          },
+          "description": "decrypt the currently selected text"
+      }
+  },
+  "manifest_version": 2
+}
