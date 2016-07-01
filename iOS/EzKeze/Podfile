@@ -1,0 +1,23 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'EzKeze' do
+  # Comment this line if you're not using Swift and don't want to use dynamic frameworks
+  pod 'Alamofire', '~> 3.4'
+  pod 'SwiftyJSON', '~> 2.3'
+  pod 'ChameleonFramework/Swift'
+  pod 'Locksmith'
+  # pod 'OpenSSL'
+  pod 'CryptoSwift'
+  use_frameworks!
+  # Pods for EzKeze
+end
+
+target 'Keyboard' do
+  pod 'Alamofire', '~> 3.4'
+  pod 'SwiftyJSON', '~> 2.3'
+  pod 'Locksmith'
+  # pod 'OpenSSL'
+  pod 'CryptoSwift'
+  use_frameworks!
+end
