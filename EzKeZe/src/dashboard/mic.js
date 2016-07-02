@@ -4,16 +4,24 @@ var keyData;
 var micButtonHTML;
 var loadingDialogHTML = '<div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>';
 
-function saveRecording(blob) {
+function saveRecording(blob, isRegister) {
 var time = new Date(),
     url = URL.createObjectURL(blob),
     html = "<audio controls style='width: 256px;' src='" + url + "'></audio> ";
   var div = document.createElement('div');
   div.innerHTML = html;
-  document.getElementById("audioPreview").innerHTML = "";
-  document.getElementById("audioPreview").appendChild(div);
-//$recordingList.prepend($(html));
-  console.log('recording saved!');
+  if(isRegister){
+    document.getElementById("audioPreviewRegister").innerHTML = "";
+    document.getElementById("audioPreviewRegister").appendChild(div);
+  //$recordingList.prepend($(html));
+    console.log('recording saved!');
+  }else {
+    document.getElementById("audioPreview").innerHTML = "";
+    document.getElementById("audioPreview").appendChild(div);
+  //$recordingList.prepend($(html));
+    console.log('recording saved!');
+
+  }
 }
 
 
@@ -26,6 +34,8 @@ var rafID = null;
 var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
+var unlockPass = document.getElementById("unlockPass");
+unlockPass.style.visibility = "hidden";
 
 /* TODO:
 
@@ -41,8 +51,14 @@ function saveAudio() {
 
 function gotBuffers( buffers ) {
     var canvas = document.getElementById( "wavedisplay" );
+    var canvasRegister = document.getElementById("wavedisplayRegister");
+    if(registerCheck){
+      drawBuffer( canvasRegister.width, canvasRegister.height, canvasRegister.getContext('2d'), buffers[0] );
 
-    drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
+    }else{
+      drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
+    }
+
 
     // the ONLY time gotBuffers is called is right after a new recording is completed -
     // so here's where we should set up the download.
@@ -51,7 +67,7 @@ function gotBuffers( buffers ) {
 
 var encodedBlob;
 function doneEncoding( blob ) {
-    saveRecording(blob);
+    saveRecording(blob, registerCheck);
     encodedBlob = blob;
     console.log("Encoding finished")
 }
@@ -74,9 +90,13 @@ var serverSync = function(){
       }).done(function(data) {
           micSpinner.classList.remove("is-active");
           document.getElementById("fabIcon").innerHTML = "check";
+          document.getElementById("prompt").innerHTML = "Enter your unlock pass";
           recordButton.style.color = "green";
+          unlockPass.style.visibility = "visible";
+          serverSyncDone = true;
+          requestSyncButton.innerHTML = "Unlock Keys";
           keyData = data;
-          createKeyList(data);
+
       });
     })
   }
@@ -212,8 +232,8 @@ var createKeyList = function(list){
     var entryID = entry.id;
     var entryKey = entry.key;
     var rawHTML = '<span class="mdl-list__item-primary-content"> <i class="material-icons  mdl-list__item-avatar">lock</i>' +
-        'Unlock Wtih Custom Key' + '</span> <span class="mdl-list__item-secondary-action"> <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-1"> <input type="checkbox" id="list-checkbox-1" class="mdl-checkbox__input"/> </label> </span>';
-  //x = document.getElementById("keyList"), 
+        entryKey + '</span> <span class="mdl-list__item-secondary-action"> </span>';
+  //x = document.getElementById("keyList"),
     //c = x.childNodes;
 	//for (var i = 0; i < 4; i++) {
 		   //x.removeChild(c[i--]);

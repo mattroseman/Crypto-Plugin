@@ -22,7 +22,9 @@
 html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
 }
-
+.prompt {
+  text-align: center;
+}
 .center-item {
   display: flex;
   align-items: center;

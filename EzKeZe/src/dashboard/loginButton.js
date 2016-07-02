@@ -36,7 +36,7 @@ closeButton.addEventListener('click', logInClickHandler);
 
 
 var registerDialog = document.querySelector('#registerDialog');
-var registerCloseButton = registerDialog.querySelector('button');
+var registerCloseButton = document.getElementById('registerFinal');
 var registerShowButton = document.querySelector('#registerButton');
 var registerEmail = document.getElementById('registerEmail');
 var registerPassword = document.getElementById('registerPassword');
@@ -76,6 +76,27 @@ var showClickHandler = function(event) {
 registerShowButton.addEventListener('click', showClickHandler);
 registerCloseButton.addEventListener('click', registerClickHandeler);
 
+var registerRecordButton = document.getElementById("recordButtonRegister");
+
+var recordingRegister = false;
+var registerCheck = false;
+
+var recordingToggleRegister = function(event){
+  var defaultColorRegister = recordButton.style.color
+  if(recordingRegister){
+    toggleRecording(recordingRegister);
+    recordButtonRegister.style.color = defaultColorRegister;
+    recordingRegister = false;
+  }else{
+    toggleRecording(recordingRegister);
+    recordButtonRegister.style.color = "red";
+    registerCheck = true;
+    recordingRegister = true;
+  }
+}
+
+registerRecordButton.addEventListener('click', recordingToggleRegister);
+
 var serverSyncButton = document.getElementById("requestSSButton");
 
 var syncDialog = document.querySelector('#syncDialog');
@@ -106,7 +127,7 @@ var serverSyncClickHandeler = function(event) {
 };
 
 var syncClose = function(event){
-  syncDialog.close();
+  //syncDialog.close();
 }
 var recording = false;
 var defaultColor = recordButton.style.color
@@ -123,9 +144,16 @@ var recordingToggle = function(event){
   }
 }
 var requestSyncButton = document.getElementById("requestSyncButton");
+var serverSyncDone = false;
 
 var serverSyncRequest = function(event){
-  serverSync();
+  if(serverSyncDone){
+    createKeyList(keyData);
+    syncDialog.close();
+  }
+  else{
+    serverSync();
+  }
 }
 
 

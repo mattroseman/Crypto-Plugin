@@ -91,7 +91,7 @@
         <header class="demo-drawer-header">
           <img src="images/user.jpg" class="demo-avatar">
           <div class="demo-avatar-dropdown">
-            <span id="name"></span>
+            <span id="name">example@stoh.io</span>
             <div class="mdl-layout-spacer"></div>
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
               <li class="mdl-menu__item">hello@example.com</li>
@@ -132,19 +132,43 @@
                 Password<input id="registerPassword" class="mdl-textfield__input" type="password"><br>
                 Confirm Password<input class="mdl-textfield__input" type="password" id="registerConfirmPassword"><br>
             </div>
+            <br>
             </form>
           </div>
-          <div class="mdl-dialog__actions mdl-dialog__actions--full-width">
-              <button type="button" class="mdl-button">Close</button>
-              <button type="button" class="mdl-button">Inactive action</button>
+
+          <div class="mdl-dialog__content" id="syncPrompt">
+            <div id="prompt" class="prompt mdl-textfield mdl-js-textfield">
+          Say<br>
+            <b>Denver Cleveland Triangle</b><br>
+          three times each, <br>
+          slowly and clearly
+            </div>
+            <div id="micDivRegister" class = "microphone-button">
+              <button id="recordButtonRegister" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored microphone-button">
+                <i id = "fabIconRegister" class="material-icons">mic</i>
+                <div id = "micSpinnerRegister" class="mdl-spinner mdl-spinner mdl-js-spinner"></div>
+              </button>
+            </div>
+            <br> </br>
+            <canvas id="wavedisplayRegister" width="256" height="125" class="center-item"></canvas>
+
+            <div id="audioPreviewRegister">
+
+            </div>
+
           </div>
+          <div class="mdl-dialog__actions mdl-dialog__actions--full-width">
+              <button id="registerFinal" type="button" class="mdl-button">Register</button>
+              <button type="button" class="mdl-button">Close</button>
+          </div>
+          Powered by <a href=https://www.knurld.io/> Knurld </a>
       </dialog>
 
       <dialog class="mdl-dialog" id="syncDialog">
           <div class="mdl-dialog__content" id="syncPrompt">
-            <div class="mdl-textfield mdl-js-textfield">
-		    	Say<br> 
-			<b>Cleveland Denver Triangle</b><br>
+            <div id="prompt" class="prompt mdl-textfield mdl-js-textfield">
+		    	Say<br>
+			<b>Denver Cleveland Triangle</b><br>
 		    	slowly and clearly
             </div>
             <div id="micDiv" class = "microphone-button">
@@ -152,6 +176,9 @@
                 <i id = "fabIcon" class="material-icons">mic</i>
                 <div id = "micSpinner" class="mdl-spinner mdl-spinner mdl-js-spinner"></div>
               </button>
+            </div>
+            <div id="unlockPass" class="mdl-textfield mdl-js-textfield">
+                Password<input id="registerPassword" class="mdl-textfield__input" type="password"><br>
             </div>
             <br> </br>
             <canvas id="wavedisplay" width="256" height="125" class="center-item"></canvas>
