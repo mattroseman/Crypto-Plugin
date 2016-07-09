@@ -4,19 +4,54 @@
       "archives": [
         {
           "checksum": {
-            "sha1": "3c63a6002dea894616292bb25d6b375dba0290f1"
+            "sha1": "c90944aa6dc45085f1a222396ffa2b6a86afdf3d"
           },
           "host_os": "all",
-          "size": 30527,
-          "url": "https://storage.googleapis.com/nativeclient-mirror/nacl/nacl_sdk/trunk.314836/sdk_tools.tgz"
+          "size": 31159,
+          "url": "https://storage.googleapis.com/nativeclient-mirror/nacl/nacl_sdk/trunk.361478/sdk_tools.tgz"
         }
       ],
-      "description": "Native Client SDK Tools, revision 314836",
+      "description": "Native Client SDK Tools, revision 361478",
       "name": "sdk_tools",
       "recommended": "yes",
-      "revision": 314836,
+      "revision": 361478,
       "stability": "stable",
       "version": 1
+    },
+    {
+      "archives": [
+        {
+          "checksum": {
+            "sha1": "c0085301e5fc2357f7040054d24a140be70f4d2d"
+          },
+          "host_os": "linux",
+          "size": 332884009,
+          "url": "https://storage.googleapis.com/nativeclient-mirror/nacl/nacl_sdk/49.0.2623.87/naclsdk_linux.tar.bz2"
+        },
+        {
+          "checksum": {
+            "sha1": "87dcc561b8a77a17c6bbdce9de501ce1c3afc7c2"
+          },
+          "host_os": "mac",
+          "size": 320994309,
+          "url": "https://storage.googleapis.com/nativeclient-mirror/nacl/nacl_sdk/49.0.2623.87/naclsdk_mac.tar.bz2"
+        },
+        {
+          "checksum": {
+            "sha1": "368b4e141495640e483563d53cf8885b2f6d2a7e"
+          },
+          "host_os": "win",
+          "size": 318623426,
+          "url": "https://storage.googleapis.com/nativeclient-mirror/nacl/nacl_sdk/49.0.2623.87/naclsdk_win.tar.bz2"
+        }
+      ],
+      "description": "Chrome 49 bundle. Chrome revision: 592. NaCl revision: 26c7e6ae1327a43c948f4666fef9e84fe351ab7c",
+      "name": "pepper_49",
+      "recommended": "yes",
+      "repath": "pepper_49",
+      "revision": 592,
+      "stability": "stable",
+      "version": 49
     }
   ],
   "manifest_version": 2

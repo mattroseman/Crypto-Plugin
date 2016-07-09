@@ -3,6 +3,7 @@
 #include "ppapi/cpp/var.h"
 #include "ppapi/cpp/var_dictionary.h"
 
+#include <string.h>
 #include "openssl/rsa.h"
 #include "openssl/bn.h"
 #include "openssl/evp.h"
@@ -56,9 +57,9 @@ class EncryptInstance : public pp::Instance {
                 pp::VarDictionary dictionary(var_message);
                 pp::VarArray keys = dictionary.GetKeys();
 
-                pp::VarDictionary var_reply;
-
-                fprintf(stdout, "nacl log: %s\n", dictionary.Get(pp::Var("request_type")).AsString().c_str());
+                //pp::VarDictionary var_reply;
+                // test line (TODO delete)
+                pp::Var var_reply;
 
                 //  if asked to generate an rsa key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("generate_rsa_keys") == 0) {
@@ -67,15 +68,19 @@ class EncryptInstance : public pp::Instance {
                     char *rsa_pubkey_pem;
                     char *rsa_privkey_pem;
                     rsa_publickey_to_pem(rsa_key, &rsa_pubkey_pem);
+                    std::string public_key(rsa_pubkey_pem);
+                    var_reply = pp::Var(public_key);
+                    /*
                     rsa_privatekey_to_pem(rsa_key, &rsa_privkey_pem, password);
 
-                    std::string public_key(rsa_pubkey_pem);
                     std::string private_key(rsa_privkey_pem);
 
                     var_reply.Set(pp::Var("public_key"), pp::Var(public_key));
                     var_reply.Set(pp::Var("private_key"), pp::Var(private_key));
+                    */
                 }
 
+                /*
                 //  if asked to encrypt a string with a given rsa key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("encrypt_rsa") == 0) {
                     char *rsa_pub_pem = string2char_array(dictionary.Get(pp::Var("public_key")).AsString());
@@ -142,11 +147,10 @@ class EncryptInstance : public pp::Instance {
 
                     var_reply.Set(pp::Var("decrypted_message"), pp::Var(decrypted_message));
                 }
+                */
 
                 PostMessage(var_reply);
             }
-
-            PostMessage(pp::Var("test"));
         }
 };
 
@@ -175,6 +179,7 @@ namespace pp {
  */
 RSA *generate_rsa_keys() {
     RSA *key = RSA_new();
+    /*
     kExp = BN_new();
     BN_set_word(kExp, kExp_long);
 
@@ -182,7 +187,7 @@ RSA *generate_rsa_keys() {
         printf("RSA_generate_key_ex failed\n");
         exit(EXIT_FAILURE);
     }
-
+    */
     return key;
 }
 
@@ -210,6 +215,7 @@ unsigned int rsa_publickey_to_pem(RSA *key, char **out) {
         new_pem = (char *)realloc(pem, len*sizeof(char));
         if (!new_pem) {
             printf("realloc failed at length:%d\n", len);
+            exit(EXIT_FAILURE);
         } else {
             memcpy(new_pem, "-----BEGIN PUBLIC KEY-----\n", (size_t)len);
             pem = new_pem;
