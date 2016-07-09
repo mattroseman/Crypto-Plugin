@@ -31,6 +31,20 @@ function moduleDidLoad() {
 
 function handleMessage(message) {
     console.log("message from NaCl");
+    if (message.data.original_request.request_type == "generate_rsa_keys") {
+        console.log(message.data.public_key);
+        console.log(message.data.private_key);
+    }
+    if (message.original_request.request_type == "encrypt_rsa") {
+    }
+    if (message.original_request.request_type == "decrypt_rsa") {
+    }
+    if (message.original_request.request_type == "generate_aes_keys") {
+    }
+    if (message.original_request.request_type == "encrypt_aes") {
+    }
+    if (message.original_request.request_type == "decrypt_aes") {
+    }
 }
 
 function onInitFs(fs) {
@@ -91,13 +105,6 @@ chrome.commands.onCommand.addListener(function(command){
 
   //The command to encrypt the currently selected text
   if(command == 'encrypt_userText'){
-
-
-    var generate_keys_context = {
-        request_type: "generate_rsa_keys",
-        password: "P@ssw0rd"
-    };
-    encrypt_module.postMessage(generate_keys_context);
 
     //Send a message to the current active page that you want to encrypt text
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {

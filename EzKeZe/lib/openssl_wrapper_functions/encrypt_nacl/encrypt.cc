@@ -58,6 +58,7 @@ class EncryptInstance : public pp::Instance {
                 pp::VarArray keys = dictionary.GetKeys();
 
                 pp::VarDictionary var_reply;
+                var_reply.Set(pp::Var("original_request"), var_message);
 
                 //  if asked to generate an rsa key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("generate_rsa_keys") == 0) {
@@ -76,7 +77,6 @@ class EncryptInstance : public pp::Instance {
                     var_reply.Set(pp::Var("private_key"), pp::Var(private_key));
                 }
 
-                /*
                 //  if asked to encrypt a string with a given rsa key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("encrypt_rsa") == 0) {
                     char *rsa_pub_pem = string2char_array(dictionary.Get(pp::Var("public_key")).AsString());
@@ -143,7 +143,6 @@ class EncryptInstance : public pp::Instance {
 
                     var_reply.Set(pp::Var("decrypted_message"), pp::Var(decrypted_message));
                 }
-                */
 
                 PostMessage(var_reply);
             }
@@ -175,7 +174,6 @@ namespace pp {
  */
 RSA *generate_rsa_keys() {
     RSA *key = RSA_new();
-    /*
     kExp = BN_new();
     BN_set_word(kExp, kExp_long);
 
@@ -183,7 +181,6 @@ RSA *generate_rsa_keys() {
         printf("RSA_generate_key_ex failed\n");
         exit(EXIT_FAILURE);
     }
-    */
     return key;
 }
 
