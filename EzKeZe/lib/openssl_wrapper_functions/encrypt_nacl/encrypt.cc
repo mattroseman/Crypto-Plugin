@@ -4,6 +4,8 @@
 #include "ppapi/cpp/var_dictionary.h"
 
 #include <string.h>
+#include <stdio.h>
+#include <math.h>
 #include "openssl/rsa.h"
 #include "openssl/bn.h"
 #include "openssl/evp.h"
@@ -18,6 +20,7 @@
 
 int Base64Encode(const char*, size_t, char**); //Encodes a binary safe base 64 string
 size_t calcDecodeLength(const char*); //Calculates the length of a decoded string
+int calcEncodedLength(float); //Calculates the lenght of an encoded string
 int Base64Decode(char*, char**, size_t*); //Decodes a base64 encoded string
 
 RSA *generate_rsa_keys();
@@ -55,11 +58,38 @@ class EncryptInstance : public pp::Instance {
             //  if the message isn't a string
             if (var_message.is_dictionary()) {
                 pp::VarDictionary dictionary(var_message);
-                pp::VarArray keys = dictionary.GetKeys();
+                //pp::VarArray keys = dictionary.GetKeys();
 
                 pp::VarDictionary var_reply;
+                pp::Var test_reply;
                 var_reply.Set(pp::Var("original_request"), var_message);
 
+                char *password = string2char_array("P@ssw0rd");
+                RSA *rsa_key = generate_rsa_keys();
+
+                char *rsa_pubkey_pem;
+                char *rsa_privkey_pem;
+                rsa_publickey_to_pem(rsa_key, &rsa_pubkey_pem);
+                rsa_privatekey_to_pem(rsa_key, &rsa_privkey_pem, password);
+
+                std::string public_key(rsa_pubkey_pem);
+                std::string private_key(rsa_privkey_pem);
+
+                var_reply.Set(pp::Var("public_key"), pp::Var(public_key));
+                var_reply.Set(pp::Var("private_key"), pp::Var(private_key));
+
+                char *plaintext = (char *)string2char_array("Hello World!");
+                RSA *key = rsa_pem_to_publickey(rsa_pubkey_pem);
+                char *rsa_encrypted_message = (char *)malloc(kBits);
+                int encrypted_length = rsa_encrypt_message(plaintext, strlen(plaintext), key, &rsa_encrypted_message);
+
+                std::string encrypted_message((char *)rsa_encrypted_message);
+                std::string encrypted_message_length = std::to_string(encrypted_length);
+
+                var_reply.Set(pp::Var("encrypted_message"), pp::Var(encrypted_message));
+                var_reply.Set(pp::Var("encrypted_message_length"), pp::Var(encrypted_message_length));
+
+                /*
                 //  if asked to generate an rsa key
                 if (dictionary.Get(pp::Var("request_type")).AsString().compare("generate_rsa_keys") == 0) {
                     char *password = string2char_array(dictionary.Get(pp::Var("password")).AsString());
@@ -143,6 +173,7 @@ class EncryptInstance : public pp::Instance {
 
                     var_reply.Set(pp::Var("decrypted_message"), pp::Var(decrypted_message));
                 }
+                */
 
                 PostMessage(var_reply);
             }
@@ -292,6 +323,7 @@ RSA *rsa_pem_to_privatekey(char *private_key, RSA *public_key) {
  */
 unsigned int rsa_encrypt_message(char *message, unsigned int length, RSA *key, char **out) {
     char *encrypted_message = (char *)malloc(RSA_size(key));
+    char *encoded_message = (char *)malloc(RSA_size(key));
     int size;
 
     if ((size = RSA_public_encrypt(length, (const unsigned char *)message, (unsigned char *)encrypted_message, key, padding)) < 0) {
@@ -299,10 +331,16 @@ unsigned int rsa_encrypt_message(char *message, unsigned int length, RSA *key, c
         exit(EXIT_FAILURE);
     }
 
-    if (Base64Encode(encrypted_message, size, (char **)out) < 0) {
+    if (Base64Encode(encrypted_message, size, (char **)&encoded_message) < 0) {
         printf("Base64Encode failed\n");
         exit(EXIT_FAILURE);
     }
+
+    size = calcEncodedLength((float)size);
+
+    *(encoded_message + size) = '\0';
+
+    *out = encoded_message;
 
     return size;
 }
@@ -499,6 +537,12 @@ size_t calcDecodeLength(const char* b64input) { //Calculates the length of a dec
 		padding = 1;
 
 	return (len*3)/4 - padding;
+}
+
+int calcEncodedLength(float in_len) {
+    //  in_len * 4/3 gets the base64 length
+    //  by dividing by 4, rounding up, an multiplying by 4 we account for the padding
+    return (int)4 * ceil((in_len*4/3)/4);
 }
 
 int Base64Decode(char* b64message, char** buffer, size_t* length) { //Decodes a base64 encoded string

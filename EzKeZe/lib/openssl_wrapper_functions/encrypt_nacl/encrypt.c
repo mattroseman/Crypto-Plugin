@@ -71,6 +71,8 @@ int main() {
     printf ("\'Hello World!\' encrypted is:\n");
     printf ("%s\n", encrypted_message);
 
+    printf ("%d\n", encrypted_length);
+
     unsigned char *decrypted_message = (unsigned char *)malloc(plaintext_length*sizeof(unsigned char));
 
     printf ("beginning rsa decryption\n");

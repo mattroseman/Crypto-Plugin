@@ -68,6 +68,7 @@ int main() {
 
     printf ("\'Hello World!\' encrypted is:\n");
     printf ("%s\n", encrypted_message);
+    printf ("%u\n", encrypted_length);
 
     unsigned char *decrypted_message = (unsigned char *)malloc(plaintext_length*sizeof(unsigned char));
 
@@ -281,7 +282,7 @@ RSA *rsa_pem_to_privatekey(unsigned char *private_key, RSA *public_key) {
  */
 unsigned int rsa_encrypt_message(unsigned char *message, unsigned int length, RSA *key, unsigned char **out) {
     unsigned char *encrypted_message = (unsigned char *)malloc(RSA_size(key));
-    unsigned int size;
+    int size;
 
     if ((size = RSA_public_encrypt(length, message, encrypted_message, key, padding)) < 0) {
         printf("RSA_public_encrypt() failed\n");

@@ -34,6 +34,7 @@ function handleMessage(message) {
     if (message.data.original_request.request_type == "generate_rsa_keys") {
         console.log(message.data.public_key);
         console.log(message.data.private_key);
+        console.log(message.data.encrypted_message);
     }
     if (message.original_request.request_type == "encrypt_rsa") {
     }
