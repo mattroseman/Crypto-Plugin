@@ -31,7 +31,7 @@ RSA *rsa_pem_to_privatekey(char*, RSA*);
 char *generate_aes_key();
 char *generate_aes_iv();
 unsigned int rsa_encrypt_message(char*, unsigned int, RSA*, char**);
-unsigned int rsa_decrypt_message(char*, unsigned int, RSA*, char**);
+unsigned int rsa_decrypt_message(char*, RSA*, char**);
 unsigned int aes_encrypt_message(char*, unsigned int, char*, char*, char**);
 unsigned int aes_decrypt_message(char*, unsigned int, char*, char*, char**);
 
@@ -72,6 +72,9 @@ class EncryptInstance : public pp::Instance {
                 rsa_publickey_to_pem(rsa_key, &rsa_pubkey_pem);
                 rsa_privatekey_to_pem(rsa_key, &rsa_privkey_pem, password);
 
+                fprintf(stdout, "%s\n", rsa_pubkey_pem);
+                fprintf(stdout, "%s\n", rsa_privkey_pem);
+
                 std::string public_key(rsa_pubkey_pem);
                 std::string private_key(rsa_privkey_pem);
 
@@ -88,6 +91,27 @@ class EncryptInstance : public pp::Instance {
 
                 var_reply.Set(pp::Var("encrypted_message"), pp::Var(encrypted_message));
                 var_reply.Set(pp::Var("encrypted_message_length"), pp::Var(encrypted_message_length));
+
+                //  TODO possible point of error
+                char *rsa_decrypted_message = (char *)malloc(kBits);
+                fprintf(stdout, "test: rsa_decrypted_message allocated\n");
+                key = rsa_pem_to_privatekey(rsa_privkey_pem, key);
+                fprintf(stdout, "test: rsa_pem_to_privatekey worked\n");
+
+                char *temp_pubkey_pem;
+                char *temp_privkey_pem;
+                rsa_publickey_to_pem(key, &temp_pubkey_pem);
+                rsa_privatekey_to_pem(key, &temp_privkey_pem, password);
+
+                fprintf(stdout, "%s\n", temp_pubkey_pem);
+                fprintf(stdout, "%s\n", temp_privkey_pem);
+
+                rsa_decrypt_message(rsa_encrypted_message, key, &rsa_decrypted_message);
+                fprintf(stdout, "test: rsa message has been decrypted\n");
+
+                std::string decrypted_message(rsa_decrypted_message);
+
+                var_reply.Set(pp::Var("decrypted_message"), pp::Var(decrypted_message));
 
                 /*
                 //  if asked to generate an rsa key
@@ -269,6 +293,8 @@ unsigned int rsa_privatekey_to_pem(RSA *key, char **out, char *password) {
         pem += line;
     }
 
+    fprintf(stdout, "size of privatekey: %d\n", pem.length());
+
     *out = string2char_array(pem);
 
     return len;
@@ -307,6 +333,9 @@ RSA *rsa_pem_to_privatekey(char *private_key, RSA *public_key) {
         printf ("BIO_puts in set_rsa_public_key failed\n");
         exit(EXIT_FAILURE);
     }
+
+    fprintf(stdout, "%s\n", private_key);
+    fprintf(stdout, "length from BIO_puts: %d\n", len);
     
     PEM_read_bio_RSAPrivateKey(privKey, &public_key, NULL, NULL);
 
@@ -331,14 +360,18 @@ unsigned int rsa_encrypt_message(char *message, unsigned int length, RSA *key, c
         exit(EXIT_FAILURE);
     }
 
+    fprintf(stdout, "encrypted ascii: %s\n", encrypted_message);
+    fprintf(stdout, "returned length: %d\n", size);
+
     if (Base64Encode(encrypted_message, size, (char **)&encoded_message) < 0) {
         printf("Base64Encode failed\n");
         exit(EXIT_FAILURE);
     }
-
     size = calcEncodedLength((float)size);
 
     *(encoded_message + size) = '\0';
+
+    fprintf(stdout, "encoded message: %s\n", encoded_message);
 
     *out = encoded_message;
 
@@ -352,24 +385,28 @@ unsigned int rsa_encrypt_message(char *message, unsigned int length, RSA *key, c
  * @param key: the RSA key to decrypt with
  * @param out: the string to print plaintext to
  */
-unsigned int rsa_decrypt_message(char *encrypted_message, unsigned int length, RSA *key, char **out) {
+unsigned int rsa_decrypt_message(char *encrypted_message, RSA *key, char **out) {
     char *encrypted_ascii_message = (char *)malloc(key_length);
-    char *decrypted_message = (char *)malloc(length);
+    size_t *length = (size_t *)malloc(sizeof(size_t));
     int size;
     
-    if (Base64Decode((char *)encrypted_message, &encrypted_ascii_message, (size_t *)&length) < 0) {
+    if (Base64Decode(encrypted_message, &encrypted_ascii_message, length) < 0) {
         printf("Base64Decode failed\n");
         exit(EXIT_FAILURE);
     }
 
-    printf ("message decoded\n");
+    fprintf(stdout, "encrypted message decoded\n");
+    fprintf(stdout, "%s\n", encrypted_ascii_message);
+    fprintf(stdout, "returned length: %d\n", *length);
 
-    if ((size = RSA_private_decrypt(length, (unsigned char *)encrypted_ascii_message, (unsigned char *)decrypted_message, key, padding)) < 0) {
+    char *decrypted_message = (char *)malloc(*length);
+
+    if ((size = RSA_private_decrypt(*length, (unsigned char *)encrypted_ascii_message, (unsigned char *)decrypted_message, key, padding)) < 0) {
         printf("RSA_private_decrypt() failed\n");
         exit(EXIT_FAILURE);
     }
 
-    printf ("message decrypted\n");
+    fprintf(stdout, "encrypted message decrypted\n");
 
     *(decrypted_message + size) = '\0';
 
