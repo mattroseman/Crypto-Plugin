@@ -286,7 +286,7 @@ unsigned int rsa_privatekey_to_pem(RSA *key, char **out, char *password) {
 
     if (!BIO_eof(privKey)) {
         BIO_gets(privKey, line, sizeof *privKey);
-        pem += "-----BEGIN PRIVATE KEY-----\n";
+        pem += "-----BEGIN RSA PRIVATE KEY-----\n";
     }
     while (!BIO_eof(privKey)) {
         BIO_gets(privKey, line, sizeof *privKey);

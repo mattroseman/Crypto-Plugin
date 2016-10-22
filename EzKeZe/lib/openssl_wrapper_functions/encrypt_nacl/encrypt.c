@@ -1,27 +1,25 @@
 /* openssl headers */
-//#include "include/openssl/opensslconf.h"
-#include "openssl/rsa.h"
-#include "openssl/bn.h"
-#include "openssl/evp.h"
-#include "openssl/aes.h"
-#include "openssl/rand.h"
-#include "openssl/conf.h"
-#include "openssl/evp.h"
-#include "openssl/err.h"
-#include "openssl/pem.h"
+#include "include/openssl/rsa.h"
+#include "include/openssl/bn.h"
+#include "include/openssl/evp.h"
+#include "include/openssl/aes.h"
+#include "include/openssl/rand.h"
+#include "include/openssl/conf.h"
+#include "include/openssl/evp.h"
+#include "include/openssl/err.h"
+#include "include/openssl/pem.h"
+
+/* openssl base64 encypt/decrypt */
+#include "OpenSSL_B64/Base64Encode.c"
+#include "OpenSSL_B64/Base64Decode.c"
 
 /* general headers */
 #include <string.h>
-#include <assert.h>
-
-int Base64Encode(const unsigned char*, size_t, char**); //Encodes a binary safe base 64 string
-size_t calcDecodeLength(const char*); //Calculates the length of a decoded string
-int Base64Decode(char*, unsigned char**, size_t*); //Decodes a base64 encoded string
 
 RSA *generate_rsa_keys();
 unsigned int rsa_publickey_to_pem(RSA*, unsigned char**);
 RSA *rsa_pem_to_publickey(unsigned char*);
-unsigned int rsa_privatekey_to_pem(RSA*, unsigned char**, unsigned char*);
+unsigned int rsa_privatekey_to_pem(RSA*, unsigned char**);
 RSA *rsa_pem_to_privatekey(unsigned char*, RSA*);
 unsigned char *generate_aes_key();
 unsigned char *generate_aes_iv();
@@ -36,6 +34,7 @@ const int kBits = 2048;
 const int key_length = 2048/8;
 const unsigned long kExp_long = 65537;
 BIGNUM *kExp = NULL;
+unsigned char *password = "P@ssw0rd";
 
 
 //  AES constants
@@ -48,11 +47,15 @@ int main() {
     unsigned char *rsa_pubkey_pem; 
     unsigned int pub_pem_size = rsa_publickey_to_pem(rsa_key, &rsa_pubkey_pem);
 
+    printf ("the rsa public key generated in pem format\n");
+    printf ("this pem should be %u bytes\n\n", pub_pem_size);
     printf ("%s\n", rsa_pubkey_pem);
 
     unsigned char *rsa_privkey_pem;
-    unsigned int priv_pem_size = rsa_privatekey_to_pem(rsa_key, &rsa_privkey_pem, NULL);
+    unsigned int priv_pem_size = rsa_privatekey_to_pem(rsa_key, &rsa_privkey_pem);
 
+    printf ("the rsa private key generated in pem format\n");
+    printf ("this pem should be %u bytes\n\n", priv_pem_size);
     printf ("%s\n", rsa_privkey_pem);
 
     printf ("RSA keys generated\n");
@@ -70,14 +73,23 @@ int main() {
 
     printf ("\'Hello World!\' encrypted is:\n");
     printf ("%s\n", encrypted_message);
-
-    printf ("%d\n", encrypted_length);
+    printf ("%u\n", encrypted_length);
 
     unsigned char *decrypted_message = (unsigned char *)malloc(plaintext_length*sizeof(unsigned char));
 
     printf ("beginning rsa decryption\n");
 
-    RSA *rsa_privkey = rsa_pem_to_privatekey(rsa_privkey_pem, rsa_key);
+    RSA *rsa_privkey = rsa_pem_to_privatekey(rsa_privkey_pem, rsa_pubkey);
+
+    unsigned char *temp_pub_pem;
+    unsigned char *temp_priv_pem;
+    unsigned int temp_pub_pem_size = rsa_publickey_to_pem(rsa_pubkey, &temp_pub_pem);
+    unsigned int temp_priv_pem_size = rsa_privatekey_to_pem(rsa_privkey, &temp_priv_pem);
+
+    printf("re encoded keys\n");
+    printf("%s\n", temp_pub_pem);
+    printf("%s\n", temp_priv_pem);
+        
 
     rsa_decrypt_message(encrypted_message, encrypted_length, rsa_privkey, &decrypted_message);
 
@@ -92,6 +104,8 @@ int main() {
     unsigned char *aes_iv = generate_aes_iv();
 
     printf ("AES key and iv generated\n");
+    printf ("key: %s\n", aes_key);
+    printf ("iv: %s\n", aes_iv);
 
     unsigned char *aes_encrypted_message = (unsigned char *)malloc(plaintext_length*(unsigned char) + AES_BLOCK_SIZE);
 
@@ -140,43 +154,71 @@ RSA *generate_rsa_keys(unsigned char **public_key, unsigned char **private_key) 
  * @return: the length of the PEM encoding
  */
 unsigned int rsa_publickey_to_pem(RSA *key, unsigned char **out) {
+    //  This creats a source sink BIO to store the public key
     BIO *pubKey = BIO_new(BIO_s_mem());
 
+    //  this writes the RSA key into the BIO in PEM format
     PEM_write_bio_RSA_PUBKEY(pubKey, key);
 
-    unsigned char line[65];
+    unsigned char line[100];
     int len = 0;
     unsigned char *pem = NULL;
     unsigned char *new_pem = NULL;
 
+    //  Have to do the first line because the pubkey BIO seems to get junk bytes at the beginning
+    //  don't know why, but this is an easy fix
     if (!BIO_eof(pubKey)) {
-        BIO_gets(pubKey, line, sizeof *pubKey);
-
-        len += strlen(line);
-
-        new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
-        if (!new_pem) {
-            printf("realloc failed at length:%d\n", len);
-        } else {
-            memcpy(new_pem, "-----BEGIN PUBLIC KEY-----\n", (size_t)len);
-            pem = new_pem;
+        //  reads one line up to pubKey bytes and puts it into line
+        if(!BIO_gets(pubKey, line, sizeof *pubKey)) {
+            printf("BIO_gets for reading the public key pem to a string failed\n");
+            exit(EXIT_FAILURE);
         }
-    }
-
-    while (!BIO_eof(pubKey)) {
-        BIO_gets(pubKey, line, sizeof *pubKey);
 
         //  current length of PEM (including newlines)
         len += strlen(line);
 
-        new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
-        if (!new_pem) {
+        //  initialize the first allocation of memory for pem and new_pem
+        if (!(new_pem = (unsigned char *)calloc(len, sizeof(unsigned char)))) {
+            printf("calloc failed at length:%d\n", len);
+            exit(EXIT_FAILURE);
+        }
+
+        memcpy(new_pem, line, (size_t)len);
+        pem = new_pem;
+
+        //  These lines are for debugging, show line lengths
+        /*
+        printf ("%s", line);
+        printf ("length of line: %u\n", strlen(line));
+        printf ("total length: %u %u\n", len, strlen(pem));
+        */
+    }
+
+    while (!BIO_eof(pubKey)) {
+        //  reads one line up to pubKey bytes and puts it into line
+        if (!BIO_gets(pubKey, line, sizeof *pubKey)) {
+            printf("BIO_gets for reading the public key pem to a string failed\n");
+            exit(EXIT_FAILURE);
+        }
+
+        //  current length of PEM (including newlines)
+        len += strlen(line);
+
+        //  copy the data of pem over to new_pem but with the increased length for the new line
+        if (!(new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char)))) {
             printf("realloc failed at length:%d\n", len);
             exit(EXIT_FAILURE);
-        } else {
-            memcpy(new_pem, strcat(new_pem, line), (size_t)len);
-            pem = new_pem;
         }
+
+        memcpy(new_pem, strcat(new_pem, line), (size_t)len);
+        pem = new_pem;
+
+        //  These lines are for debugging, show line lengths
+        /*
+        printf ("%s", line);
+        printf ("length of line: %u\n", strlen(line));
+        printf ("total length: %u %u\n", len, strlen(pem));
+        */
     }
 
     *out = pem;
@@ -188,47 +230,75 @@ unsigned int rsa_publickey_to_pem(RSA *key, unsigned char **out) {
  * Takes in an RSA object and PEM encodes it in out
  * @param key: the RSA private key
  * @param out: the string the PEM encoding goes to
- * @param pem_password: the password to unlock the pem encoding
  * @return: the length of the PEM encoding
  */
-unsigned int rsa_privatekey_to_pem(RSA *key, unsigned char **out, unsigned char *password) {
-    BIO *pubKey = BIO_new(BIO_s_mem());
+unsigned int rsa_privatekey_to_pem(RSA *key, unsigned char **out) {
+    //  This creats a source sink BIO to store the private key
+    BIO *privKey = BIO_new(BIO_s_mem());
 
-    PEM_write_bio_RSAPrivateKey(pubKey, key, NULL, NULL, 0, NULL, NULL);
+    //  this writes the RSA key into the BIO in PEM format
+    PEM_write_bio_RSAPrivateKey(privKey, key, NULL, NULL, 0, 0, NULL);
 
-    unsigned char line[65];
+    unsigned char line[100];
     int len = 0;
     unsigned char *pem = NULL;
     unsigned char *new_pem = NULL;
 
-    if (!BIO_eof(pubKey)) {
-        BIO_gets(pubKey, line, sizeof *pubKey);
-
-        len += strlen(line);
-
-        new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
-        if (!new_pem) {
-            printf("realloc failed at length:%d\n", len);
-        } else {
-            memcpy(new_pem, "-----BEGIN PRIVATE KEY-----\n", (size_t)len);
-            pem = new_pem;
+    //  Have to do the first line because the pubkey BIO seems to get junk bytes at the beginning
+    //  don't know why, but this is an easy fix
+    if (!BIO_eof(privKey)) {
+        //  reads one line up to pubKey bytes and puts it into line
+        if (!BIO_gets(privKey, line, sizeof *privKey)) {
+            printf("BIO_gets for reading the private key pem to a string failed\n");
+            exit(EXIT_FAILURE);
         }
-    }
-
-    while (!BIO_eof(pubKey)) {
-        BIO_gets(pubKey, line, sizeof *pubKey);
 
         //  current length of PEM (including newlines)
         len += strlen(line);
 
-        new_pem = (unsigned char *)realloc(pem, len*sizeof(unsigned char));
-        if (!new_pem) {
+        //  create the first allocation of data, and fill all data with 0's
+        if (!(new_pem = (unsigned char *)calloc(len, sizeof(unsigned char)))) {
+            printf("calloc failed at length:%d\n", len);
+            exit(EXIT_FAILURE);
+        } 
+
+        //memcpy(new_pem, "-----BEGIN RSA PRIVATE KEY-----\n", (size_t)len);
+        memcpy(new_pem, line, (size_t)len);
+        pem = new_pem;
+
+        //  These lines are for debugging, show line lengths
+        /*
+        printf ("%s", line);
+        printf ("length of line: %u\n", strlen(line));
+        printf ("total length: %u %u\n", len, strlen(pem));
+        */
+    }
+
+    while (!BIO_eof(privKey)) {
+        //  reads one line up to pubKey bytes and puts it into line
+        if (!BIO_gets(privKey, line, sizeof *privKey)) {
+            printf("BIO_gets for reading the private key pem to a string failed\n");
+            exit(EXIT_FAILURE);
+        }
+
+        //  current length of PEM (including newlines)
+        len += strlen(line);
+
+        //  copy the data of pem over to new_pem but with the increased length for the new line
+        if (!(new_pem = (unsigned char *)realloc(pem, (len + 1)*sizeof(unsigned char)))) {
             printf("realloc failed at length:%d\n", len);
             exit(EXIT_FAILURE);
-        } else {
-            memcpy(new_pem, strcat(new_pem, line), (size_t)len);
-            pem = new_pem;
         }
+
+        memcpy(new_pem, strcat(new_pem, line), (size_t)len);
+        pem = new_pem;
+
+        //  These lines are for debugging, show line lengths
+        /*
+        printf ("%s", line);
+        printf ("length of line: %u\n", strlen(line));
+        printf ("total length: %u %u\n", len, strlen(pem));
+        */
     }
 
     *out = pem;
@@ -261,7 +331,14 @@ RSA *rsa_pem_to_publickey(unsigned char *public_key) {
  * @param private_key: the PEM encoding
  * @return: the RSA private key
  */
-RSA *rsa_pem_to_privatekey(unsigned char *private_key, RSA *public_key) {
+RSA *rsa_pem_to_privatekey(unsigned char *private_key,  RSA *public_key) {
+    /*
+    if (!EVP_PKEY_assign_RSA(key, empty_key)) {
+        printf("EVP_PKEY_set1_RSA failed\n");
+        exit(EXIT_FAILURE);
+    }
+    */
+
     BIO *privKey = BIO_new(BIO_s_mem());
     int len;
 
@@ -269,10 +346,17 @@ RSA *rsa_pem_to_privatekey(unsigned char *private_key, RSA *public_key) {
         printf ("BIO_puts in set_rsa_public_key failed\n");
         exit(EXIT_FAILURE);
     }
-    
-    PEM_read_bio_RSAPrivateKey(privKey, &public_key, NULL, NULL);
 
-    return public_key;
+    EVP_PKEY *key = PEM_read_bio_PrivateKey(privKey, NULL, NULL, NULL);
+
+    RSA *rsa_key = RSA_new();
+
+    if (!(rsa_key = EVP_PKEY_get1_RSA(key))) {
+        printf("EVP_PKEY_get1_RSA failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return rsa_key;
 }
 
 /*
@@ -285,7 +369,7 @@ RSA *rsa_pem_to_privatekey(unsigned char *private_key, RSA *public_key) {
  */
 unsigned int rsa_encrypt_message(unsigned char *message, unsigned int length, RSA *key, unsigned char **out) {
     unsigned char *encrypted_message = (unsigned char *)malloc(RSA_size(key));
-    unsigned int size;
+    int size;
 
     if ((size = RSA_public_encrypt(length, message, encrypted_message, key, padding)) < 0) {
         printf("RSA_public_encrypt() failed\n");
@@ -460,55 +544,4 @@ unsigned int aes_decrypt_message(unsigned char *encrypted_message, unsigned int 
     *out = decMsg;
 
     return plaintext_len;
-}
-
-int Base64Encode(const unsigned char* buffer, size_t length, char** b64text) { //Encodes a binary safe base 64 string
-	BIO *bio, *b64;
-	BUF_MEM *bufferPtr;
-
-	b64 = BIO_new(BIO_f_base64());
-	bio = BIO_new(BIO_s_mem());
-	bio = BIO_push(b64, bio);
-
-	BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL); //Ignore newlines - write everything in one line
-	BIO_write(bio, buffer, length);
-	BIO_flush(bio);
-	BIO_get_mem_ptr(bio, &bufferPtr);
-	BIO_set_close(bio, BIO_NOCLOSE);
-	BIO_free_all(bio);
-
-	*b64text=(*bufferPtr).data;
-
-	return (0); //success
-}
-
-size_t calcDecodeLength(const char* b64input) { //Calculates the length of a decoded string
-	size_t len = strlen(b64input),
-		padding = 0;
-
-	if (b64input[len-1] == '=' && b64input[len-2] == '=') //last two chars are =
-		padding = 2;
-	else if (b64input[len-1] == '=') //last char is =
-		padding = 1;
-
-	return (len*3)/4 - padding;
-}
-
-int Base64Decode(char* b64message, unsigned char** buffer, size_t* length) { //Decodes a base64 encoded string
-	BIO *bio, *b64;
-
-	int decodeLen = calcDecodeLength(b64message);
-	*buffer = (unsigned char*)malloc(decodeLen + 1);
-	(*buffer)[decodeLen] = '\0';
-
-	bio = BIO_new_mem_buf(b64message, -1);
-	b64 = BIO_new(BIO_f_base64());
-	bio = BIO_push(b64, bio);
-
-	BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL); //Do not use newlines to flush buffer
-	*length = BIO_read(bio, *buffer, strlen(b64message));
-	assert(*length == decodeLen); //length should equal decodeLen, else something went horribly wrong
-	BIO_free_all(bio);
-
-	return (0); //success
 }

@@ -6,8 +6,6 @@ var encrypt_module = null;
 //This is the key used to encode all the chats at the moment, it is temporary until the backend is up and running
 current_chat_key = [115, 98, 103, 111, 108, 121, 112, 105, 101, 115, 114, 100, 97, 105, 105, 97];
 
-console.log("fuck");
-
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 
 var listenerDiv = document.createElement('div');
