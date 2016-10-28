@@ -3,6 +3,8 @@ var current_chat_key;
 
 var encrypt_module = null;
 
+var logged_in = false;
+
 //This is the key used to encode all the chats at the moment, it is temporary until the backend is up and running
 current_chat_key = [115, 98, 103, 111, 108, 121, 112, 105, 101, 115, 114, 100, 97, 105, 105, 97];
 
@@ -165,11 +167,22 @@ chrome.extension.onMessage.addListener(
       plaintext = decrypt_sym_message(Uint8Array.from(array), current_chat_key);
       sendResponse(plaintext);
     }
+
+    //  If this is a request for the login status
+    if (request.action == "get_login_status") {
+        sendResponse(logged_in);
+    }
+
+    //  If this is a request to verify the username and password
+    if (request.action == "verify_password") {
+    }
   }
 );
 
+/*
 //Open the local html when the extension is clicked
 chrome.browserAction.onClicked.addListener(function(tab) {
     console.log("The Extension Button was Clicked");
     chrome.tabs.create({'url': chrome.extension.getURL('src/dashboard/index.html'), 'selected': true});
 });
+*/

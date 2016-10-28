@@ -2,9 +2,31 @@
 <html>
     <head>
         <title>EZKZ popup</title>
+        <script type="text/javascript" src="../../lib/jquery-1.12.2.min.js"></script>
+        <script type="text/javascript" src="popup.js"></script>
     </head>
     <body>
-        <button type="button" id="encrypt">Encrypt</button>
-        <button type="button" id="sync">Sync</button>
+        <div id="login">
+            <form name="user_login">
+                Username <input type="text" name="username"/>
+                Password <input type="password" name="password"/>
+                <input type="button" onclick="login(this.form)" value="Login"/>
+            </form>
+            <button type="button" id="sign-up">Sign Up</button>
+        </div>
+        <div id="signup">
+            <form name="user_signup">
+                Username <input type="text" name="username"/>
+                Password <input type="password" name="password"/>
+                Password_Confirm <input type="password" name="password_confirm"/>
+                <input type="button" onclick="signup(this.form)" value="Submit"/>
+            </form>
+        </div>
+        <div id="menu">
+            <button type="button" id="select_convo">Select Conversation</button>
+            <button type="button" id="encrypt">Encrypt</button>
+            <button type="button" id="sync">Sync</button>
+            <button type:"button" id="create_convo">Create Conversation</button>
+        </div>
     </body>
 </html>

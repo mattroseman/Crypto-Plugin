@@ -36,6 +36,7 @@ closeButton.addEventListener('click', logInClickHandler);
 
 var registerDialog = document.querySelector('#registerDialog');
 var registerCloseButton = registerDialog.querySelector('button');
+//  the SIGN UP button
 var registerShowButton = document.querySelector('#registerButton');
 var registerEmail = document.getElementById('registerEmail');
 var registerPassword = document.getElementById('registerPassword');

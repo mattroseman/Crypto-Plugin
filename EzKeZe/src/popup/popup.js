@@ -1,6 +1,28 @@
 $(document).ready(function() {
 
-    var key = generate_asym_keys("p@ssw0rd");
+    //  get the login status from background
+    var request = JSON.parse("{\"action\": \"get_login_status\"}");
+
+    chrome.runtime.sendMessage(request, function(response) {
+        console.log("user logged in status: " + response);
+        $('#signup').hide();
+        if (response === true) {
+            //  if user is logged in hide login and show menu
+            $('#login').hide();
+        } else {
+            //  if user isn't logged in, hide menu and show login
+            $('#menu').hide();
+        }
+    });
+
+    $('#sign-up').click(function() {
+        console.log("signing up for EzKeZe");
+        //chrome.tabs.create({url: chrome.extension.getURL('src/dashboard/index.html')});
+        $('#login').hide();
+        $('#menu').hide();
+        $('#signup').show();
+    });
+
 
     var publickey = cryptico.publicKeyString(key);
 
@@ -35,3 +57,25 @@ $(document).ready(function() {
         });
     });
 });
+
+function login(form) {
+    username = form.username.value;
+    password = form.password.value;
+    //  send this to background to check password, and decrypt private key
+    var request = JSON.parse("{\"action\": \"verify_password\"}");
+    chrome.runtime.sendMessage(request, function(response) {
+        console.log("user password status: " + response);
+
+        //  if the password and username are correct
+        if (response === true) {
+        //  if the password and username don't match
+        } else {
+        }
+    });
+}
+
+function signup() {
+    username = form.username.value;
+    password = form.password.value;
+    password_confirm = form.password_confirm.value;
+}
