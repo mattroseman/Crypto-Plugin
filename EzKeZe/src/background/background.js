@@ -106,15 +106,15 @@ chrome.commands.onCommand.addListener(function(command){
 
   //The command to encrypt the currently selected text
   if(command == 'encrypt_userText'){
-
+      console.log('test1');
     //Send a message to the current active page that you want to encrypt text
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {action: "encrypt_request"}, function(response){
         //When a response is received from the active page, this code executes
-	      if(!response) console.log("response was null");
+          if(!response) console.log("response was null");
         //Encrypt the string that the active page sends you
         //var ciphertext = encrypt_sym_message(response.text, current_chat_key);
-        console.log('test');
+        console.log('test2');
         var generate_keys_context = {
             request_type: "generate_rsa_keys",
             password: "P@ssw0rd"
