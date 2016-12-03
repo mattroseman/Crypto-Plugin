@@ -158,7 +158,7 @@ chrome.commands.onCommand.addListener(function(command){
 //Called when a message is sent straight to the extension
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
-    console.log("Extenion message?");
+    console.log("Extension message?");
 
     //If the request is for a deccryption
     if(request.msg == "decrypt_this"){

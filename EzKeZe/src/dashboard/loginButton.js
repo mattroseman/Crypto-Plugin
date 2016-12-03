@@ -1,75 +1,117 @@
-'use strict';
-var dialog = document.querySelector('#logInDialog');
-var closeButton = dialog.querySelector('button');
-var showButton = document.querySelector('#show-modal-example');
+$(document).ready(function() {
+    'use strict';
 
-if (! dialog.showModal) {
-    dialogPolyfill.registerDialog(dialog);
-}
+    $.validator.addMethod(
+        "username",
+        function(value) {
+            return /^[A-Za-z0-9_-]{3,20}$/.test(value);
+        },
+        "Username can only contain [A-Z,a-z,0-9,_,-] and must be between 3 and 20 characters long"
+    );
+    $.validator.addMethod(
+        "password",
+        function(value) {
+            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,30}$/.test(value);
+        }, 'Password must contain at least one number, one upper-case, and one lower-case character.' +
+        'Also must be between 5 and 30 characters long'
+    );
 
-var logInEmailField = document.getElementById('logInEmail');
-var logInPasswordField = document.getElementById('logInPassword');
+    //  LOGIN DIALOG
 
-var logInClickHandler = function(event) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "http://stoh.io:8080/api/login", true);
-  xhttp.setRequestHeader("Content-type", "application/json");
-  var email = logInEmailField.value.toString();
-  var password = logInPasswordField.value.toString();
-  password = Sha256.hash(password);
-  var loginJSON = {
-    'email': email,
-    'password': password
-  }
-  var loginString = JSON.stringify(loginJSON);
-  xhttp.send(loginString);
-  dialog.close();
-};
+    // load dialog
+    var loginDialog = $('#loginDialog');
+    dialogPolyfill.registerDialog(loginDialog["0"]);
+    $('#loginButton').click(function(event) {
+        loginDialog["0"].showModal();
+    });
+    loginDialog.validate({
+        rules: {
+            loginUsername: {
+                required: true,
+                username: true
+            },
+            loginPassword: {
+                required: true,
+                password: true
+            }
+        }
+    });
+    var loginUsernameField = $('#loginUsername');
+    var loginPasswordField = $('#loginPassword');
 
-var showClickHandler = function(event) {
-    dialog.showModal();
-};
+    // load buttons
+    var loginCloseButton = $('#loginCloseButton');
+    loginCloseButton.click(function(event) {
+        loginDialog["0"].close();
+    });
 
-showButton.addEventListener('click', showClickHandler);
-closeButton.addEventListener('click', logInClickHandler);
+    var loginSubmitButton = $('#loginSubmitButton');
+    loginSubmitButton.click(function(event) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "http://stoh.io:8080/api/login", true);
+      xhttp.setRequestHeader("Content-type", "application/json");
+      var username = loginUsernameField.value.toString();
+      var password = loginPasswordField.value.toString();
+      password = Sha256.hash(password);
+      var loginJSON = {
+        'username': username,
+        'password': password
+      };
+      var loginString = JSON.stringify(loginJSON);
+      xhttp.send(loginString);
+      loginDialog["0"].close();
+    });
 
+    //  REGISTER DIALOG
 
-var registerDialog = document.querySelector('#registerDialog');
-var registerCloseButton = registerDialog.querySelector('button');
-//  the SIGN UP button
-var registerShowButton = document.querySelector('#registerButton');
-var registerEmail = document.getElementById('registerEmail');
-var registerPassword = document.getElementById('registerPassword');
+    // load dialog
+    var registerDialog = $('#registerDialog');
+    dialogPolyfill.registerDialog(registerDialog["0"]);
+    $('#registerButton').click(function(event) {
+        registerDialog["0"].showModal();
+    });
+    registerDialog.validate({
+        rules: {
+            registerUsername: {
+                required: true,
+                username: true
+            },
+            registerPassword: {
+                required: true,
+                password: true
+            },
+            registerPasswordConf: {
+                required: true,
+                password: true,
+                equalTo: '#registerPassword'
+            }
+        }
+    });
+    var registerUsernameField = $('#registerUsername');
+    var registerPasswordField = $('#registerPassword');
+    var registerPasswordConfField = $('#registerPasswordConf');
 
-if (! dialog.showModal) {
-    dialogPolyfill.registerDialog(dialog);
-}
+    // load buttons
+    var registerCloseButton = $('#registerCloseButton');
+    registerCloseButton.click(function(event) {
+        registerDialog["0"].close();
+    });
 
-var registerClickHandeler = function(event) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "http://stoh.io:8080/api/register", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    var email = registerEmail.value.toString();
-    var password = registerPassword.value.toString();
-    password = Sha256.hash(password);
-    console.log("password");
-
-    var registerJSON = {
-      'email': email,
-      'password': password,
-      'gender': 'M',
-      'public_key': 'alphaTest'
-    }
-
-    var registerString = JSON.stringify(registerJSON);
-
-    xhttp.send(registerString);
-    registerDialog.close();
-};
-
-var showClickHandler = function(event) {
-    registerDialog.showModal();
-};
-
-registerShowButton.addEventListener('click', showClickHandler);
-registerCloseButton.addEventListener('click', registerClickHandeler);
+    var registerSubmitButton = $('#registerSubmitButton');
+    registerSubmitButton.click(function(event) {
+        // TODO generate public key from background.js
+        var xhttp = XMLHttpRequest();
+        xhttp.open('Post', 'http://stoh.io:8080/api/register', true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        var username = registerUsernameField.value.toString();
+        var password = registerPasswordField.value.toString();
+        password = Sha256.hash(password);
+        var registerJSON = {
+            'username': username,
+            'password': password
+        };
+        var registerString = JSON.stringigy(registerJSON);
+        xhttp.send(registerString);
+        registerDialog["0"].close();
+    });
+});

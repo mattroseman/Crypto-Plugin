@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     chrome.runtime.sendMessage(request, function(response) {
         console.log("user logged in status: " + response);
-        $('#signup').hide();
+        //$('#signup').hide();
         if (response === true) {
             //  if user is logged in hide login and show menu
             $('#login').hide();
@@ -17,13 +17,16 @@ $(document).ready(function() {
 
     $('#sign-up').click(function() {
         console.log("signing up for EzKeZe");
-        //chrome.tabs.create({url: chrome.extension.getURL('src/dashboard/index.html')});
+        chrome.tabs.create({url: chrome.extension.getURL('src/dashboard/index.html')});
+        /*
         $('#login').hide();
         $('#menu').hide();
         $('#signup').show();
+        */
     });
 
 
+    /*
     var publickey = cryptico.publicKeyString(key);
 
     console.log("public key:\n" + publickey);
@@ -56,12 +59,14 @@ $(document).ready(function() {
             console.log(response);
         });
     });
+    */
 });
 
 function login(form) {
     username = form.username.value;
     password = form.password.value;
     //  send this to background to check password, and decrypt private key
+    //  TODO possibly hash password here, or in background (probably background so OpenSSL can be used
     var request = JSON.parse("{\"action\": \"verify_password\"}");
     chrome.runtime.sendMessage(request, function(response) {
         console.log("user password status: " + response);
@@ -74,8 +79,10 @@ function login(form) {
     });
 }
 
+/*
 function signup() {
     username = form.username.value;
     password = form.password.value;
     password_confirm = form.password_confirm.value;
 }
+*/

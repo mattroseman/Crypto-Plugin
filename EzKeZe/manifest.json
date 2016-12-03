@@ -6,14 +6,15 @@
     "activeTab",
     "tabs",
     "http://*/*",
-    "webNavigation",
-    "fileSystem"
+    "webNavigation"
   ],
   "background": {
-      "scripts": ["lib/jquery-1.12.2.min.js", "lib/aesjs_index.js", "lib/cryptico.js", "src/encrypt.js", "src/background/background.js"],
+      "scripts": ["lib/jquery-1.12.2.min.js", "src/background/background.js"],
       "persistent": false
   },
   "browser_action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": "res/icon.png",
     "default_title": "EzKeZe"
   },
   "content_scripts": [{
@@ -23,6 +24,7 @@
     "js": ["src/content/content.js"],
     "run_at": "document_end"
     }],
+  "content_security_policy": "script-src 'self' https://fonts.googleapis.com https://code.getmdl.io; object-src 'self'",
   "commands": {
       "encrypt_userText": {
           "suggested_key": {
