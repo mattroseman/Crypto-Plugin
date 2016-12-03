@@ -1,6 +1,7 @@
 $(document).ready(function() {
     'use strict';
 
+    /*
     $.validator.addMethod(
         "username",
         function(value) {
@@ -15,6 +16,7 @@ $(document).ready(function() {
         }, 'Password must contain at least one number, one upper-case, and one lower-case character.' +
         'Also must be between 5 and 30 characters long'
     );
+    */
 
     //  LOGIN DIALOG
 
@@ -24,7 +26,8 @@ $(document).ready(function() {
     $('#loginButton').click(function(event) {
         loginDialog["0"].showModal();
     });
-    loginDialog.validate({
+    /*
+    loginDialog["0"].validate({
         rules: {
             loginUsername: {
                 required: true,
@@ -36,6 +39,7 @@ $(document).ready(function() {
             }
         }
     });
+    */
     var loginUsernameField = $('#loginUsername');
     var loginPasswordField = $('#loginPassword');
 
@@ -50,8 +54,8 @@ $(document).ready(function() {
       var xhttp = new XMLHttpRequest();
       xhttp.open("POST", "http://stoh.io:8080/api/login", true);
       xhttp.setRequestHeader("Content-type", "application/json");
-      var username = loginUsernameField.value.toString();
-      var password = loginPasswordField.value.toString();
+      var username = loginUsernameField["0"].value.toString();
+      var password = loginPasswordField["0"].value.toString();
       password = Sha256.hash(password);
       var loginJSON = {
         'username': username,
@@ -70,6 +74,7 @@ $(document).ready(function() {
     $('#registerButton').click(function(event) {
         registerDialog["0"].showModal();
     });
+    /*
     registerDialog.validate({
         rules: {
             registerUsername: {
@@ -87,6 +92,7 @@ $(document).ready(function() {
             }
         }
     });
+    */
     var registerUsernameField = $('#registerUsername');
     var registerPasswordField = $('#registerPassword');
     var registerPasswordConfField = $('#registerPasswordConf');
@@ -99,18 +105,22 @@ $(document).ready(function() {
 
     var registerSubmitButton = $('#registerSubmitButton');
     registerSubmitButton.click(function(event) {
-        // TODO generate public key from background.js
-        var xhttp = XMLHttpRequest();
+
+        chrome.runtime.sendMessage({msg: "generate_rsa_keys"}, function(response) {
+            console.log(response);
+        });
+
+        var xhttp = new XMLHttpRequest();
         xhttp.open('Post', 'http://stoh.io:8080/api/register', true);
         xhttp.setRequestHeader('Content-type', 'application/json');
-        var username = registerUsernameField.value.toString();
-        var password = registerPasswordField.value.toString();
+        var username = registerUsernameField["0"].value.toString();
+        var password = registerPasswordField["0"].value.toString();
         password = Sha256.hash(password);
         var registerJSON = {
             'username': username,
             'password': password
         };
-        var registerString = JSON.stringigy(registerJSON);
+        var registerString = JSON.stringify(registerJSON);
         xhttp.send(registerString);
         registerDialog["0"].close();
     });

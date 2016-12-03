@@ -116,8 +116,7 @@ chrome.commands.onCommand.addListener(function(command){
         //var ciphertext = encrypt_sym_message(response.text, current_chat_key);
         console.log('test2');
         var generate_keys_context = {
-            request_type: "generate_rsa_keys",
-            password: "P@ssw0rd"
+            request_type: "generate_rsa_keys"
         };
         encrypt_module.postMessage(generate_keys_context);
 
@@ -159,6 +158,15 @@ chrome.commands.onCommand.addListener(function(command){
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
     console.log("Extension message?");
+
+    // If the request is to generate new public and private keys
+    if (request.msg == "generate_rsa_keys") {
+        var generate_keys_context = {
+            request_type: "generate_rsa_keys",
+        };
+        encrypt_module.postMessage(generate_keys_context);
+        sendResponse("generating public and private keys now");
+    }
 
     //If the request is for a deccryption
     if(request.msg == "decrypt_this"){
