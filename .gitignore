@@ -1,2 +1,3 @@
-EzKeZe/lib/openssl_wrapper_functions/nacl_sdk/
-EzKeZe/lib/nacl_sdk/
+EzKeZe/chrome-extension/lib/openssl_wrapper_functions/nacl_sdk/
+EzKeZe/chrome-extension/lib/nacl_sdk/
+__pycache__
