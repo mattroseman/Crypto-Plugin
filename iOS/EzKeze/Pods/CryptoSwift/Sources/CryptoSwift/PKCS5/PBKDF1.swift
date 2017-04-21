@@ -15,29 +15,29 @@ public extension PKCS5 {
     /// some applications.
     public struct PBKDF1 {
 
-        public enum Error: ErrorType {
-            case InvalidInput
-            case DerivedKeyTooLong
+        public enum Error: Swift.Error {
+            case invalidInput
+            case derivedKeyTooLong
         }
 
         public enum Variant {
             case md5, sha1
 
-            var size:Int {
+            var size: Int {
                 switch (self) {
                 case .md5:
-                    return MD5.size
+                    return MD5.digestLength
                 case .sha1:
-                    return SHA1.size
+                    return SHA1.digestLength
                 }
             }
 
-            private func calculateHash(bytes bytes:Array<UInt8>) -> Array<UInt8>? {
+            fileprivate func calculateHash(_ bytes: Array<UInt8>) -> Array<UInt8>? {
                 switch (self) {
                 case .sha1:
-                    return Hash.sha1(bytes).calculate()
+                    return Digest.sha1(bytes)
                 case .md5:
-                    return Hash.md5(bytes).calculate()
+                    return Digest.md5(bytes)
                 }
             }
         }
@@ -52,31 +52,33 @@ public extension PKCS5 {
         ///   - variant: hash variant
         ///   - iterations: iteration count, a positive integer
         ///   - keyLength: intended length of derived key
-        public init(password: Array<UInt8>, salt: Array<UInt8>, variant: Variant = .sha1, iterations: Int = 4096 /* c */, keyLength: Int? = nil /* dkLen */) throws {
+        public init(password: Array<UInt8>, salt: Array<UInt8>, variant: Variant = .sha1, iterations: Int = 4096 /* c */ , keyLength: Int? = nil /* dkLen */ ) throws {
             precondition(iterations > 0)
             precondition(salt.count == 8)
 
+            let keyLength = keyLength ?? variant.size
+
             if (keyLength > variant.size) {
-                throw Error.DerivedKeyTooLong
+                throw Error.derivedKeyTooLong
             }
 
-            guard let t1 = variant.calculateHash(bytes: password + salt) else {
-                throw Error.InvalidInput
+            guard let t1 = variant.calculateHash(password + salt) else {
+                throw Error.invalidInput
             }
 
             self.iterations = iterations
             self.variant = variant
-            self.keyLength = keyLength ?? variant.size
+            self.keyLength = keyLength
             self.t1 = t1
         }
 
         /// Apply the underlying hash function Hash for c iterations
         public func calculate() -> Array<UInt8> {
             var t = t1
-            for _ in 2...self.iterations {
-                t = self.variant.calculateHash(bytes: t)!
+            for _ in 2 ... self.iterations {
+                t = self.variant.calculateHash(t)!
             }
-            return Array(t[0..<self.keyLength])
+            return Array(t[0 ..< self.keyLength])
         }
     }
 }

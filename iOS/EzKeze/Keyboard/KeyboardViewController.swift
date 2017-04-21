@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
 import CryptoSwift
 
 class KeyboardViewController: UIInputViewController
@@ -29,9 +27,9 @@ class KeyboardViewController: UIInputViewController
     var based64:String = ""
     var decrypting:Bool = false
     
-    var timer = NSTimer()
-    var timerTwo = NSTimer()
-    var deleteFast = NSTimer()
+    var timer = Timer()
+    var timerTwo = Timer()
+    var deleteFast = Timer()
     
     let key: [UInt8] = [115, 98, 103, 111, 108, 121, 112, 105, 101, 115, 114, 100, 97, 105, 105, 97]
     let iv: [UInt8] = [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00]
@@ -128,14 +126,14 @@ class KeyboardViewController: UIInputViewController
         loadKeyboard()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let allAlphabetButtons:[UIButton] = [q, w, e, r, t, y, u, i, o, p, a, s, d, f, g, h, j, k, l, z, x, c, v, b, n, m, initializeUpperButton, initializeDeleteButton, space, initialize123Button,initializeEncryptButton, initializeNextKeyboard, normalDownButton]
         
         // setting the height priority
-        self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.Height, relatedBy:.Equal, toItem:nil, attribute:.NotAnAttribute, multiplier:0, constant:0)
+        self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.height, relatedBy:.equal, toItem:nil, attribute:.notAnAttribute, multiplier:0, constant:0)
         self.heightConstraint!.priority = 999
-        self.heightConstraint!.active = true
+        self.heightConstraint!.isActive = true
         
         // take all number buttons out of the view
         let numbersButtons:[UIButton] = [one, two, three, four, five, six, seven, eight, nine, zero, dash, forwardSlash, colon, semicolon, leftParen, rightParen, dollar, ampersand, at, quote, period, comma, question, exclamation, singleQuote]
@@ -163,7 +161,7 @@ class KeyboardViewController: UIInputViewController
         
         let portraitHeight: CGFloat = (216 + (e.frame.width / 2))
         let landscapeHeight: CGFloat = 200
-        let screenSize = UIScreen.mainScreen().bounds.size
+        let screenSize = UIScreen.main.bounds.size
         
         let newHeight = screenSize.width > screenSize.height ? landscapeHeight : portraitHeight
         
@@ -171,7 +169,7 @@ class KeyboardViewController: UIInputViewController
         {
             self.heightConstraint!.constant = newHeight
         }
-        view.backgroundColor = UIColor.blueColor().colorWithAlphaComponent(0.0)
+        view.backgroundColor = UIColor.blue.withAlphaComponent(0.0)
     }
     
     override func didReceiveMemoryWarning()
@@ -186,7 +184,7 @@ class KeyboardViewController: UIInputViewController
         let bytes = temp.utf8.map({$0})
         let encrypted = try! AES(key: key, iv: iv, blockMode: .CBC, padding: PKCS7()).encrypt(bytes)
         (textDocumentProxy as UIKeyInput).insertText(encrypted.description)
-        UIPasteboard.generalPasteboard().string = encrypted.description
+        UIPasteboard.general.string = encrypted.description
         displayString = ""
         memoryDisplayString = ""
         globalMemoryIndex = 0
@@ -197,11 +195,11 @@ class KeyboardViewController: UIInputViewController
         if !decrypting
         {
             decrypting = true
-            let encryptedString = UIPasteboard.generalPasteboard().string
-            var temp = encryptedString!.stringByReplacingOccurrencesOfString(" ", withString: "")
-            temp = temp.stringByReplacingOccurrencesOfString("[", withString: "")
-            temp = temp.stringByReplacingOccurrencesOfString("]", withString: "")
-            let tempArray = temp.componentsSeparatedByString(",")
+            let encryptedString = UIPasteboard.general.string
+            var temp = encryptedString!.replacingOccurrences(of: " ", with: "")
+            temp = temp.replacingOccurrences(of: "[", with: "")
+            temp = temp.replacingOccurrences(of: "]", with: "")
+            let tempArray = temp.components(separatedBy: ",")
             let bytes = tempArray.map { UInt8($0)!}
             do
             {
@@ -210,7 +208,7 @@ class KeyboardViewController: UIInputViewController
                 {
                     toDropUp()
                 }
-                let decryptedString = String(bytes: decrypted, encoding: NSUTF8StringEncoding)
+                let decryptedString = String(bytes: decrypted, encoding: String.Encoding.utf8)
                 self.dropdownTextProxy.text = decryptedString
             }catch
             {
@@ -234,7 +232,7 @@ class KeyboardViewController: UIInputViewController
     {
         lowercaseLogic = true
         let keyboardNib = UINib(nibName: "keyboardView", bundle: nil)
-        keyboardView = keyboardNib.instantiateWithOwner(self, options: nil)[0] as! UIView
+        keyboardView = keyboardNib.instantiate(withOwner: self, options: nil)[0] as! UIView
         view.addSubview(keyboardView)
         viewLabel.text = ""
     }
@@ -269,20 +267,20 @@ class KeyboardViewController: UIInputViewController
         repeat
         {
             var temp = alphabet[index].titleLabel?.text
-            temp = temp!.lowercaseString
+            temp = temp!.lowercased()
             let addingPNG = temp! + "Low.png"
             let image = UIImage(named: addingPNG)
-            alphabet[index].setImage(image, forState: UIControlState.Normal)
-            alphabet[index].setTitle(temp, forState: UIControlState.Normal)
+            alphabet[index].setImage(image, for: UIControlState())
+            alphabet[index].setTitle(temp, for: UIControlState())
             index = index + 1
         }
             while index < alphabet.endIndex
-        initializeUpperButton.setImage(UIImage(named: "lowercase.png"), forState: UIControlState.Normal)
-        initializeUpperButton.removeTarget(nil, action: nil, forControlEvents: .AllEvents)
-        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toUppercase), forControlEvents: UIControlEvents.TouchUpInside)
-        initialize123Button.setImage(UIImage(named: "123.png"), forState: UIControlState.Normal)
-        initialize123Button.removeTarget(nil, action: nil, forControlEvents: .AllEvents)
-        initialize123Button.addTarget(self, action: #selector(KeyboardViewController.toNumbersOne), forControlEvents: UIControlEvents.TouchUpInside)
+        initializeUpperButton.setImage(UIImage(named: "lowercase.png"), for: UIControlState())
+        initializeUpperButton.removeTarget(nil, action: nil, for: .allEvents)
+        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toUppercase), for: UIControlEvents.touchUpInside)
+        initialize123Button.setImage(UIImage(named: "123.png"), for: UIControlState())
+        initialize123Button.removeTarget(nil, action: nil, for: .allEvents)
+        initialize123Button.addTarget(self, action: #selector(KeyboardViewController.toNumbersOne), for: UIControlEvents.touchUpInside)
         
         lowercaseLogic = true
         uppercaseLogic = false
@@ -300,23 +298,23 @@ class KeyboardViewController: UIInputViewController
         repeat
         {
             var temp = alphabet[index].titleLabel?.text
-            temp = temp?.stringByReplacingOccurrencesOfString("Low", withString: "")
-            temp = temp?.capitalizedString
+            temp = temp?.replacingOccurrences(of: "Low", with: "")
+            temp = temp?.capitalized
             let addingPNG = temp! + ".png"
             let image = UIImage(named: addingPNG)
-            alphabet[index].setImage(image, forState: UIControlState.Normal)
-            alphabet[index].setTitle(temp, forState: UIControlState.Normal)
+            alphabet[index].setImage(image, for: UIControlState())
+            alphabet[index].setTitle(temp, for: UIControlState())
             index = index + 1
         } while index < alphabet.endIndex
-        initializeUpperButton.setImage(UIImage(named: "uppercase.png"), forState: UIControlState.Normal)
-        initializeUpperButton.removeTarget(nil, action: nil, forControlEvents: .AllEvents)
-        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toLowercase), forControlEvents: UIControlEvents.TouchUpInside)
+        initializeUpperButton.setImage(UIImage(named: "uppercase.png"), for: UIControlState())
+        initializeUpperButton.removeTarget(nil, action: nil, for: .allEvents)
+        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toLowercase), for: UIControlEvents.touchUpInside)
         
         lowercaseLogic = false
         uppercaseLogic = true
         doublecaseLogic = false
         numbersOneLogic = false
-        numbersTwoLogic = false
+        numbersTwoLogic = false 
     }
     
     @IBAction func toDoublecase()
@@ -382,20 +380,20 @@ class KeyboardViewController: UIInputViewController
             var index = numbersButtons.startIndex
             repeat
             {
-                numbersButtons[index].setImage(numbersOneImage[index], forState: .Normal)
-                numbersButtons[index].setTitle(numbersOneOutput[index], forState: .Normal)
+                numbersButtons[index].setImage(numbersOneImage[index], for: UIControlState())
+                numbersButtons[index].setTitle(numbersOneOutput[index], for: UIControlState())
                 index += 1
             }
                 while index < (numbersButtons.endIndex - 5)
         }
         
         // changes general initialize buttons image and function to match new view
-        initializeUpperButton.setImage(UIImage(named: "symbols.png"), forState: UIControlState.Normal)
-        initializeUpperButton.removeTarget(nil, action: nil, forControlEvents: .AllEvents)
-        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toNumbersTwo), forControlEvents: UIControlEvents.TouchUpInside)
-        initialize123Button.setImage(UIImage(named: "ABC.png"), forState: UIControlState.Normal)
-        initialize123Button.removeTarget(nil, action: nil, forControlEvents: .AllEvents)
-        initialize123Button.addTarget(self, action: #selector(KeyboardViewController.toLowercase), forControlEvents: UIControlEvents.TouchUpInside)
+        initializeUpperButton.setImage(UIImage(named: "symbols.png"), for: UIControlState())
+        initializeUpperButton.removeTarget(nil, action: nil, for: .allEvents)
+        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toNumbersTwo), for: UIControlEvents.touchUpInside)
+        initialize123Button.setImage(UIImage(named: "ABC.png"), for: UIControlState())
+        initialize123Button.removeTarget(nil, action: nil, for: .allEvents)
+        initialize123Button.addTarget(self, action: #selector(KeyboardViewController.toLowercase), for: UIControlEvents.touchUpInside)
         
         lowercaseLogic = false
         uppercaseLogic = false
@@ -436,17 +434,17 @@ class KeyboardViewController: UIInputViewController
             var index = numbersButtons.startIndex
             repeat
             {
-                numbersButtons[index].setImage(numbersTwoImage[index], forState: .Normal)
-                numbersButtons[index].setTitle(numbersTwoOutput[index], forState: .Normal)
+                numbersButtons[index].setImage(numbersTwoImage[index], for: UIControlState())
+                numbersButtons[index].setTitle(numbersTwoOutput[index], for: UIControlState())
                 index += 1
             }
                 while index < (numbersButtons.endIndex - 5)
         }
         
         // changes general initialize buttons image and function to match new view
-        initializeUpperButton.setImage(UIImage(named: "123.png"), forState: UIControlState.Normal)
-        initializeUpperButton.removeTarget(nil, action: nil, forControlEvents: .AllEvents)
-        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toNumbersOne), forControlEvents: UIControlEvents.TouchUpInside)
+        initializeUpperButton.setImage(UIImage(named: "123.png"), for: UIControlState())
+        initializeUpperButton.removeTarget(nil, action: nil, for: .allEvents)
+        initializeUpperButton.addTarget(self, action: #selector(KeyboardViewController.toNumbersOne), for: UIControlEvents.touchUpInside)
         
         lowercaseLogic = false
         uppercaseLogic = false
@@ -458,8 +456,7 @@ class KeyboardViewController: UIInputViewController
     
     @IBAction func toNormalDown()
     {
-        UIView.animateWithDuration(0.2)
-        {
+        UIView.animate(withDuration: 0.2, animations: {
             let size = CGSize(width: self.dropdownTextProxy.frame.width, height: 0)
             let rect = CGRect(
                 origin: CGPoint(x: self.dropdownTextProxy.frame.origin.x, y: self.dropdownTextProxy.frame.origin.y),
@@ -467,13 +464,14 @@ class KeyboardViewController: UIInputViewController
             )
             self.dropdownTextProxy.frame = rect
             self.dropdownTextProxy.center.y -= -(216 - self.normalDownButton.frame.height)
-        }
+        })
+        
         
         memoryDisplayString = NSMutableString(string: dropdownTextProxy.text!)
         let endIndex = memoryDisplayString.description.characters.endIndex
         if memoryDisplayString.description.characters.count >= 20
         {
-            let beginIndex = memoryDisplayString.description.characters.endIndex.advancedBy(-20)
+            let beginIndex = memoryDisplayString.description.characters.index(memoryDisplayString.description.characters.endIndex, offsetBy: -20)
             displayString = memoryDisplayString.description[Range(beginIndex ..< endIndex)]
         }
         else
@@ -493,10 +491,10 @@ class KeyboardViewController: UIInputViewController
         
         let seconds = 0.19
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        let dispatchTime = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
         
-        dispatch_after(dispatchTime, dispatch_get_main_queue(),
-        {
+        DispatchQueue.main.asyncAfter(deadline: dispatchTime,
+        execute: {
             self.slideImage.image = UIImage(named: "slideUp.png")
 
             self.viewLabel.center.x += self.view.center.x
@@ -504,8 +502,8 @@ class KeyboardViewController: UIInputViewController
             self.dropUpButton.center.x += self.view.bounds.width
             
             self.heightConstraint!.constant = (216 + (self.e.frame.width / 2))
-            self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.Height, relatedBy:.Equal, toItem:nil, attribute:.NotAnAttribute, multiplier:0, constant:0)
-            self.heightConstraint!.active = true
+            self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.height, relatedBy:.equal, toItem:nil, attribute:.notAnAttribute, multiplier:0, constant:0)
+            self.heightConstraint!.isActive = true
             let height:CGFloat = -216
             self.editKeyboardKeysHeight(height)
         })
@@ -522,16 +520,15 @@ class KeyboardViewController: UIInputViewController
         if (self.heightConstraint!.constant != newHeight)
         {
             self.heightConstraint!.constant = newHeight
-            self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.Height, relatedBy:.Equal, toItem:nil, attribute:.NotAnAttribute, multiplier:0, constant:0)
+            self.heightConstraint = NSLayoutConstraint(item:self.inputView!, attribute:.height, relatedBy:.equal, toItem:nil, attribute:.notAnAttribute, multiplier:0, constant:0)
             self.heightConstraint!.priority = 1
-            self.heightConstraint!.active = true
+            self.heightConstraint!.isActive = true
         }
         
         let height:CGFloat = 216
         editKeyboardKeysHeight(height)
         
-        UIView.animateWithDuration(0.2)
-        {
+        UIView.animate(withDuration: 0.2, animations: {
             let size = CGSize(width: self.dropdownTextProxy.frame.width, height: (self.space.center.y - (216 + (self.e.frame.width / 2) + (self.e.frame.width / 8))))
             let rect = CGRect(
                 origin: CGPoint(x: self.dropdownTextProxy.frame.origin.x, y: self.dropdownTextProxy.frame.origin.y),
@@ -539,7 +536,8 @@ class KeyboardViewController: UIInputViewController
             )
             self.dropdownTextProxy.frame = rect
             self.dropdownTextProxy.center.y -= (216 - self.normalDownButton.frame.height)
-        }
+        })
+        
         
         viewLabel.center.x -= view.center.x
         normalDownButton.center.x += view.bounds.width
@@ -549,61 +547,61 @@ class KeyboardViewController: UIInputViewController
         dropdownLogic = true
     }
     
-    @IBAction func keypressPopup(sender: UIButton!)
+    @IBAction func keypressPopup(_ sender: UIButton!)
     {
-        dispatch_async(dispatch_get_main_queue())
+        DispatchQueue.main.async
         {
             let buttonNorm = sender.frame
             let imagePop = sender.currentImage
             if sender.titleLabel!.text != "q" && sender.titleLabel!.text != "Q" && sender.titleLabel!.text != "1" && sender.titleLabel!.text != "-" && sender.titleLabel!.text != "[" && sender.titleLabel!.text != "_" && sender.titleLabel!.text != "A" && sender.titleLabel!.text != "a"
             {
-                sender.frame = CGRectMake(buttonNorm.origin.x - self.popupX, buttonNorm.origin.y - self.popupY, buttonNorm.size.width + self.popupY, buttonNorm.size.height + self.popupY)
-                sender.setImage(imagePop, forState: .Highlighted)
+                sender.frame = CGRect(x: buttonNorm.origin.x - self.popupX, y: buttonNorm.origin.y - self.popupY, width: buttonNorm.size.width + self.popupY, height: buttonNorm.size.height + self.popupY)
+                sender.setImage(imagePop, for: .highlighted)
             }
         }
     }
     
-    @IBAction func keypressPopupEnd(sender: UIButton!)
+    @IBAction func keypressPopupEnd(_ sender: UIButton!)
     {
         let buttonNorm = sender.frame
         if sender.titleLabel!.text != "q" && sender.titleLabel!.text != "Q" && sender.titleLabel!.text != "1" && sender.titleLabel!.text != "-" && sender.titleLabel!.text != "[" && sender.titleLabel!.text != "_" && sender.titleLabel!.text != "A" && sender.titleLabel!.text != "a"
         {
-            sender.frame = CGRectMake(buttonNorm.origin.x + self.popupX, buttonNorm.origin.y + self.popupY, buttonNorm.size.width - self.popupY, buttonNorm.size.height - self.popupY)
+            sender.frame = CGRect(x: buttonNorm.origin.x + self.popupX, y: buttonNorm.origin.y + self.popupY, width: buttonNorm.size.width - self.popupY, height: buttonNorm.size.height - self.popupY)
         }
     }
-    @IBAction func keypress(sender: UIButton!)
+    @IBAction func keypress(_ sender: UIButton!)
     {
         let buttonNorm = sender.frame
         if sender.titleLabel!.text != "q" && sender.titleLabel!.text != "Q" && sender.titleLabel!.text != "1" && sender.titleLabel!.text != "-" && sender.titleLabel!.text != "[" && sender.titleLabel!.text != "_" && sender.titleLabel!.text != "A" && sender.titleLabel!.text != "a"
         {
-            dispatch_async(dispatch_get_main_queue())
+            DispatchQueue.main.async
             {
-                sender.frame = CGRectMake(buttonNorm.origin.x + self.popupX, buttonNorm.origin.y + self.popupY, buttonNorm.size.width - self.popupY, buttonNorm.size.height - self.popupY)
+                sender.frame = CGRect(x: buttonNorm.origin.x + self.popupX, y: buttonNorm.origin.y + self.popupY, width: buttonNorm.size.width - self.popupY, height: buttonNorm.size.height - self.popupY)
             }
         }
         if dropdownLogic == false
         {
             let proxy = viewLabel
             let typedCharacter = sender.titleLabel?.text
-            if proxy.text!.isEmpty == false && displayString == ""
+            if proxy?.text!.isEmpty == false && displayString == ""
             {
-                proxy.text = ""
+                proxy?.text = ""
             }
             displayString += typedCharacter!
-            memoryDisplayString.insertString(typedCharacter!, atIndex: globalMemoryIndex)
+            memoryDisplayString.insert(typedCharacter!, at: globalMemoryIndex)
             globalMemoryIndex += 1
             let stringChars = findMaxUILabelCharacters(displayString)
-            if stringChars.width >= (proxy.frame.size.width - 20) // making sure line doesn't get truncated
+            if stringChars.width >= ((proxy?.frame.size.width)! - 20) // making sure line doesn't get truncated
             {
                 displayString = String(displayString.characters.dropFirst())
                 displayString = String(displayString.characters.dropFirst())
                 displayString = String(displayString.characters.dropFirst())
                 displayString = String(displayString.characters.dropFirst())
-                proxy.text = displayString
+                proxy?.text = displayString
             }
             else
             {
-                proxy.text = displayString
+                proxy?.text = displayString
             }
             if (uppercaseLogic)
             {
@@ -623,25 +621,25 @@ class KeyboardViewController: UIInputViewController
         {
             let proxy = viewLabel
             let typedCharacter = " "
-            if proxy.text!.isEmpty == false && displayString == ""
+            if proxy?.text!.isEmpty == false && displayString == ""
             {
-                proxy.text = ""
+                proxy?.text = ""
             }
             displayString += typedCharacter
-            memoryDisplayString.insertString(typedCharacter, atIndex: globalMemoryIndex)
+            memoryDisplayString.insert(typedCharacter, at: globalMemoryIndex)
             globalMemoryIndex += 1
             let stringChars = findMaxUILabelCharacters(displayString)
-            if stringChars.width >= (proxy.frame.size.width - 20) // making sure line doesn't get truncated
+            if stringChars.width >= ((proxy?.frame.size.width)! - 20) // making sure line doesn't get truncated
             {
                 displayString = String(displayString.characters.dropFirst())
                 displayString = String(displayString.characters.dropFirst())
                 displayString = String(displayString.characters.dropFirst())
                 displayString = String(displayString.characters.dropFirst())
-                proxy.text = displayString
+                proxy?.text = displayString
             }
             else
             {
-                proxy.text = displayString
+                proxy?.text = displayString
             }
         }
         else
@@ -656,9 +654,9 @@ class KeyboardViewController: UIInputViewController
         if dropdownLogic == false
         {
             var proxy = viewLabel
-            if proxy.text!.isEmpty == false && displayString == ""
+            if proxy?.text!.isEmpty == false && displayString == ""
             {
-                proxy.text = ""
+                proxy?.text = ""
             }
             if uppercaseLogic == true
             {
@@ -667,20 +665,20 @@ class KeyboardViewController: UIInputViewController
             if displayString.isEmpty == false
             {
                 proxy = viewLabel
-                displayString.removeAtIndex(displayString.endIndex.predecessor())
-                memoryDisplayString.deleteCharactersInRange(NSMakeRange(memoryDisplayString.length - 1, 1))
+                displayString.remove(at: displayString.characters.index(before: displayString.endIndex))
+                memoryDisplayString.deleteCharacters(in: NSMakeRange(memoryDisplayString.length - 1, 1))
                 globalMemoryIndex -= 1
                 if memoryDisplayString.length > displayString.characters.count
                 {
                     var indexOfAdditiveChar = (memoryDisplayString.length - displayString.characters.count)
                     indexOfAdditiveChar -= 1
-                    let additiveChar = Character(memoryDisplayString.substringWithRange(NSRange(location: indexOfAdditiveChar, length: 1)))
-                    displayString.insert(additiveChar, atIndex: displayString.startIndex)
-                    proxy.text = displayString
+                    let additiveChar = Character(memoryDisplayString.substring(with: NSRange(location: indexOfAdditiveChar, length: 1)))
+                    displayString.insert(additiveChar, at: displayString.startIndex)
+                    proxy?.text = displayString
                 }
                 else
                 {
-                    proxy.text = displayString
+                    proxy?.text = displayString
                 }
             }
         }
@@ -692,7 +690,7 @@ class KeyboardViewController: UIInputViewController
     
     @IBAction func deleteFastFunc()
     {
-        deleteFast = NSTimer.scheduledTimerWithTimeInterval(0.09, target: self, selector:#selector(KeyboardViewController.deleteTwo), userInfo: nil, repeats: true)
+        deleteFast = Timer.scheduledTimer(timeInterval: 0.09, target: self, selector:#selector(KeyboardViewController.deleteTwo), userInfo: nil, repeats: true)
     }
     
     func deleteTwo()
@@ -700,9 +698,9 @@ class KeyboardViewController: UIInputViewController
         if dropdownLogic == false
         {
             var proxy = viewLabel
-            if proxy.text!.isEmpty == false && displayString == ""
+            if proxy?.text!.isEmpty == false && displayString == ""
             {
-                proxy.text = ""
+                proxy?.text = ""
             }
             if uppercaseLogic == true
             {
@@ -711,20 +709,20 @@ class KeyboardViewController: UIInputViewController
             if displayString.isEmpty == false
             {
                 proxy = viewLabel
-                displayString.removeAtIndex(displayString.endIndex.predecessor())
-                memoryDisplayString.deleteCharactersInRange(NSMakeRange(memoryDisplayString.length - 1, 1))
+                displayString.remove(at: displayString.characters.index(before: displayString.endIndex))
+                memoryDisplayString.deleteCharacters(in: NSMakeRange(memoryDisplayString.length - 1, 1))
                 globalMemoryIndex -= 1
                 if memoryDisplayString.length > displayString.characters.count
                 {
                     var indexOfAdditiveChar = (memoryDisplayString.length - displayString.characters.count)
                     indexOfAdditiveChar -= 1
-                    let additiveChar = Character(memoryDisplayString.substringWithRange(NSRange(location: indexOfAdditiveChar, length: 1)))
-                    displayString.insert(additiveChar, atIndex: displayString.startIndex)
-                    proxy.text = displayString
+                    let additiveChar = Character(memoryDisplayString.substring(with: NSRange(location: indexOfAdditiveChar, length: 1)))
+                    displayString.insert(additiveChar, at: displayString.startIndex)
+                    proxy?.text = displayString
                 }
                 else
                 {
-                    proxy.text = displayString
+                    proxy?.text = displayString
                 }
             }
         }
@@ -741,12 +739,13 @@ class KeyboardViewController: UIInputViewController
     
     func timerFunc()
     {
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.15, target: self, selector: Selector(counterFunc()), userInfo: nil, repeats: true)
+        
+        timer = Timer.scheduledTimer(timeInterval: 0.15, target: self, selector: #selector(counterFunc), userInfo: nil, repeats: true)
     }
     
     func timerTwoFunc()
     {
-        timerTwo = NSTimer.scheduledTimerWithTimeInterval(0.15, target: self, selector: Selector(counterFuncTwo()), userInfo: nil, repeats: true)
+        timerTwo = Timer.scheduledTimer(timeInterval: 0.15, target: self, selector: #selector(counterFuncTwo), userInfo: nil, repeats: true)
     }
     
     func counterFunc()
@@ -759,17 +758,17 @@ class KeyboardViewController: UIInputViewController
         counterTwo += 0.15
     }
     
-    func findMaxUILabelCharacters(testString: String) -> CGRect
+    func findMaxUILabelCharacters(_ testString: String) -> CGRect
     {
         let label = viewLabel
-        let sizeOfUILabel = CGSize(width: label.frame.size.width, height: label.frame.size.height)
-        let labelFont = label.font
+        let sizeOfUILabel = CGSize(width: (label?.frame.size.width)!, height: (label?.frame.size.height)!)
+        let labelFont = label?.font
         let myAttribute = [ NSFontAttributeName: labelFont]
-        let textSize = testString.boundingRectWithSize(sizeOfUILabel, options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: myAttribute, context: nil)
+        let textSize = testString.boundingRect(with: sizeOfUILabel, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: myAttribute as Any as? [String : Any], context: nil)
         return textSize
     }
     
-    func editKeyboardKeysHeight(height: CGFloat)
+    func editKeyboardKeysHeight(_ height: CGFloat)
     {
         var allButtonArray:[UIButton] = [q, w, e, r, t, y, u, i, o, p, a, s, d, f, g, h, j, k, l, z, x, c, v, b, n, m, one, two, three, four, five, six, seven, eight, nine, zero, dash, forwardSlash, colon, semicolon, leftParen, rightParen, dollar, ampersand, at, quote, period, comma, question, exclamation, singleQuote, space, initialize123Button, initializeUpperButton, initializeDeleteButton, initializeNextKeyboard, initializeEncryptButton]
         viewLabel.center.y += height
@@ -783,7 +782,7 @@ class KeyboardViewController: UIInputViewController
             while index < allButtonArray.endIndex
     }
     
-    func animateKeyboard(buttonArray: [UIButton])
+    func animateKeyboard(_ buttonArray: [UIButton])
     {
         slideImage.center.x -= view.bounds.width
         
@@ -795,7 +794,7 @@ class KeyboardViewController: UIInputViewController
         }
             while index < buttonArray.endIndex
         
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.slideImage.center.x += self.view.bounds.width
             
             index = buttonArray.startIndex
@@ -807,7 +806,7 @@ class KeyboardViewController: UIInputViewController
                 while index < 10
         })
         
-        UIView.animateWithDuration(0.3, delay: 0.1, options: [], animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
             repeat
             {
                 buttonArray[index].center.x += self.view.bounds.width
@@ -816,7 +815,7 @@ class KeyboardViewController: UIInputViewController
                 while index >= 10 && index < 19
             }, completion: nil)
         
-        UIView.animateWithDuration(0.3, delay: 0.2, options: [], animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.2, options: [], animations: {
             repeat
             {
                 buttonArray[index].center.x += self.view.bounds.width
@@ -825,7 +824,7 @@ class KeyboardViewController: UIInputViewController
                 while index >= 19 && index < 28
             }, completion: nil)
         
-        UIView.animateWithDuration(0.3, delay: 0.3, options: [], animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.3, options: [], animations: {
             repeat
             {
                 buttonArray[index].center.x += self.view.bounds.width
@@ -837,7 +836,7 @@ class KeyboardViewController: UIInputViewController
         func addActivityIndicator()
         {
             activityIndicator = UIActivityIndicatorView(frame: view.bounds)
-            activityIndicator.activityIndicatorViewStyle = .WhiteLarge
+            activityIndicator.activityIndicatorViewStyle = .whiteLarge
             activityIndicator.backgroundColor = UIColor(white: 0, alpha: 0.25)
             activityIndicator.startAnimating()
             view.addSubview(activityIndicator)
@@ -854,7 +853,7 @@ class KeyboardViewController: UIInputViewController
     func addActivityIndicator()
     {
         activityIndicator = UIActivityIndicatorView(frame: view.bounds)
-        activityIndicator.activityIndicatorViewStyle = .WhiteLarge
+        activityIndicator.activityIndicatorViewStyle = .whiteLarge
         activityIndicator.backgroundColor = UIColor(white: 0, alpha: 0.25)
         activityIndicator.startAnimating()
         view.addSubview(activityIndicator)

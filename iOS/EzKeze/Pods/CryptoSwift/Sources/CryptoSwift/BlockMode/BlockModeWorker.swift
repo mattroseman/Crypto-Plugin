@@ -8,6 +8,6 @@
 
 protocol BlockModeWorker {
     var cipherOperation: CipherOperationOnBlock { get }
-    mutating func encrypt(plaintext: Array<UInt8>) -> Array<UInt8>
-    mutating func decrypt(ciphertext: Array<UInt8>) -> Array<UInt8>
+    mutating func encrypt(_ plaintext: ArraySlice<UInt8>) -> Array<UInt8>
+    mutating func decrypt(_ ciphertext: ArraySlice<UInt8>) -> Array<UInt8>
 }

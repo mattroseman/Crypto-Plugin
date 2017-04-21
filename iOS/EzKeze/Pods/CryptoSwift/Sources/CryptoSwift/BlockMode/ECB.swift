@@ -12,18 +12,18 @@ struct ECBModeWorker: BlockModeWorker {
     typealias Element = Array<UInt8>
     let cipherOperation: CipherOperationOnBlock
 
-    init(iv: Array<UInt8>, cipherOperation: CipherOperationOnBlock) {
+    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock) {
         self.cipherOperation = cipherOperation
     }
 
-    mutating func encrypt(plaintext: Array<UInt8>) -> Array<UInt8> {
-        guard let ciphertext = cipherOperation(block: plaintext) else {
-            return plaintext
+    mutating func encrypt(_ plaintext: ArraySlice<UInt8>) -> Array<UInt8> {
+        guard let ciphertext = cipherOperation(Array(plaintext)) else {
+            return Array(plaintext)
         }
         return ciphertext
     }
 
-    mutating func decrypt(ciphertext: Array<UInt8>) -> Array<UInt8> {
+    mutating func decrypt(_ ciphertext: ArraySlice<UInt8>) -> Array<UInt8> {
         return encrypt(ciphertext)
     }
 }

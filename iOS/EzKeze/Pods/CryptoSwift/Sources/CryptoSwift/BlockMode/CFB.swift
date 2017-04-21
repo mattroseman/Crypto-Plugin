@@ -15,25 +15,25 @@ struct CFBModeWorker: BlockModeWorker {
     private let iv: Element
     private var prev: Element?
 
-    init(iv: Array<UInt8>, cipherOperation: CipherOperationOnBlock) {
+    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock) {
         self.iv = iv
         self.cipherOperation = cipherOperation
     }
 
-    mutating func encrypt(plaintext: Array<UInt8>) -> Array<UInt8> {
-        guard let ciphertext = cipherOperation(block: prev ?? iv) else {
-            return plaintext
+    mutating func encrypt(_ plaintext: ArraySlice<UInt8>) -> Array<UInt8> {
+        guard let ciphertext = cipherOperation(prev ?? iv) else {
+            return Array(plaintext)
         }
         prev = xor(plaintext, ciphertext)
         return prev ?? []
     }
 
-    mutating func decrypt(ciphertext: Array<UInt8>) -> Array<UInt8> {
-        guard let plaintext = cipherOperation(block: prev ?? iv) else {
-            return ciphertext
+    mutating func decrypt(_ ciphertext: ArraySlice<UInt8>) -> Array<UInt8> {
+        guard let plaintext = cipherOperation(prev ?? iv) else {
+            return Array(ciphertext)
         }
         let result = xor(plaintext, ciphertext)
-        self.prev = ciphertext
+        self.prev = Array(ciphertext)
         return result
     }
 }

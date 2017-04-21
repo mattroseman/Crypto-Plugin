@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0830"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7F60E6360230CC39627A19D7A3CA1361"
+               BlueprintIdentifier = "B89737B8A187C593CD60F9B30C671F15"
                BuildableName = "Pods_EzKeze.framework"
                BlueprintName = "Pods-EzKeze"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7F60E6360230CC39627A19D7A3CA1361"
+            BlueprintIdentifier = "B89737B8A187C593CD60F9B30C671F15"
             BuildableName = "Pods_EzKeze.framework"
             BlueprintName = "Pods-EzKeze"
             ReferencedContainer = "container:Pods.xcodeproj">

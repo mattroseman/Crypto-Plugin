@@ -6,15 +6,16 @@
 //  Copyright (c) 2014 Marcin Krzyzanowski. All rights reserved.
 //
 
-#if os(Linux)
+#if os(Linux) || os(Android) || os(FreeBSD)
     import Glibc
 #else
     import Darwin
 #endif
 
-public protocol Cryptors {
-    associatedtype EncryptorType: UpdatableCryptor
-    associatedtype DecryptorType: UpdatableCryptor
+/// Worker cryptor/decryptor of `Updatable` types
+public protocol Cryptors: class {
+    associatedtype EncryptorType: Updatable
+    associatedtype DecryptorType: Updatable
 
     /// Cryptor suitable for encryption
     func makeEncryptor() -> EncryptorType
@@ -23,14 +24,16 @@ public protocol Cryptors {
     func makeDecryptor() -> DecryptorType
 
     /// Generate array of random bytes. Helper function.
-    static func randomIV(blockSize:Int) -> Array<UInt8>
+    static func randomIV(_ blockSize: Int) -> Array<UInt8>
 }
 
 extension Cryptors {
-    static public func randomIV(blockSize:Int) -> Array<UInt8> {
-        var randomIV:Array<UInt8> = Array<UInt8>();
-        for _ in 0..<blockSize {
-            randomIV.append(UInt8(truncatingBitPattern: cs_arc4random_uniform(256)));
+
+    public static func randomIV(_ blockSize: Int) -> Array<UInt8> {
+        var randomIV: Array<UInt8> = Array<UInt8>()
+        randomIV.reserveCapacity(blockSize)
+        for randomByte in RandomBytesSequence(size: blockSize) {
+            randomIV.append(randomByte)
         }
         return randomIV
     }
