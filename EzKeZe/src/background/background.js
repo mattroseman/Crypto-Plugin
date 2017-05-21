@@ -48,6 +48,7 @@ function handleMessage(message) {
     }
 }
 
+/*
 function onInitFs(fs) {
   fs.root.getFile('blaiseFUCKINGmarchetti.txt', {create: true}, function(fileEntry) {
 
@@ -98,6 +99,7 @@ window.webkitStorageInfo.requestQuota(PERSISTENT, 5*1024*1024, function(grantedB
 }, function(e) {
   console.log('Error', e);
 });
+*/
 
 
 
